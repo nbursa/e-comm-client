@@ -21,14 +21,14 @@ interface Props {
   todos?: Todo[];
   meta: Meta;
   active: boolean;
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
-  todos: () => []
+  todos: () => [],
 });
 
 const clickCount = ref(0);
-function increment() {
+function increment(): number {
   clickCount.value += 1;
   return clickCount.value;
 }

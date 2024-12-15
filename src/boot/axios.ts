@@ -1,5 +1,6 @@
 import { defineBoot } from '#q-app/wrappers';
 import axios, { type AxiosInstance } from 'axios';
+import type { App } from 'vue';
 
 declare module 'vue' {
   interface ComponentCustomProperties {
@@ -16,7 +17,7 @@ declare module 'vue' {
 // for each client)
 const api = axios.create({ baseURL: 'https://api.example.com' });
 
-export default defineBoot(({ app }) => {
+export default defineBoot(({ app }: { app: App }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   app.config.globalProperties.$axios = axios;
