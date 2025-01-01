@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
-    <h2>Shopping Cart</h2>
-    <q-list>
+    <h5>Shopping Cart</h5>
+    <q-list class="q-mb-md">
       <q-item v-for="item in cartStore.items" :key="item.id">
         <q-item-section>
           <div>{{ item.name }}</div>
@@ -27,9 +27,11 @@ import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useCartStore } from 'src/stores/cart';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
+const router = useRouter();
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
@@ -41,7 +43,6 @@ const removeItem = (id: number) => {
 };
 
 const checkout = () => {
-  console.log('Order placed:', cartStore.items);
-  cartStore.clearCart();
+  router.push('/checkout');
 };
 </script>

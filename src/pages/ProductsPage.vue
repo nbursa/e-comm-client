@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <h4 class="q-m-sm">Products</h4>
+    <h5 class="q-m-sm">Products</h5>
     <q-list>
       <q-item v-for="product in products" :key="product.id" class="q-pa-none">
         <q-item-section>
@@ -20,9 +20,9 @@
 
     <q-separator class="q-my-md" />
 
-    <q-card class="q-mb-md">
+    <q-card class="q-mb-md cursor-pointer" @click="openCart">
       <q-card-section>
-        <h6 class="q-mb-sm">Cart Summary</h6>
+        <h5 class="q-mb-sm">Cart Summary</h5>
         <div>Total Items: {{ totalItems }}</div>
         <div>Total Price: {{ formatPrice(totalPrice) }}</div>
       </q-card-section>
@@ -35,9 +35,11 @@ import { computed, ref } from 'vue';
 import type { Product } from '../stores/cart';
 import { useCartStore } from '../stores/cart';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 
 const cartStore = useCartStore();
 const $q = useQuasar();
+const router = useRouter();
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
@@ -56,4 +58,8 @@ const addToCart = (product: Product) => {
 
 const totalItems = computed(() => cartStore.totalItems);
 const totalPrice = computed(() => cartStore.totalPrice);
+
+const openCart = () => {
+  router.push('/cart');
+};
 </script>
