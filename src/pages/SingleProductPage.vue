@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="scroll">
+  <q-page padding>
     <q-card
       bordered
       class="q-mb-md cursor-pointer cart-summary"
@@ -56,7 +56,12 @@
             {{ formatPrice(product.price) }}
           </template>
         </div>
-        <q-btn :color="color" :text-color="text" label="Add to Cart" @click="addToCart(product)" />
+        <q-btn
+          :color="color"
+          :text-color="text"
+          label="Add to Cart"
+          @click.stop="addToCart(product)"
+        />
       </q-card-actions>
     </q-card>
 
@@ -110,8 +115,16 @@ const isCollapsed = ref(false);
 
 const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
 
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+};
+
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
+  scrollToTop();
   $q.notify({
     color: 'positive',
     message: 'Product added to cart!',

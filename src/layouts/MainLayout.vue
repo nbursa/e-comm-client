@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf" class="shadow-2">
-    <q-header elevated :class="themeStyle">
+    <q-header elevated bordered :class="themeStyle">
       <q-toolbar>
         <q-toolbar-title>E-comm</q-toolbar-title>
 

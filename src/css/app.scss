@@ -137,3 +137,8 @@ $shadow-light: 0px 4px 10px rgba(255, 255, 255, 0.05);
     color: var(--q-light) !important;
   }
 }
+
+.q-header.q-layout__section--marginal.bg-light {
+  background-color: var(--q-light) !important;
+  color: var(--q-dark) !important;
+}

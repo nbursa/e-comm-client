@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="scroll">
+  <q-page padding>
     <!-- Cart Summary -->
     <q-card
       bordered
@@ -71,7 +71,7 @@
             :color="color"
             :text-color="text"
             label="Add to Cart"
-            @click="addToCart(product)"
+            @click.stop="addToCart(product)"
           />
         </q-card-actions>
       </q-card>
@@ -83,7 +83,12 @@
       v-model="currentPage"
       :max="totalPages"
       boundary-numbers
-      class="q-my-md text-center"
+      class="q-my-md text-center justify-center"
+      :color="$q.dark.isActive ? 'white' : 'dark'"
+      :text-color="$q.dark.isActive ? 'white' : 'dark'"
+      :active-color="$q.dark.isActive ? 'white' : 'dark'"
+      :active-text-color="$q.dark.isActive ? 'dark' : 'white'"
+      @update:model-value="scrollToTop"
     />
   </q-page>
 </template>
@@ -125,8 +130,21 @@ const getFirstSentence = (text: string): string => {
   return match ? match[0] : text;
 };
 
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+};
+
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
+  $q.notify({
+    color: 'positive',
+    message: 'Product added to cart!',
+    icon: 'check_circle',
+  });
+  scrollToTop();
 };
 
 const totalItems = computed(() => cartStore.totalItems);
