@@ -54,6 +54,9 @@ export default defineConfig((ctx: { modeName: string }) => {
       // publicPath: '/',
       // analyze: true,
       // env: {},
+      env: {
+        VITE_API_URL: process.env.VITE_API_URL,
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -143,9 +146,10 @@ export default defineConfig((ctx: { modeName: string }) => {
       plugins: ['Notify', 'Loading'],
     },
 
-    // animations: 'all', // --- includes all animations
+    animations: 'all', // --- includes all animations
     // https://v2.quasar.dev/options/animations
-    animations: [],
+    // animations: [],open src-capacitor/ios/App/App.xcworkspace
+
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#sourcefiles
     // sourceFiles: {

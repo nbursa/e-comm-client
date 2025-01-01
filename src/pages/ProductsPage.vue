@@ -107,6 +107,8 @@ const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 
+const apiUrl = import.meta.env.VITE_API_URL || '';
+
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
@@ -170,7 +172,7 @@ const viewProduct = (product: Product) => {
 const fetchProducts = async () => {
   $q.loading.show();
   try {
-    const response = await fetch('https://fakestoreapi.com/products');
+    const response = await fetch(apiUrl);
     const data = await response.json();
     products.value = data.map((product: Product) => ({
       id: product.id,
