@@ -1,7 +1,10 @@
-declare module '#q-app/wrappers' {
+export declare module '#q-app/wrappers' {
   import type { App } from 'vue';
   import type { Router } from 'vue-router';
   import type { Pinia } from 'pinia';
+
+  import * as QuasarTypes from 'quasar';
+  export * from 'quasar';
 
   /**
    * Context provided to the `defineConfig` callback in `quasar.config.ts`.
@@ -37,4 +40,37 @@ declare module '#q-app/wrappers' {
    * Define a store setup (Pinia-specific).
    */
   export function defineStore<T extends object>(store: T): T;
+
+  interface Dark {
+    isActive: boolean;
+    set(isDark: boolean): void;
+  }
+
+  interface Notify {
+    positive(message: string): void;
+    negative(message: string): void;
+    warning(message: string): void;
+    info(message: string): void;
+  }
+
+  // export function useQuasar(): {
+  //   dark: Dark;
+  //   notify: Notify;
+  //   platform: {
+  //     is: Record<string, boolean>;
+  //     has: {
+  //       touch: boolean;
+  //     };
+  //   };
+  //   [key: string]: unknown;
+  // };
+
+  export function useQuasar<T = Record<string, unknown>>(): T & {
+    dark: {
+      isActive: boolean;
+      set: (isDark: boolean) => void;
+    };
+  };
+
+  export { QuasarTypes };
 }

@@ -1,7 +1,7 @@
 import { defineBoot } from '#q-app/wrappers';
 import { createI18n } from 'vue-i18n';
 
-import messages from 'src/i18n';
+import messages from '../i18n';
 import type { App } from 'vue';
 
 export type MessageLanguages = keyof typeof messages;

@@ -70,24 +70,32 @@ export default [
     },
 
     // add your custom rules here
-    rules: {
-      semi: ['error', 'always'],
-      'prettier/prettier': ['error', { semi: true }],
-      'prefer-promise-reject-errors': 'off',
-      '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
-      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }],
-    },
     // rules: {
+    //   semi: ['error', 'always'],
+    //   'prettier/prettier': ['error', { semi: true }],
     //   'prefer-promise-reject-errors': 'off',
     //   '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
-
-    //   // allow debugger during development only
+    //   '@typescript-eslint/no-unused-vars': 'error',
+    //   '@typescript-eslint/no-explicit-any': 'warn',
+    //   '@typescript-eslint/explicit-function-return-type': [
+    //     'error',
+    //     {
+    //       allowExpressions: true, // This allows for arrow functions without explicit return types
+    //       allowTypedFunctionExpressions: true, // Useful for typed callbacks
+    //       allowHigherOrderFunctions: true, // Useful for functional programming
+    //     },
+    //   ],
     //   'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    //   'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // },
+
+    rules: {
+      'prefer-promise-reject-errors': 'off',
+      '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+
+      // allow debugger during development only
+      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    },
   },
 
   {

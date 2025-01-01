@@ -2,7 +2,7 @@
   <q-page padding>
     <h2>Checkout</h2>
     <q-list>
-      <q-item v-for="item in cartItems" :key="item.id">
+      <q-item v-for="item in cartStore.items" :key="item.id">
         <q-item-section>
           <div>{{ getProduct(item.id).name }}</div>
           <div>{{ formatPrice(getProduct(item.id).price * item.quantity) }}</div>
@@ -12,47 +12,44 @@
         </q-item-section>
       </q-item>
     </q-list>
-    <q-btn color="positive" label="Place Order" @click="placeOrder" />
+    <q-btn color="black" label="Place Order" @click="placeOrder" />
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { useCartStore, type Product } from '@/stores/cart';
+// import { ref } from 'vue';
 
-interface CartItem {
-  id: number;
-  quantity: number;
-}
+const cartStore = useCartStore();
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-}
-
-const cartItems = ref<CartItem[]>([
-  { id: 1, quantity: 2 },
-  { id: 2, quantity: 1 },
-]);
-
-const products = ref<Product[]>([
-  { id: 1, name: 'Product A', price: 50 },
-  { id: 2, name: 'Product B', price: 100 },
-]);
+// const products = ref<Product[]>([
+//   {
+//     id: 1,
+//     name: 'Product A',
+//     price: 50,
+//     quantity: 0,
+//   },
+//   {
+//     id: 2,
+//     name: 'Product B',
+//     price: 100,
+//     quantity: 0,
+//   },
+// ]);
 
 const getProduct = (id: number): Product => {
-  const product = products.value.find((p) => p.id === id);
+  const product = cartStore.items.find((p) => p.id === id);
   if (!product) throw new Error(`Product with id ${id} not found`);
   return product;
 };
 
 const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
 
-const removeItem = (id: number): void => {
-  cartItems.value = cartItems.value.filter((item) => item.id !== id);
+const removeItem = (id: number) => {
+  cartStore.removeItem(id);
 };
 
 const placeOrder = (): void => {
-  console.log('Order placed:', cartItems.value);
+  console.log('Order placed:', cartStore.items);
 };
 </script>

@@ -13,9 +13,17 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "#q-app/wrappers": ["node_modules/@quasar/app-vite/types/app-wrappers.d.ts"]
+      "#q-app/*": [".quasar/*"],
+      "#q-app/wrappers": ["node_modules/@quasar/app-vite/types/app-wrappers.d.ts"],
+      "quasar": ["node_modules/quasar/dist/types/index.d.ts"]
     }
   },
-  "include": ["src/**/*", ".quasar/**/*", "quasar.d.ts"],
+  "include": [
+    "src/**/*",
+    ".quasar/**/*",
+    "quasar.d.ts",
+    "node_modules/quasar/types/index.d.ts",
+    "src/shims-quasar.d.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

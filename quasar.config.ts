@@ -13,7 +13,7 @@ export default defineConfig((ctx: { modeName: string }) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n', 'axios'],
+    boot: ['i18n', 'axios', 'theme'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.scss'],
@@ -63,6 +63,14 @@ export default defineConfig((ctx: { modeName: string }) => {
 
       // extendViteConf (viteConf) {},
       // viteVuePluginOptions: {},
+
+      extendViteConf(viteConf) {
+        viteConf.resolve ??= {};
+        viteConf.resolve.alias = {
+          ...viteConf.resolve.alias,
+          '@': fileURLToPath(new URL('./src', import.meta.url)),
+        };
+      },
 
       vitePlugins: [
         // {
@@ -114,7 +122,23 @@ export default defineConfig((ctx: { modeName: string }) => {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
-      config: {},
+      config: {
+        brand: {
+          primary: '#1a1a2e',
+          'primary-light': '#c4c4c4',
+          secondary: '#3c3c69',
+          accent: '#00ffcc',
+          dark: '#0D0A0B',
+          light: '#1a1a2e',
+          white: '#ffffff',
+          night: '#0D0A0B',
+          charcoal: '#454955',
+          magnolia: '#F3EFF5',
+          applegreen: '#72B01D',
+          officegreen: '#3F7D20',
+        },
+        dark: true,
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
