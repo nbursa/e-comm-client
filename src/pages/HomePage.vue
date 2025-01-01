@@ -1,8 +1,10 @@
 <template>
-  <q-page padding>
-    <h1 class="text-h4 q-mb-sm">Welcome to E-Commerce Platform</h1>
-    <p class="text-h6">Start shopping with us!</p>
-    <q-btn :color="color" :text-color="text" to="/products" label="View Products" />
+  <q-page padding class="flex flex-center items-center">
+    <div class="text-center">
+      <h1 class="text-h4 q-mb-lg">Welcome to E-Commerce Platform</h1>
+      <p class="text-h6 q-mb-lg">Start shopping with us!</p>
+      <q-btn :color="color" :text-color="text" to="/products" label="Products" />
+    </div>
   </q-page>
 </template>
 
