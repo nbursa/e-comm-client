@@ -12,30 +12,20 @@
         </q-item-section>
       </q-item>
     </q-list>
-    <q-btn color="black" label="Place Order" @click="placeOrder" />
+    <q-btn :color="color" :text-color="text" label="Place Order" @click="placeOrder" />
   </q-page>
 </template>
 
 <script lang="ts" setup>
 import { useCartStore, type Product } from '@/stores/cart';
-// import { ref } from 'vue';
+import { useQuasar } from 'quasar';
+import { computed } from 'vue';
 
 const cartStore = useCartStore();
+const $q = useQuasar();
 
-// const products = ref<Product[]>([
-//   {
-//     id: 1,
-//     name: 'Product A',
-//     price: 50,
-//     quantity: 0,
-//   },
-//   {
-//     id: 2,
-//     name: 'Product B',
-//     price: 100,
-//     quantity: 0,
-//   },
-// ]);
+const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
+const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
 const getProduct = (id: number): Product => {
   const product = cartStore.items.find((p) => p.id === id);

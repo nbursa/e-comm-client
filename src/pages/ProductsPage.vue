@@ -8,7 +8,12 @@
           <div>{{ formatPrice(product.price) }}</div>
         </q-item-section>
         <q-item-section side>
-          <q-btn color="primary" label="Add to Cart" @click="addToCart(product)" />
+          <q-btn
+            :color="color"
+            :text-color="text"
+            label="Add to Cart"
+            @click="addToCart(product)"
+          />
         </q-item-section>
       </q-item>
     </q-list>
@@ -16,11 +21,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { Product } from '../stores/cart';
 import { useCartStore } from '../stores/cart';
+import { useQuasar } from 'quasar';
 
 const cartStore = useCartStore();
+const $q = useQuasar();
+
+const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
+const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
 const products = ref<Product[]>([
   {

@@ -18,14 +18,21 @@
       <div>Total Price: {{ formatPrice(cartStore.totalPrice) }}</div>
     </div>
 
-    <q-btn color="black" label="Checkout" class="q-mt-lg" @click="checkout" />
+    <q-btn :color="color" :text-color="text" label="Checkout" class="q-mt-lg" @click="checkout" />
   </q-page>
 </template>
 
 <script lang="ts" setup>
+import { useQuasar } from 'quasar';
+import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useCartStore } from 'src/stores/cart';
+import { computed } from 'vue';
 
 const cartStore = useCartStore();
+const $q = useQuasar() as QVueGlobals;
+
+const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
+const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
 const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
