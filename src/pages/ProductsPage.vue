@@ -60,6 +60,8 @@ const totalItems = computed(() => cartStore.totalItems);
 const totalPrice = computed(() => cartStore.totalPrice);
 
 const openCart = () => {
-  router.push('/cart');
+  if (cartStore.items.length) {
+    router.push('/cart');
+  }
 };
 </script>

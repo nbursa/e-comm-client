@@ -43,6 +43,8 @@ const removeItem = (id: number) => {
 };
 
 const checkout = () => {
-  router.push('/checkout');
+  if (cartStore.items.length) {
+    router.push('/checkout');
+  }
 };
 </script>
