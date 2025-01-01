@@ -1,10 +1,10 @@
 export default {
   settings: {
     title: 'Settings',
-    themeSettings: 'Theme Settings',
+    themeSettings: 'Theme',
     themeLabel: 'Theme',
     followSystemTheme: 'Follow System Theme',
-    languageSettings: 'Language Settings',
+    languageSettings: 'Language',
     languageLabel: 'Language',
   },
 };

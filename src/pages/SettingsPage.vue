@@ -1,7 +1,21 @@
 <template>
   <q-page padding>
     <h5>{{ $t('settings.title') }}</h5>
+
     <q-card class="q-mb-md">
+      <q-card-section>
+        <p>{{ $t('settings.languageSettings') }}</p>
+        <q-select
+          v-model="currentLanguage"
+          :options="languageOptions"
+          :label="$t('settings.languageLabel')"
+          outlined
+          @update:model-value="onLanguageChange"
+        />
+      </q-card-section>
+    </q-card>
+
+    <q-card>
       <q-card-section>
         <p>{{ $t('settings.themeSettings') }}</p>
         <q-select
@@ -16,19 +30,6 @@
           :label="$t('settings.followSystemTheme')"
           color="primary"
           class="q-mt-md"
-        />
-      </q-card-section>
-    </q-card>
-
-    <q-card>
-      <q-card-section>
-        <p>{{ $t('settings.languageSettings') }}</p>
-        <q-select
-          v-model="currentLanguage"
-          :options="languageOptions"
-          :label="$t('settings.languageLabel')"
-          outlined
-          @update:model-value="onLanguageChange"
         />
       </q-card-section>
     </q-card>

@@ -1,10 +1,10 @@
 export default {
   settings: {
     title: 'Podešavanja',
-    themeSettings: 'Podešavanja teme',
+    themeSettings: 'Tema',
     themeLabel: 'Tema',
     followSystemTheme: 'Pratite sistemsku temu',
-    languageSettings: 'Podešavanja jezika',
+    languageSettings: 'Jezik',
     languageLabel: 'Jezik',
   },
 };
