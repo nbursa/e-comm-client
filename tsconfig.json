@@ -1,6 +1,8 @@
 {
   "extends": "./.quasar/tsconfig.json",
   "compilerOptions": {
+    "typeRoots": ["node_modules/@types"],
+    "allowSyntheticDefaultImports": true,
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",

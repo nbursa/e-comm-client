@@ -5,4 +5,13 @@ declare module 'quasar' {
       set: (isDark: boolean) => void;
     };
   };
+
+  export namespace scroll {
+    export function getScrollTarget(element: HTMLElement | Window): HTMLElement | Window;
+    export function getVerticalScrollPosition(scrollTarget: HTMLElement | Window): number;
+    export function setVerticalScrollPosition(
+      scrollTarget: HTMLElement | Window,
+      offset: number,
+    ): void;
+  }
 }

@@ -1,10 +1,22 @@
 import { defineStore } from 'pinia';
 
+type ProductRating = {
+  rate: number;
+  count: number;
+};
+
 export interface Product {
   id: number;
+  title: string;
   name: string;
   price: number;
+  discountedPrice?: number;
   quantity: number;
+  description: string;
+  category: string;
+  image: string;
+  rating: ProductRating;
+  discount?: boolean;
 }
 
 export const useCartStore = defineStore('cart', {
@@ -15,7 +27,10 @@ export const useCartStore = defineStore('cart', {
   getters: {
     totalItems: (state) => state.items.reduce((total, item) => total + item.quantity, 0),
     totalPrice: (state) =>
-      state.items.reduce((total, item) => total + item.price * item.quantity, 0),
+      state.items.reduce(
+        (total, item) => total + (item.discountedPrice || item.price) * item.quantity,
+        0,
+      ),
   },
 
   actions: {

@@ -16,7 +16,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/products',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/ProductsPage.vue') }],
+    children: [
+      { path: '', component: () => import('pages/ProductsPage.vue') },
+      { path: ':slug', component: () => import('pages/SingleProductPage.vue') },
+    ],
   },
 
   {

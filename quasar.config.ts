@@ -118,7 +118,7 @@ export default defineConfig((ctx: { modeName: string }) => {
           secondary: '#3c3c69',
           accent: '#00ffcc',
           dark: '#0D0A0B',
-          light: '#1a1a2e',
+          light: '#F3EFF5',
           white: '#ffffff',
           night: '#0D0A0B',
           charcoal: '#454955',
@@ -140,7 +140,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify'],
+      plugins: ['Notify', 'Loading'],
     },
 
     // animations: 'all', // --- includes all animations
