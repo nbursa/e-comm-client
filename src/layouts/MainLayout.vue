@@ -63,7 +63,9 @@ const drawerWidth = computed<number>(() => {
   return $q.screen.lt.md ? $q.screen.width : 300;
 });
 
-const themeStyle = computed(() => ($q.dark.isActive ? 'bg-dark text-light' : 'bg-light text-dark'));
+const themeStyle = computed(() =>
+  $q.dark.isActive ? 'bg-dark text-light shadow-dark' : 'bg-light text-dark shadow-light',
+);
 
 function navigate(item: { label: string; path: string }) {
   drawerOpen.value = false;

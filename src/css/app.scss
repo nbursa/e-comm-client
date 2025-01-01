@@ -1,3 +1,81 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+body {
+  font-size: 18px;
+}
+
 .q-layout__section--marginal {
   background-color: unset !important;
+}
+
+.q-layout-padding {
+  @media screen and (min-width: 0px) and (max-width: 599px) {
+    // xs
+    padding: 1rem !important;
+  }
+  @media screen and (min-width: 600px) and (max-width: 1023px) {
+    // sm
+    padding: 16px;
+  }
+  @media screen and (min-width: 1024px) and (max-width: 1439px) {
+    // md
+    padding: 24px;
+  }
+  @media screen and (min-width: 1440px) and (max-width: 1919px) {
+    // lg
+    padding: 32px;
+  }
+  @media screen and (min-width: 1920px) {
+    // xl
+    padding: 40px;
+  }
+}
+
+$shadow-dark: 0px 4px 10px rgba(0, 0, 0, 0.1);
+$shadow-light: 0px 4px 10px rgba(255, 255, 255, 0.05);
+
+.q-header.bg-dark {
+  .q-layout__shadow::after {
+    box-shadow: $shadow-light !important;
+  }
+}
+
+.q-header.bg-light {
+  .q-layout__shadow::after {
+    box-shadow: $shadow-dark !important;
+  }
+}
+
+.q-card--dark {
+  box-shadow: $shadow-light !important;
+}
+
+.q-card {
+  box-shadow: $shadow-dark !important;
+}
+
+:root {
+  --q-item-active-light: #0d0a0b;
+  --q-item-active-dark: #ffffff;
+}
+
+.q-dark {
+  --q-item-active: var(--q-item-active-dark);
+}
+
+:root {
+  --q-item-active: var(--q-item-active-light);
+}
+
+.q-item.q-router-link--active,
+.q-item--active,
+.q-field__control {
+  color: var(--q-item-active) !important;
 }
