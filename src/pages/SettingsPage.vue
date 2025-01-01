@@ -4,7 +4,6 @@
 
     <q-card class="q-mb-md">
       <q-card-section>
-        <p>{{ $t('settings.languageSettings') }}</p>
         <q-select
           v-model="currentLanguage"
           :options="languageOptions"
@@ -17,7 +16,6 @@
 
     <q-card>
       <q-card-section>
-        <p>{{ $t('settings.themeSettings') }}</p>
         <q-select
           v-model="theme"
           :options="themeOptions"
