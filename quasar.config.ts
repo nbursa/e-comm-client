@@ -1,14 +1,13 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
-// import { defineConfig } from '#q-app/wrappers'
 import { defineConfig } from '@quasar/app-vite/wrappers';
 import { fileURLToPath } from 'node:url';
 
 export default defineConfig((ctx: { modeName: string }) => {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
-    // preFetch: true,
+    preFetch: true,
 
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
@@ -73,16 +72,6 @@ export default defineConfig((ctx: { modeName: string }) => {
       },
 
       vitePlugins: [
-        // {
-        //   name: 'resolve-quasar-wrappers',
-        //   config: () => ({
-        //     resolve: {
-        //       alias: {
-        //         '#q-app': fileURLToPath(new URL('./.quasar/dev-spa', import.meta.url)),
-        //       },
-        //     },
-        //   }),
-        // },
         [
           '@intlify/unplugin-vue-i18n/vite',
           {
@@ -151,7 +140,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Notify'],
     },
 
     // animations: 'all', // --- includes all animations
