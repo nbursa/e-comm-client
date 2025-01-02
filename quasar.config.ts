@@ -130,6 +130,16 @@ export default defineConfig((ctx: { modeName: string }) => {
           officegreen: '#3F7D20',
         },
         dark: true,
+        // screen: {
+        //   breakpoints: {
+        //     xs: 600,
+        //     sm: 1024,
+        //     md: 1440,
+        //     lg: 1920,
+        //     xl: 2560,
+        //     '2xl': 3920,
+        //   },
+        // },
       },
 
       // iconSet: 'material-icons', // Quasar icon set
@@ -149,7 +159,6 @@ export default defineConfig((ctx: { modeName: string }) => {
     animations: 'all', // --- includes all animations
     // https://v2.quasar.dev/options/animations
     // animations: [],open src-capacitor/ios/App/App.xcworkspace
-
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#sourcefiles
     // sourceFiles: {

@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf" class="shadow-2">
     <q-header elevated bordered :class="themeStyle">
       <q-toolbar>
-        <q-toolbar-title>E-comm</q-toolbar-title>
+        <q-toolbar-title class="header-title">E-comm</q-toolbar-title>
 
         <div class="gt-xs">
           <q-btn flat to="/" label="Home" />
@@ -19,7 +19,6 @@
     <q-drawer
       v-model="drawerOpen"
       side="right"
-      bordered
       :width="drawerWidth"
       :overlay="true"
       behavior="desktop"
