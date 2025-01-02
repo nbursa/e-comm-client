@@ -33,7 +33,7 @@ body {
 }
 
 html {
-  font-size: 22px;
+  font-size: 20px;
 }
 
 body {
@@ -75,6 +75,10 @@ a.q-btn {
 button.q-btn {
   padding: 0.5rem 2rem;
   font-size: 1rem;
+}
+
+.q-card__actions button.q-btn--rectangle {
+  padding: 1rem 2rem;
 }
 
 .q-drawer-container {

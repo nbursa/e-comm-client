@@ -1,77 +1,93 @@
 <template>
   <q-page padding>
-    <q-card
-      bordered
-      class="q-mb-md cursor-pointer cart-summary"
-      :class="[
-        $q.dark.isActive ? 'bg-dark text-light' : 'bg-light text-dark',
-        isCollapsed ? 'collapsed' : 'expanded',
-      ]"
-      @click="openCart"
-    >
-      <div
-        :class="
-          isCollapsed ? 'w-100 q-px-md row items-center justify-between' : 'q-px-none col q-pa-md'
-        "
-        style="width: 100%"
-      >
-        <h5
-          :class="isCollapsed ? 'q-mb-none text-center' : 'q-mb-sm'"
-          :style="isCollapsed && 'width: 100%'"
+    <CartPreview
+      :total-items="totalItems"
+      :total-price="totalPrice"
+      :is-collapsed="isCollapsed"
+      class="q-ml-auto q-mb-md"
+    />
+
+    <h5 class="q-m-sm">{{ product.title }}</h5>
+    <q-separator class="q-my-md" />
+
+    <q-card bordered class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1600px">
+      <div class="row items-stretch full-height" :class="{ 'col-reverse-md': $q.screen.md }">
+        <div class="col-12 col-md-4">
+          <q-img
+            :src="product.image"
+            :alt="product.name"
+            fit="cover"
+            spinner-color="primary"
+            class="cursor-pointer full-width full-height"
+            @click="openImageOverlay(product.image)"
+          />
+        </div>
+
+        <div
+          class="col-12 col-md-8 q-pa-md"
+          style="
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            height: auto;
+            min-height: 100%;
+          "
         >
-          Cart Summary
-        </h5>
-        <div class="row items-center justify-between" style="width: 100%">
-          <div class="q-mr-md">
-            Total Items:
-            <span :class="isCollapsed ? 'text-h6' : 'text-h4'">{{ totalItems }}</span>
-          </div>
-          <div>
-            Total Price:
-            <span :class="isCollapsed ? 'text-h6' : 'text-h4'">{{ formatPrice(totalPrice) }}</span>
-          </div>
+          <q-card-section style="flex: 1; display: flex; flex-direction: column; height: 100%">
+            <!-- <div class="text-h6 product-name">{{ product.name }}</div> -->
+            <div class="text-body1 q-mt-sm">{{ product.description }}</div>
+          </q-card-section>
+
+          <q-card-actions align="right" class="row justify-between items-center">
+            <div class="q-mt-sm text-bold price-text">
+              <template v-if="product.discount">
+                <s class="text-grey">{{ formatPrice(product.price) }}</s>
+                <span class="text-positive q-ml-sm">
+                  {{ formatPrice(product.discountedPrice || product.price) }}
+                </span>
+              </template>
+              <template v-else>
+                {{ formatPrice(product.price) }}
+              </template>
+            </div>
+            <q-btn
+              :color="color"
+              :text-color="text"
+              label="Add to Cart"
+              class="q-px-md"
+              @click.stop="addToCart(product)"
+            />
+          </q-card-actions>
         </div>
       </div>
     </q-card>
 
-    <h5 class="q-m-sm">{{ product.title }}</h5>
+    <div class="row justify-center q-mt-xl">
+      <q-btn :color="color" :text-color="text" label="Back to Products" @click="goBack" />
+    </div>
 
-    <q-separator class="q-my-md" />
-
-    <q-card bordered class="q-mb-md">
-      <q-img :src="product.image" :alt="product.name" class="q-card-img-top" />
-      <q-card-section>
-        <div class="text-h6 product-name">{{ product.name }}</div>
-        <div class="text-caption q-mt-sm">{{ product.description }}</div>
-      </q-card-section>
-      <q-card-actions align="right" class="row justify-between items-center">
-        <div class="q-mt-sm text-bold price-text">
-          <template v-if="product.discount">
-            <s class="text-grey">{{ formatPrice(product.price) }}</s>
-            <span class="text-positive q-ml-sm">
-              {{ formatPrice(product.discountedPrice || product.price) }}
-            </span>
-          </template>
-          <template v-else>
-            {{ formatPrice(product.price) }}
-          </template>
+    <!-- Image Overlay -->
+    <q-dialog v-model="showImageOverlay" maximized>
+      <q-card class="q-pa-md" style="max-width: 90vw; max-height: 90vh; overflow: hidden">
+        <div class="row justify-between items-center q-mb-md">
+          <div class="text-h6">{{ product.name }}</div>
+          <q-btn flat dense round icon="close" @click="showImageOverlay = false" />
         </div>
-        <q-btn
-          :color="color"
-          :text-color="text"
-          label="Add to Cart"
-          @click.stop="addToCart(product)"
+        <q-img
+          :src="imageUrl"
+          :alt="imageUrl"
+          class="zoomable-image"
+          :class="{ 'zoom-in': isZoomed, 'zoom-out': !isZoomed }"
+          style="max-width: 100%; max-height: 100%"
+          :style="imageStyle"
+          @click="toggleZoom"
+          @mousedown="startPanning"
+          @mousemove="panImage"
+          @mouseup="stopPanning"
+          @mouseleave="stopPanning"
         />
-      </q-card-actions>
-    </q-card>
-
-    <q-btn
-      :color="color"
-      :text-color="text"
-      label="Back to Products"
-      class="q-mt-md"
-      @click="goBack"
-    />
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -82,6 +98,7 @@ import { useCartStore, type Product } from '@/stores/cart';
 import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { scroll } from 'quasar';
+import CartPreview from '@/components/CartPreview.vue';
 
 const { getVerticalScrollPosition } = scroll;
 
@@ -112,6 +129,15 @@ const totalItems = computed(() => cartStore.totalItems);
 const totalPrice = computed(() => cartStore.totalPrice);
 
 const isCollapsed = ref(false);
+const showImageOverlay = ref(false);
+
+const imageUrl = ref('');
+const isZoomed = ref(false);
+const isPanning = ref(false);
+const startX = ref(0);
+const startY = ref(0);
+const translateX = ref(0);
+const translateY = ref(0);
 
 const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
 
@@ -132,11 +158,42 @@ const addToCart = (product: Product) => {
   });
 };
 
-const openCart = () => {
-  if (cartStore.items.length) {
-    router.push('/cart');
-  }
+const openImageOverlay = (image: string) => {
+  imageUrl.value = image;
+  showImageOverlay.value = true;
+  isZoomed.value = false;
 };
+
+const toggleZoom = () => {
+  if (!isZoomed.value) {
+    translateX.value = 0;
+    translateY.value = 0;
+  }
+  isZoomed.value = !isZoomed.value;
+};
+
+const startPanning = (event: MouseEvent) => {
+  if (!isZoomed.value) return;
+  isPanning.value = true;
+  startX.value = event.clientX - translateX.value;
+  startY.value = event.clientY - translateY.value;
+};
+
+const panImage = (event: MouseEvent) => {
+  if (!isZoomed.value || !isPanning.value) return;
+  translateX.value = event.clientX - startX.value;
+  translateY.value = event.clientY - startY.value;
+};
+
+const stopPanning = () => {
+  if (!isZoomed.value) return;
+  isPanning.value = false;
+};
+
+const imageStyle = computed(() => ({
+  '--translate-x': `${translateX.value}px`,
+  '--translate-y': `${translateY.value}px`,
+}));
 
 const goBack = () => {
   router.push('/products');
@@ -189,3 +246,20 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 </script>
+
+<style lang="scss">
+.zoomable-image {
+  transition: transform 0.3s ease;
+  &.zoom-in {
+    cursor: grab;
+    transform: scale(2) translate(var(--translate-x, 0), var(--translate-y, 0));
+    transition: transform 0.3s ease;
+    will-change: transform;
+  }
+  &.zoom-out {
+    cursor: pointer;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+  }
+}
+</style>

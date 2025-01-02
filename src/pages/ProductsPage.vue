@@ -1,50 +1,21 @@
 <template>
   <q-page padding>
-    <!-- Cart Summary -->
-    <q-card
-      bordered
-      class="q-mb-md cursor-pointer cart-summary"
-      :class="[
-        $q.dark.isActive ? 'bg-dark text-light' : 'bg-light text-dark',
-        isCollapsed ? 'collapsed' : 'expanded',
-      ]"
-      @click="openCart"
-    >
-      <div
-        :class="
-          isCollapsed ? 'w-100 q-px-md row items-center justify-between' : 'q-px-none col q-pa-md'
-        "
-        style="width: 100%"
-      >
-        <h5
-          :class="isCollapsed ? 'q-mb-none text-center' : 'q-mb-sm'"
-          :style="isCollapsed && 'width: 100%'"
-        >
-          Cart Summary
-        </h5>
-        <div class="row items-center justify-between" style="width: 100%">
-          <div class="q-mr-md">
-            Total Items:
-            <span :class="isCollapsed ? 'text-h6' : 'text-h4'">{{ totalItems }}</span>
-          </div>
-          <div>
-            Total Price:
-            <span :class="isCollapsed ? 'text-h6' : 'text-h4'">{{ formatPrice(totalPrice) }}</span>
-          </div>
-        </div>
-      </div>
-    </q-card>
+    <CartPreview
+      :total-items="totalItems"
+      :total-price="totalPrice"
+      :is-collapsed="isCollapsed"
+      class="q-ml-auto"
+    />
 
     <h5 class="q-m-sm">Products</h5>
 
     <q-separator class="q-my-md" />
 
-    <!-- Product List -->
-    <div class="row justify-center q-gutter-md q-mx-auto" style="max-width: 2400px">
+    <div class="row justify-center q-mb-xl q-gutter-md" style="max-width: 2400px">
       <div
         v-for="product in paginatedProducts"
         :key="product.id"
-        class="col-xs-12 col-sm-10 col-md-5 col-lg-3"
+        class="col-xs-12 col-sm-10 col-md-5 col-lg-3 cursor-pointer"
       >
         <q-card class="q-mb-m full-width" bordered @click="viewProduct(product)">
           <q-img :src="product.image" :alt="product.name" class="q-card-img-top" />
@@ -53,7 +24,7 @@
             <div class="text-caption">{{ getFirstSentence(product.description) }}</div>
           </q-card-section>
 
-          <q-card-actions align="right" class="row justify-between items-center">
+          <q-card-actions class="row justify-between items-center">
             <div class="q-mt-sm text-bold price-text">
               <template v-if="product.discount">
                 <s class="text-grey">{{ formatPrice(product.price) }}</s>
@@ -69,7 +40,7 @@
               :color="color"
               :text-color="text"
               label="Add to Cart"
-              class="full-width"
+              class="full-width q-mt-md"
               @click.stop="addToCart(product)"
             />
           </q-card-actions>
@@ -77,7 +48,6 @@
       </div>
     </div>
 
-    <!-- Pagination -->
     <q-pagination
       v-if="products.length > itemsPerPage"
       v-model="currentPage"
@@ -101,6 +71,7 @@ import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { scroll } from 'quasar';
+import CartPreview from '@/components/CartPreview.vue';
 
 const { getVerticalScrollPosition } = scroll;
 const cartStore = useCartStore();
@@ -156,19 +127,6 @@ const addToCart = (product: Product) => {
 
 const totalItems = computed(() => cartStore.totalItems);
 const totalPrice = computed(() => cartStore.totalPrice);
-
-const openCart = () => {
-  if (cartStore.items.length) {
-    router.push('/cart');
-  } else {
-    $q.notify({
-      color: 'negative',
-      position: 'top',
-      message: 'Cart is empty, add some products to cart first.',
-      icon: 'error',
-    });
-  }
-};
 
 const viewProduct = (product: Product) => {
   router.push(`/products/${product.id}`);

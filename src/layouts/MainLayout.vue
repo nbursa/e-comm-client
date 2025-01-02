@@ -1,18 +1,17 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="shadow-2">
+  <q-layout view="hHh lpR fFf" class="shadow-2 text-body1">
     <q-header elevated bordered :class="themeStyle">
       <q-toolbar>
         <q-toolbar-title class="header-title">E-comm</q-toolbar-title>
 
-        <div class="gt-xs">
+        <div class="gt-md">
           <q-btn flat to="/" label="Home" />
           <q-btn flat to="/products" label="Products" />
           <q-btn flat to="/cart" label="Cart" />
-          <q-btn flat to="/checkout" label="Checkout" />
           <q-btn flat to="/settings" label="Settings" />
         </div>
 
-        <q-btn flat round dense icon="menu" class="lt-sm" @click="drawerOpen = !drawerOpen" />
+        <q-btn flat round dense icon="menu" class="lt-lg" @click="drawerOpen = !drawerOpen" />
       </q-toolbar>
     </q-header>
 
@@ -54,7 +53,6 @@ const menuItems = [
   { label: 'Home', path: '/' },
   { label: 'Products', path: '/products' },
   { label: 'Cart', path: '/cart' },
-  { label: 'Checkout', path: '/checkout' },
   { label: 'Settings', path: '/settings' },
 ];
 
