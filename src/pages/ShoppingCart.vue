@@ -2,8 +2,8 @@
   <q-page padding>
     <div v-if="cartStore.items.length === 0" class="text-center q-pa-xl">
       <q-icon name="shopping_cart" size="100px" color="grey-4" />
-      <h5 class="text-grey-6 q-mb-md">Your cart is empty</h5>
-      <q-btn to="/products" color="white" text-color="black" label="Continue Shopping" />
+      <h5 class="text-grey-6 q-mb-md">{{ $t('cart.emptyCart') }}</h5>
+      <q-btn to="/products" color="white" text-color="black" :label="$t('cart.continue')" />
     </div>
 
     <div v-else class="row q-col-gutter-md">
@@ -28,7 +28,9 @@
                 <q-item-label class="text-subtitle1 text-weight-medium">
                   {{ item.name }}
                 </q-item-label>
-                <q-item-label caption> {{ formatPrice(item.price) }} each </q-item-label>
+                <q-item-label caption>
+                  {{ formatPrice(item.price) }} {{ $t('cart.each') }}
+                </q-item-label>
 
                 <div class="row items-center q-mt-sm">
                   <q-btn-group flat>
@@ -63,22 +65,22 @@
       <div class="col-12 col-md-4">
         <q-card class="order-summary">
           <q-card-section>
-            <div class="text-h6">Order Summary</div>
+            <div class="text-h6">{{ $t('cart.orderSummary') }}</div>
             <q-list dense>
               <q-item>
-                <q-item-section>Items ({{ cartStore.totalItems }})</q-item-section>
+                <q-item-section>{{ $t('cart.items') }} ({{ cartStore.totalItems }})</q-item-section>
                 <q-item-section side>
                   {{ formatPrice(cartStore.totalPrice) }}
                 </q-item-section>
               </q-item>
               <q-item>
-                <q-item-section>Shipping</q-item-section>
-                <q-item-section side>Free</q-item-section>
+                <q-item-section>{{ $t('cart.shipping') }}</q-item-section>
+                <q-item-section side>{{ $t('cart.free') }}</q-item-section>
               </q-item>
               <q-separator class="q-my-md" />
               <q-item>
                 <q-item-section>
-                  <span class="text-subtitle1 text-weight-bold">Total</span>
+                  <span class="text-subtitle1 text-weight-bold">{{ $t('cart.total') }}</span>
                 </q-item-section>
                 <q-item-section side>
                   <span class="text-subtitle1 text-weight-bold">
@@ -92,7 +94,7 @@
             <q-btn
               :color="color"
               :text-color="text"
-              label="Proceed to Checkout"
+              :label="$t('cart.checkout')"
               class="full-width"
               @click="checkout"
             />

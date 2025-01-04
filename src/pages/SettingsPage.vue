@@ -49,6 +49,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { themeManager } from '@/boot/theme';
+import { type MessageLanguages, setLanguage } from '@/boot/i18n';
 
 const { locale } = useI18n();
 
@@ -87,6 +88,8 @@ const onSystemPreferenceChange = (value: boolean) => {
 };
 
 const onLanguageChange = (selectedLanguage: { value: string; label: string }) => {
-  locale.value = selectedLanguage.value;
+  const lang = selectedLanguage.value as MessageLanguages;
+  locale.value = lang;
+  setLanguage(lang);
 };
 </script>

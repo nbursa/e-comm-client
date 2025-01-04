@@ -8,7 +8,7 @@
       class="q-ml-auto q-mb-md"
     />
 
-    <h5 class="q-my-md">Products</h5>
+    <h5 class="q-my-md">{{ $t('products.title') }}</h5>
 
     <q-tabs
       v-model="selectedCategory"
@@ -19,7 +19,7 @@
       :inactive-color="color"
       align="justify"
     >
-      <q-tab name="all" label="All Products" />
+      <q-tab name="all" :label="$t('products.categories.allProducts')" />
       <q-tab
         v-for="category in categories"
         :key="category"
@@ -34,7 +34,7 @@
       class="q-my-md lt-md"
       :color="color"
       :text-color="text"
-      label="Select Category"
+      :label="$t('products.selectCategory')"
       outlined
       :option-label="(opt) => (opt === 'all' ? 'All Products' : formatCategoryLabel(opt))"
     />
@@ -69,7 +69,7 @@
             <q-btn
               :color="color"
               :text-color="text"
-              label="Add to Cart"
+              :label="$t('products.addToCart')"
               class="full-width q-mt-md"
               @click.stop="addToCart(product)"
             />

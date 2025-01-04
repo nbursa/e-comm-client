@@ -13,7 +13,7 @@
           <!-- Shipping Step -->
           <q-step
             :name="1"
-            title="Shipping Details"
+            :title="$t('checkout.shipping')"
             icon="local_shipping"
             :done="step > 1"
             class="checkout-step"
@@ -23,21 +23,33 @@
               <q-card-section>
                 <q-form class="row q-col-gutter-md" @submit.prevent="validateShipping">
                   <div class="col-12 col-sm-6">
-                    <q-input v-model="form.firstName" label="First Name" :rules="[required]" />
+                    <q-input
+                      v-model="form.firstName"
+                      :label="$t('checkout.firstName')"
+                      :rules="[required]"
+                    />
                   </div>
                   <div class="col-12 col-sm-6">
-                    <q-input v-model="form.lastName" label="Last Name" :rules="[required]" />
+                    <q-input
+                      v-model="form.lastName"
+                      :label="$t('checkout.lastName')"
+                      :rules="[required]"
+                    />
                   </div>
                   <div class="col-12">
                     <q-input
                       v-model="form.email"
-                      label="Email"
+                      :label="$t('checkout.email')"
                       type="email"
                       :rules="[required, email]"
                     />
                   </div>
                   <div class="col-12">
-                    <q-input v-model="form.address" label="Address" :rules="[required]" />
+                    <q-input
+                      v-model="form.address"
+                      :label="$t('checkout.address')"
+                      :rules="[required]"
+                    />
                   </div>
                 </q-form>
               </q-card-section>
@@ -45,14 +57,20 @@
           </q-step>
 
           <!-- Payment Step -->
-          <q-step :name="2" title="Payment" icon="payment" :done="step > 2" :header-nav="true">
+          <q-step
+            :name="2"
+            :title="$t('checkout.payment')"
+            icon="payment"
+            :done="step > 2"
+            :header-nav="true"
+          >
             <q-card flat bordered>
               <q-card-section>
                 <q-form class="row q-col-gutter-md" @submit.prevent="validatePayment">
                   <div class="col-12">
                     <q-input
                       v-model="payment.cardNumber"
-                      label="Card Number"
+                      :label="$t('checkout.cardNumber')"
                       mask="#### #### #### ####"
                       :rules="[required]"
                     />
@@ -79,12 +97,12 @@
       <div class="col-12 col-md-4">
         <q-card class="order-summary">
           <q-card-section>
-            <div class="text-h6">Order Summary</div>
+            <div class="text-h6">{{ $t('checkout.orderSummary') }}</div>
             <q-list>
               <q-item v-for="item in cartStore.items" :key="item.id">
                 <q-item-section>
                   <q-item-label>{{ item.name }}</q-item-label>
-                  <q-item-label caption>Qty: {{ item.quantity }}</q-item-label>
+                  <q-item-label caption>{{ $t('checkout.qty') }}: {{ item.quantity }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   {{ formatPrice(item.price * item.quantity) }}
@@ -92,7 +110,7 @@
               </q-item>
               <q-separator />
               <q-item>
-                <q-item-section>Total</q-item-section>
+                <q-item-section>{{ $t('checkout.total') }}</q-item-section>
                 <q-item-section side>{{ formatPrice(totalPrice) }}</q-item-section>
               </q-item>
             </q-list>
@@ -101,7 +119,7 @@
             <q-btn
               :color="color"
               :text-color="text"
-              :label="step === 2 ? 'Place Order' : 'Continue'"
+              :label="step === 2 ? $t('checkout.placeOrder') : $t('checkout.continue')"
               class="full-width"
               @click="step === 2 ? placeOrder() : nextStep()"
             />
@@ -118,10 +136,12 @@ import { useQuasar } from 'quasar';
 import { useCartStore } from '../stores/cart';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
 const router = useRouter();
+const { t } = useI18n();
 
 const step = ref(1);
 
@@ -171,7 +191,7 @@ const placeOrder = () => {
       $q.loading.hide();
       $q.notify({
         color: 'positive',
-        message: 'Order placed successfully!',
+        message: t('checkout.orderPlaced'),
         icon: 'check',
       });
       router.push('/products');
@@ -180,7 +200,7 @@ const placeOrder = () => {
     $q.loading.hide();
     $q.notify({
       color: 'negative',
-      message: 'Failed to place order',
+      message: t('checkout.orderFailed'),
       icon: 'error',
     });
   }

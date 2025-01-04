@@ -52,7 +52,7 @@
             <q-btn
               :color="color"
               :text-color="text"
-              label="Add to Cart"
+              :label="$t('singleProduct.addToCart')"
               class="q-px-md full-width"
               @click.stop="addToCart(product)"
             />
@@ -62,7 +62,12 @@
     </q-card>
 
     <div class="row justify-center q-mt-xl">
-      <q-btn :color="color" :text-color="text" label="Back to Products" @click="goBack" />
+      <q-btn
+        :color="color"
+        :text-color="text"
+        :label="$t('singleProduct.backToProducts')"
+        @click="goBack"
+      />
     </div>
 
     <!-- Image Overlay -->
