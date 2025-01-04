@@ -109,9 +109,12 @@ import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useCartStore } from '../stores/cart';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
+import { useRouter } from 'vue-router';
 
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
+const router = useRouter();
+
 const step = ref(1);
 
 const form = ref({
@@ -154,15 +157,25 @@ const formatPrice = (price: number) => {
 
 const placeOrder = () => {
   $q.loading.show();
-  // Add order placement logic
-  setTimeout(() => {
+  try {
+    setTimeout(() => {
+      cartStore.clearCart();
+      $q.loading.hide();
+      $q.notify({
+        color: 'positive',
+        message: 'Order placed successfully!',
+        icon: 'check',
+      });
+      router.push('/products');
+    }, 2000);
+  } catch {
     $q.loading.hide();
     $q.notify({
-      color: 'positive',
-      message: 'Order placed successfully!',
-      icon: 'check',
+      color: 'negative',
+      message: 'Failed to place order',
+      icon: 'error',
     });
-  }, 2000);
+  }
 };
 
 const nextStep = () => {

@@ -1,6 +1,7 @@
 <template>
   <q-page padding>
     <CartPreview
+      v-if="false"
       :total-items="totalItems"
       :total-price="totalPrice"
       :is-collapsed="isCollapsed"
@@ -11,7 +12,7 @@
 
     <q-tabs
       v-model="selectedCategory"
-      class="text-white q-mb-md"
+      class="text-white q-mb-md gt-sm"
       active-color="white"
       indicator-color="white"
       align="justify"
@@ -24,6 +25,15 @@
         :label="formatCategoryLabel(category)"
       />
     </q-tabs>
+
+    <q-select
+      v-model="selectedCategory"
+      :options="['all', ...categories]"
+      class="q-my-md lt-md"
+      label="Select Category"
+      outlined
+      :option-label="(opt) => (opt === 'all' ? 'All Products' : formatCategoryLabel(opt))"
+    />
 
     <q-separator class="q-my-md" />
 

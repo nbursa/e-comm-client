@@ -1,6 +1,7 @@
 <template>
   <q-page padding>
     <CartPreview
+      v-if="false"
       :total-items="totalItems"
       :total-price="totalPrice"
       :is-collapsed="isCollapsed"

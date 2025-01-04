@@ -7,7 +7,6 @@
         <div class="gt-md">
           <q-btn flat to="/" label="Home" />
           <q-btn flat to="/products" label="Products" />
-          <q-btn flat to="/cart" label="Cart" />
           <q-btn flat to="/settings" label="Settings" />
         </div>
 
@@ -62,7 +61,6 @@ const totalItems = computed(() => cartStore.totalItems);
 const menuItems = [
   { label: 'Home', path: '/' },
   { label: 'Products', path: '/products' },
-  { label: 'Cart', path: '/cart' },
   { label: 'Settings', path: '/settings' },
 ];
 
