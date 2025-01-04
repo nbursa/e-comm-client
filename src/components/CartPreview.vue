@@ -1,6 +1,5 @@
 <template>
   <q-card
-    bordered
     class="cursor-pointer cart-summary"
     :class="[
       $q.dark.isActive ? 'bg-dark text-light' : 'bg-light text-dark',
@@ -11,22 +10,22 @@
   >
     <div
       :class="
-        isCollapsed ? 'w-100 q-px-md row items-center justify-between' : 'q-px-none col q-pa-md'
+        isCollapsed ? 'w-100 q-px-sm row items-center justify-between' : 'q-px-none col q-pa-sm'
       "
       style="width: 100%"
     >
-      <h6
+      <div
         :class="isCollapsed ? 'q-mb-none text-center' : 'q-mb-sm'"
         :style="isCollapsed && 'width: 100%'"
       >
         Cart Summary
-      </h6>
-      <div class="row items-center justify-between" style="width: 100%">
-        <div class="q-mr-md">
+      </div>
+      <div class="row items-center justify-between q-gutter-sm" style="width: 100%">
+        <div class="q-mr-md row items-center justify-between">
           Total Items:
           <span :class="isCollapsed ? 'text-h6' : 'text-h5'">{{ totalItems }}</span>
         </div>
-        <div>
+        <div class="row items-center justify-between">
           Total Price:
           <span :class="isCollapsed ? 'text-h6' : 'text-h5'">{{ totalPrice }}</span>
         </div>

@@ -34,11 +34,10 @@
           "
         >
           <q-card-section style="flex: 1; display: flex; flex-direction: column; height: 100%">
-            <!-- <div class="text-h6 product-name">{{ product.name }}</div> -->
             <div class="text-body1 q-mt-sm">{{ product.description }}</div>
           </q-card-section>
 
-          <q-card-actions align="right" class="row justify-between items-center">
+          <q-card-actions align="right" class="row justify-between items-end">
             <div class="q-mt-sm text-bold price-text">
               <template v-if="product.discount">
                 <s class="text-grey">{{ formatPrice(product.price) }}</s>
@@ -54,7 +53,7 @@
               :color="color"
               :text-color="text"
               label="Add to Cart"
-              class="q-px-md"
+              class="q-px-md full-width"
               @click.stop="addToCart(product)"
             />
           </q-card-actions>

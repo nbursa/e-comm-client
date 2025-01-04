@@ -53,18 +53,6 @@ export declare module '#q-app/wrappers' {
     info(message: string): void;
   }
 
-  // export function useQuasar(): {
-  //   dark: Dark;
-  //   notify: Notify;
-  //   platform: {
-  //     is: Record<string, boolean>;
-  //     has: {
-  //       touch: boolean;
-  //     };
-  //   };
-  //   [key: string]: unknown;
-  // };
-
   export function useQuasar<T = Record<string, unknown>>(): T & {
     dark: {
       isActive: boolean;

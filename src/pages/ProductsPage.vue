@@ -4,7 +4,7 @@
       :total-items="totalItems"
       :total-price="totalPrice"
       :is-collapsed="isCollapsed"
-      class="q-ml-auto"
+      class="q-ml-auto q-mb-md"
     />
 
     <h5 class="q-m-sm">Products</h5>

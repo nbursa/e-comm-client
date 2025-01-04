@@ -13,7 +13,8 @@
     "clean": "quasar clean",
     "dev": "quasar dev",
     "build": "quasar build",
-    "postinstall": "quasar prepare"
+    "postinstall": "quasar prepare",
+    "analyze": "quasar build --analyze"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",

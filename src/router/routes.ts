@@ -1,44 +1,52 @@
 import type { RouteRecordRaw } from 'vue-router';
+import MainLayout from 'layouts/MainLayout.vue';
+
+const loadPage = (page: string) => () => import(`pages/${page}.vue`);
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/HomePage.vue') }],
+    component: MainLayout,
+    children: [{ path: '', component: loadPage('HomePage'), meta: { title: 'Home' } }],
   },
 
   {
     path: '/cart',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/ShoppingCart.vue') }],
+    component: MainLayout,
+    children: [{ path: '', component: loadPage('ShoppingCart'), meta: { title: 'Cart' } }],
   },
 
   {
     path: '/products',
-    component: () => import('layouts/MainLayout.vue'),
+    component: MainLayout,
     children: [
-      { path: '', component: () => import('pages/ProductsPage.vue') },
-      { path: ':slug', component: () => import('pages/SingleProductPage.vue') },
+      { path: '', component: loadPage('ProductsPage'), meta: { title: 'Products' } },
+      {
+        path: ':slug',
+        component: loadPage('SingleProductPage'),
+        meta: { requiresAuth: false, title: 'Product Details' },
+      },
     ],
   },
 
   {
     path: '/checkout',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/CheckoutPage.vue') }],
+    component: MainLayout,
+    children: [{ path: '', component: loadPage('CheckoutPage'), meta: { title: 'Checkout' } }],
   },
 
   {
     path: '/settings',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/SettingsPage.vue') }],
+    component: MainLayout,
+    children: [{ path: '', component: loadPage('SettingsPage'), meta: { title: 'Settings' } }],
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: loadPage('ErrorNotFound'),
+    meta: { title: 'Not Found' },
   },
 ];
 
