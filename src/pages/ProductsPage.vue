@@ -9,6 +9,22 @@
 
     <h5 class="q-m-sm">Products</h5>
 
+    <q-tabs
+      v-model="selectedCategory"
+      class="text-white q-mb-md"
+      active-color="white"
+      indicator-color="white"
+      align="justify"
+    >
+      <q-tab name="all" label="All Products" />
+      <q-tab
+        v-for="category in categories"
+        :key="category"
+        :name="category"
+        :label="formatCategoryLabel(category)"
+      />
+    </q-tabs>
+
     <q-separator class="q-my-md" />
 
     <div class="row justify-center q-mb-xl q-gutter-md" style="max-width: 2400px">
@@ -64,7 +80,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 import type { Product } from '../stores/cart';
 import { useCartStore } from '../stores/cart';
 import { useQuasar } from 'quasar';
@@ -79,29 +95,60 @@ const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
-
-const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
-const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
-
 const products = ref<Product[]>([]);
-
 const currentPage = ref(1);
 const itemsPerPage = 5;
 const isCollapsed = ref(false);
+const selectedCategory = ref('all');
+const isLoadingCategories = ref(true);
+const categories = ref<string[]>([]);
 
-const paginatedProducts = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  return products.value.slice(start, start + itemsPerPage);
+const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
+const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
+const filteredProducts = computed(() => {
+  if (!products.value) return [];
+  if (selectedCategory.value === 'all') {
+    return products.value;
+  }
+  return products.value.filter((p) => p.category === selectedCategory.value);
 });
-
+const paginatedProducts = computed(() => {
+  return filteredProducts.value.slice(
+    (currentPage.value - 1) * itemsPerPage,
+    currentPage.value * itemsPerPage,
+  );
+});
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
+const totalItems = computed(() => cartStore.totalItems);
+const totalPrice = computed(() => cartStore.totalPrice);
 
-const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
+const fetchCategories = async () => {
+  try {
+    isLoadingCategories.value = true;
+    const response = await fetch(`${apiUrl}/products/categories`);
+    categories.value = await response.json();
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    categories.value = [];
+  } finally {
+    isLoadingCategories.value = false;
+  }
+};
+
+const formatCategoryLabel = (category: string) => {
+  if (!category) return '';
+  return category
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
 
 const getFirstSentence = (text: string): string => {
   const match = text.match(/[^.!?]*[.!?]/);
   return match ? match[0] : text;
 };
+
+const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
 
 const scrollToTop = () => {
   const target = document.querySelector('body') as HTMLElement;
@@ -125,38 +172,8 @@ const addToCart = (product: Product) => {
   scrollToTop();
 };
 
-const totalItems = computed(() => cartStore.totalItems);
-const totalPrice = computed(() => cartStore.totalPrice);
-
 const viewProduct = (product: Product) => {
   router.push(`/products/${product.id}`);
-};
-
-const fetchProducts = async () => {
-  $q.loading.show();
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    products.value = data.map((product: Product) => ({
-      id: product.id,
-      name: product.title,
-      price: product.price,
-      description: product.description,
-      image: product.image,
-      discount: Math.random() > 0.5,
-      discountedPrice: product.price * (Math.random() > 0.5 ? 0.9 : 1),
-      quantity: 0,
-    }));
-  } catch {
-    $q.notify({
-      color: 'negative',
-      position: 'top',
-      message: 'Failed to fetch products. Please try again later.',
-      icon: 'error',
-    });
-  } finally {
-    $q.loading.hide();
-  }
 };
 
 const handleScroll = () => {
@@ -164,8 +181,39 @@ const handleScroll = () => {
   isCollapsed.value = scrollTop > 0;
 };
 
-onMounted(() => {
-  fetchProducts();
+watch(selectedCategory, async (newCategory) => {
+  currentPage.value = 1; // Reset pagination
+  await fetchProducts(newCategory);
+});
+
+const fetchProducts = async (category?: string) => {
+  $q.loading.show();
+  try {
+    const url =
+      category && category !== 'all'
+        ? `${apiUrl}/products/category/${category}`
+        : `${apiUrl}/products`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    products.value = await response.json();
+  } catch {
+    $q.notify({
+      color: 'negative',
+      position: 'top',
+      message: 'Failed to fetch products. Please try again later.',
+      icon: 'error',
+    });
+    products.value = [];
+  } finally {
+    $q.loading.hide();
+  }
+};
+
+onMounted(async () => {
+  await Promise.all([fetchCategories(), fetchProducts()]);
   window.addEventListener('scroll', handleScroll);
 });
 
