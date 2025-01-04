@@ -11,6 +11,12 @@
           <q-btn flat to="/settings" label="Settings" />
         </div>
 
+        <q-btn flat round dense to="/cart" icon="shopping_cart" class="q-mr-sm cart-btn">
+          <q-badge color="white" floating class="cart-badge">
+            {{ totalItems }}
+          </q-badge>
+        </q-btn>
+
         <q-btn flat round dense icon="menu" class="lt-lg" @click="drawerOpen = !drawerOpen" />
       </q-toolbar>
     </q-header>
@@ -40,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { computed, ref } from 'vue';
@@ -48,6 +55,9 @@ import { useRouter } from 'vue-router';
 const drawerOpen = ref(false);
 const router = useRouter();
 const $q = useQuasar() as QVueGlobals;
+const cartStore = useCartStore();
+
+const totalItems = computed(() => cartStore.totalItems);
 
 const menuItems = [
   { label: 'Home', path: '/' },
@@ -69,3 +79,29 @@ function navigate(item: { label: string; path: string }) {
   router.push(item.path);
 }
 </script>
+
+<style lang="scss" scoped>
+.cart-btn {
+  position: relative;
+
+  :deep(.cart-badge) {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    min-width: 20px;
+    min-height: 20px;
+    width: fit-content;
+    aspect-ratio: 1;
+    padding: 4px;
+    border: 2px solid black;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+  }
+}
+</style>
