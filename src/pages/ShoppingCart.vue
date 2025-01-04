@@ -51,7 +51,7 @@
                       @click="updateQuantity(item.id, item.quantity + 1)"
                     />
                   </q-btn-group>
-                  <div class="text-subtitle1 text-weight-bold q-ml-xl">
+                  <div class="text-subtitle1 text-weight-bold q-ml-xl product-price">
                     {{ formatPrice(item.price * item.quantity) }}
                   </div>
                 </div>
@@ -138,13 +138,51 @@ const checkout = () => {
 </script>
 
 <style lang="scss" scoped>
+:deep(.q-slide-item__content) {
+  @media (max-width: 599px) {
+    flex-direction: column;
+
+    .q-item {
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+
+      .product-image-container {
+        width: 100%;
+        max-width: 200px;
+        margin-bottom: 16px;
+      }
+
+      .q-item__section--main {
+        text-align: center;
+      }
+
+      .q-item__section--side {
+        padding-left: 0;
+        margin-top: 16px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .product-price {
+        width: 100%;
+        font-size: 1.25rem;
+        margin: 0;
+        margin-top: 16px;
+        text-align: center;
+      }
+    }
+  }
+}
+
 .product-image-container {
-  min-width: 120px;
-  max-width: 150px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100px;
+  height: 100px;
+
+  .product-image {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .product-image {
@@ -161,6 +199,23 @@ const checkout = () => {
     object-fit: contain;
     max-width: 100%;
     max-height: 100%;
+  }
+}
+
+.order-summary {
+  width: 100%;
+
+  :deep(.q-card__section) {
+    padding: 20px;
+
+    .q-list {
+      width: 100%;
+
+      .q-item {
+        padding: 12px 0;
+        width: 100%;
+      }
+    }
   }
 }
 </style>
