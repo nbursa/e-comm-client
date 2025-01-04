@@ -17,7 +17,6 @@
             :src="product.image"
             :alt="product.name"
             fit="cover"
-            spinner-color="primary"
             class="cursor-pointer full-width full-height"
             @click="openImageOverlay(product.image)"
           />
