@@ -8,57 +8,40 @@
 
     <div v-else class="row q-col-gutter-md">
       <div class="col-12 col-md-8">
-        <q-list separator>
-          <q-slide-item
-            v-for="item in cartStore.items"
-            :key="item.id"
-            left-color="negative"
-            @left="() => removeItem(item.id)"
-          >
-            <template #left>
-              <q-icon name="delete" />
-            </template>
+        <q-item v-for="item in cartStore.items" :key="item.id" class="cart-item">
+          <q-item-section thumbnail class="q-pr-md product-image-container">
+            <q-img :src="item.image" :ratio="1" class="product-image" fit="contain" />
+          </q-item-section>
 
-            <q-item>
-              <q-item-section thumbnail class="q-pr-md product-image-container">
-                <q-img :src="item.image" :ratio="1" class="product-image" fit="contain" />
-              </q-item-section>
+          <q-item-section>
+            <q-item-label class="text-subtitle1 text-weight-medium">
+              {{ item.name }}
+            </q-item-label>
+            <q-item-label caption>
+              {{ formatPrice(item.price) }} {{ $t('cart.each') }}
+            </q-item-label>
 
-              <q-item-section>
-                <q-item-label class="text-subtitle1 text-weight-medium">
-                  {{ item.name }}
-                </q-item-label>
-                <q-item-label caption>
-                  {{ formatPrice(item.price) }} {{ $t('cart.each') }}
-                </q-item-label>
+            <div class="mobile-controls q-mt-sm">
+              <q-btn-group flat>
+                <q-btn
+                  flat
+                  dense
+                  icon="remove"
+                  @click="updateQuantity(item.id, item.quantity - 1)"
+                />
+                <q-btn flat dense class="text-weight-bold">{{ item.quantity }}</q-btn>
+                <q-btn flat dense icon="add" @click="updateQuantity(item.id, item.quantity + 1)" />
+              </q-btn-group>
+              <div class="text-subtitle1 text-weight-bold mobile-price">
+                {{ formatPrice(item.price * item.quantity) }}
+              </div>
+            </div>
+          </q-item-section>
 
-                <div class="row items-center q-mt-sm">
-                  <q-btn-group flat>
-                    <q-btn
-                      flat
-                      dense
-                      icon="remove"
-                      :disable="item.quantity <= 1"
-                      @click="updateQuantity(item.id, item.quantity - 1)"
-                    />
-                    <q-btn flat dense class="text-weight-bold">
-                      {{ item.quantity }}
-                    </q-btn>
-                    <q-btn
-                      flat
-                      dense
-                      icon="add"
-                      @click="updateQuantity(item.id, item.quantity + 1)"
-                    />
-                  </q-btn-group>
-                  <div class="text-subtitle1 text-weight-bold q-ml-xl product-price">
-                    {{ formatPrice(item.price * item.quantity) }}
-                  </div>
-                </div>
-              </q-item-section>
-            </q-item>
-          </q-slide-item>
-        </q-list>
+          <q-item-section side>
+            <q-btn flat round color="negative" icon="delete" @click="removeItem(item.id)" />
+          </q-item-section>
+        </q-item>
       </div>
 
       <!-- Order Summary -->
@@ -110,20 +93,18 @@ import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useCartStore } from 'src/stores/cart';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
+const { t } = useI18n();
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
 const formatPrice = (price: number) => `$${price.toFixed(2)}`;
-
-const removeItem = (id: number) => {
-  cartStore.removeItem(id);
-};
 
 const updateQuantity = (id: number, quantity: number) => {
   if (quantity < 1) return;
@@ -135,9 +116,35 @@ const checkout = () => {
     router.push('/checkout');
   }
 };
+
+const removeItem = (id: number) => {
+  $q.dialog({
+    title: t('cart.confirmDelete'),
+    message: t('cart.deleteMessage'),
+    cancel: true,
+    persistent: true,
+  }).onOk(() => {
+    cartStore.removeItem(id);
+    $q.notify({
+      color: 'positive',
+      message: t('cart.itemRemoved'),
+      icon: 'delete',
+    });
+  });
+};
 </script>
 
 <style lang="scss" scoped>
+:deep(.q-slide-item) {
+  .q-slide-item__left {
+    background: var(--q-negative);
+    color: white;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+  }
+}
+
 :deep(.q-slide-item__content) {
   @media (max-width: 599px) {
     flex-direction: column;
@@ -214,6 +221,41 @@ const checkout = () => {
       .q-item {
         padding: 12px 0;
         width: 100%;
+      }
+    }
+  }
+}
+.cart-item {
+  @media (max-width: 599px) {
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+
+    .product-image-container {
+      width: 200px;
+      height: 200px;
+      margin-bottom: 16px;
+    }
+
+    .q-item__section--main {
+      width: 100%;
+      text-align: center;
+    }
+
+    .mobile-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+
+      .q-btn-group {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .mobile-price {
+        margin-top: 8px;
       }
     }
   }
