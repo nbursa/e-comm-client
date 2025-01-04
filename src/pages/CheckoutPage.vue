@@ -2,7 +2,14 @@
   <q-page padding>
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-8">
-        <q-stepper v-model="step" vertica class="checkout-stepper" color="white" header-nav>
+        <q-stepper
+          v-model="step"
+          vertical
+          class="checkout-stepper"
+          :color="color"
+          :text-color="text"
+          header-nav
+        >
           <!-- Shipping Step -->
           <q-step
             :name="1"
@@ -10,6 +17,7 @@
             icon="local_shipping"
             :done="step > 1"
             class="checkout-step"
+            :header-nav="true"
           >
             <q-card flat bordered>
               <q-card-section>
@@ -37,7 +45,7 @@
           </q-step>
 
           <!-- Payment Step -->
-          <q-step :name="2" title="Payment" icon="payment" :done="step > 2">
+          <q-step :name="2" title="Payment" icon="payment" :done="step > 2" :header-nav="true">
             <q-card flat bordered>
               <q-card-section>
                 <q-form class="row q-col-gutter-md" @submit.prevent="validatePayment">
@@ -185,30 +193,17 @@ const nextStep = () => {
 
 <style lang="scss" scoped>
 .checkout-stepper {
-  :deep(.q-stepper__header) {
-    color: white;
-  }
-
   :deep(.q-stepper__tab--active),
   :deep(.q-stepper__tab--done) {
-    color: white;
+    color: v-bind(color);
 
     .q-stepper__title {
-      color: white;
+      color: v-bind(color);
     }
 
     .q-stepper__icon {
-      color: white;
-    }
-  }
-
-  :deep(.q-stepper__tab) {
-    .q-stepper__title {
-      color: white;
-    }
-
-    .q-stepper__icon {
-      color: white;
+      color: v-bind(text);
+      background: v-bind(color);
     }
   }
 }
@@ -216,5 +211,22 @@ const nextStep = () => {
 .order-summary {
   position: sticky;
   top: 20px;
+  width: 100%;
+
+  :deep(.q-card__section) {
+    padding: 20px;
+  }
+
+  :deep(.q-list) {
+    width: 100%;
+  }
+
+  :deep(.q-item) {
+    padding: 12px 0;
+  }
+
+  :deep(.q-separator) {
+    margin: 12px 0;
+  }
 }
 </style>

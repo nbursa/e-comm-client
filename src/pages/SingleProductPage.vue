@@ -120,12 +120,6 @@ const product = ref<Product>({
   },
 });
 
-const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
-const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
-
-const totalItems = computed(() => cartStore.totalItems);
-const totalPrice = computed(() => cartStore.totalPrice);
-
 const isCollapsed = ref(false);
 const showImageOverlay = ref(false);
 
@@ -136,6 +130,15 @@ const startX = ref(0);
 const startY = ref(0);
 const translateX = ref(0);
 const translateY = ref(0);
+
+const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
+const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
+const totalItems = computed(() => cartStore.totalItems);
+const totalPrice = computed(() => cartStore.totalPrice);
+const imageStyle = computed(() => ({
+  '--translate-x': `${translateX.value}px`,
+  '--translate-y': `${translateY.value}px`,
+}));
 
 const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
 
@@ -187,11 +190,6 @@ const stopPanning = () => {
   if (!isZoomed.value) return;
   isPanning.value = false;
 };
-
-const imageStyle = computed(() => ({
-  '--translate-x': `${translateX.value}px`,
-  '--translate-y': `${translateY.value}px`,
-}));
 
 const goBack = () => {
   router.push('/products');

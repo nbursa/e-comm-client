@@ -29,12 +29,14 @@
               outlined
               :disable="useSystemPreference"
               class="full-width"
+              @update:model-value="updateTheme"
             />
             <q-toggle
               v-model="useSystemPreference"
               :label="$t('settings.followSystemTheme')"
               color="primary"
               class="q-mt-md"
+              @update:model-value="onSystemPreferenceChange"
             />
           </q-card-section>
         </q-card>
@@ -44,59 +46,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
-import { useQuasar } from 'quasar';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { themeManager } from '@/boot/theme';
 
-const $q = useQuasar();
 const { locale } = useI18n();
-
-const theme = ref<{ value: 'light' | 'dark'; label: string }>(
-  $q.dark.isActive ? { value: 'dark', label: 'Dark' } : { value: 'light', label: 'Light' },
-);
-
-const useSystemPreference = ref(false);
-
-const themeOptions = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-];
-
-watch(useSystemPreference, (value) => {
-  if (value) {
-    applySystemPreference();
-  } else {
-    updateTheme(theme.value.value);
-  }
-});
-
-watch(theme, (selectedTheme) => {
-  if (!useSystemPreference.value) {
-    updateTheme(selectedTheme.value);
-  }
-});
-
-const updateTheme = (selectedTheme: 'light' | 'dark') => {
-  $q.dark.set(selectedTheme === 'dark');
-};
-
-const applySystemPreference = () => {
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  $q.dark.set(prefersDark);
-  theme.value = prefersDark ? { value: 'dark', label: 'Dark' } : { value: 'light', label: 'Light' };
-};
-
-if (useSystemPreference.value) {
-  applySystemPreference();
-} else {
-  updateTheme(theme.value.value);
-}
 
 const languageOptions = [
   { value: 'en-US', label: 'English' },
   { value: 'sr-RS', label: 'Serbian' },
   { value: 'fr-FR', label: 'French' },
 ];
+const themeOptions = [
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+];
+
+const useSystemPreference = ref(localStorage.getItem('useSystemPreference') === 'true');
+const theme = ref(
+  themeOptions.find((t) => t.value === localStorage.getItem('theme')) || themeOptions[0],
+);
 
 const currentLanguage = ref<{ value: string; label: string }>(
   languageOptions.find((option) => option.value === locale.value) || {
@@ -104,6 +73,18 @@ const currentLanguage = ref<{ value: string; label: string }>(
     label: 'English',
   },
 );
+
+const updateTheme = (selectedTheme: { value: string; label: string }) => {
+  themeManager.setTheme(selectedTheme.value === 'dark');
+};
+
+const onSystemPreferenceChange = (value: boolean) => {
+  if (value) {
+    themeManager.enableSystemTheme();
+  } else {
+    themeManager.disableSystemTheme();
+  }
+};
 
 const onLanguageChange = (selectedLanguage: { value: string; label: string }) => {
   locale.value = selectedLanguage.value;

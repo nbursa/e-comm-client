@@ -8,13 +8,15 @@
       class="q-ml-auto q-mb-md"
     />
 
-    <h5 class="q-m-sm">Products</h5>
+    <h5 class="q-my-md">Products</h5>
 
     <q-tabs
       v-model="selectedCategory"
-      class="text-white q-mb-md gt-sm"
-      active-color="white"
-      indicator-color="white"
+      class="q-mb-md gt-sm"
+      :active-color="text"
+      :active-bg-color="color"
+      :text-color="color"
+      :inactive-color="color"
       align="justify"
     >
       <q-tab name="all" label="All Products" />
@@ -30,6 +32,8 @@
       v-model="selectedCategory"
       :options="['all', ...categories]"
       class="q-my-md lt-md"
+      :color="color"
+      :text-color="text"
       label="Select Category"
       outlined
       :option-label="(opt) => (opt === 'all' ? 'All Products' : formatCategoryLabel(opt))"
@@ -192,7 +196,7 @@ const handleScroll = () => {
 };
 
 watch(selectedCategory, async (newCategory) => {
-  currentPage.value = 1; // Reset pagination
+  currentPage.value = 1;
   await fetchProducts(newCategory);
 });
 
