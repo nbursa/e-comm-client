@@ -1,24 +1,105 @@
 <template>
   <q-page padding>
-    <h5>Shopping Cart</h5>
-    <q-list class="q-mb-md">
-      <q-item v-for="item in cartStore.items" :key="item.id">
-        <q-item-section>
-          <div>{{ item.name }}</div>
-          <div>{{ formatPrice(item.price * item.quantity) }}</div>
-        </q-item-section>
-        <q-item-section side>
-          <q-btn color="negative" icon="delete" @click="removeItem(item.id)" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-
-    <div class="q-mt-md">
-      <div>Total Items: {{ cartStore.totalItems }}</div>
-      <div>Total Price: {{ formatPrice(cartStore.totalPrice) }}</div>
+    <div v-if="cartStore.items.length === 0" class="text-center q-pa-xl">
+      <q-icon name="shopping_cart" size="100px" color="grey-4" />
+      <h5 class="text-grey-6 q-mb-md">Your cart is empty</h5>
+      <q-btn to="/products" color="white" text-color="black" label="Continue Shopping" />
     </div>
 
-    <q-btn :color="color" :text-color="text" label="Checkout" class="q-mt-lg" @click="checkout" />
+    <div v-else class="row q-col-gutter-md">
+      <div class="col-12 col-md-8">
+        <q-list separator>
+          <q-slide-item
+            v-for="item in cartStore.items"
+            :key="item.id"
+            left-color="negative"
+            @left="() => removeItem(item.id)"
+          >
+            <template #left>
+              <q-icon name="delete" />
+            </template>
+
+            <q-item>
+              <q-item-section thumbnail class="q-pr-md product-image-container">
+                <q-img :src="item.image" :ratio="1" class="product-image" fit="contain" />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label class="text-subtitle1 text-weight-medium">
+                  {{ item.name }}
+                </q-item-label>
+                <q-item-label caption> {{ formatPrice(item.price) }} each </q-item-label>
+
+                <div class="row items-center q-mt-sm">
+                  <q-btn-group flat>
+                    <q-btn
+                      flat
+                      dense
+                      icon="remove"
+                      :disable="item.quantity <= 1"
+                      @click="updateQuantity(item.id, item.quantity - 1)"
+                    />
+                    <q-btn flat dense class="text-weight-bold">
+                      {{ item.quantity }}
+                    </q-btn>
+                    <q-btn
+                      flat
+                      dense
+                      icon="add"
+                      @click="updateQuantity(item.id, item.quantity + 1)"
+                    />
+                  </q-btn-group>
+                  <div class="text-subtitle1 text-weight-bold q-ml-xl">
+                    {{ formatPrice(item.price * item.quantity) }}
+                  </div>
+                </div>
+              </q-item-section>
+            </q-item>
+          </q-slide-item>
+        </q-list>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="col-12 col-md-4">
+        <q-card class="order-summary">
+          <q-card-section>
+            <div class="text-h6">Order Summary</div>
+            <q-list dense>
+              <q-item>
+                <q-item-section>Items ({{ cartStore.totalItems }})</q-item-section>
+                <q-item-section side>
+                  {{ formatPrice(cartStore.totalPrice) }}
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section>Shipping</q-item-section>
+                <q-item-section side>Free</q-item-section>
+              </q-item>
+              <q-separator class="q-my-md" />
+              <q-item>
+                <q-item-section>
+                  <span class="text-subtitle1 text-weight-bold">Total</span>
+                </q-item-section>
+                <q-item-section side>
+                  <span class="text-subtitle1 text-weight-bold">
+                    {{ formatPrice(cartStore.totalPrice) }}
+                  </span>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-card-section>
+          <q-card-actions align="center">
+            <q-btn
+              :color="color"
+              :text-color="text"
+              label="Proceed to Checkout"
+              class="full-width"
+              @click="checkout"
+            />
+          </q-card-actions>
+        </q-card>
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -42,9 +123,42 @@ const removeItem = (id: number) => {
   cartStore.removeItem(id);
 };
 
+const updateQuantity = (id: number, quantity: number) => {
+  if (quantity < 1) return;
+  cartStore.updateQuantity(id, quantity);
+};
+
 const checkout = () => {
   if (cartStore.items.length) {
     router.push('/checkout');
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.product-image-container {
+  min-width: 120px;
+  max-width: 150px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-image {
+  width: 100%;
+  max-height: 150px;
+
+  :deep(.q-img__content) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :deep(.q-img__image) {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+</style>

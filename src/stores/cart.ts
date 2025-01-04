@@ -42,6 +42,16 @@ export const useCartStore = defineStore('cart', {
         this.items.push({ ...item });
       }
     },
+    updateQuantity(id: number, quantity: number) {
+      const item = this.items.find((i) => i.id === id);
+      if (item) {
+        if (quantity < 1) {
+          this.removeItem(id);
+        } else {
+          item.quantity = quantity;
+        }
+      }
+    },
     removeItem(id: number) {
       this.items = this.items.filter((item) => item.id !== id);
     },
