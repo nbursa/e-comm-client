@@ -23,12 +23,13 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       ? createWebHistory
       : createWebHashHistory;
 
+  // scrollBehavior(to, from, savedPosition) {
+  //   if (savedPosition) {
+  //     return savedPosition;
+  //   }
+  // }
   const Router = createRouter({
-    // scrollBehavior(to, from, savedPosition) {
     scrollBehavior() {
-      // if (savedPosition) {
-      //   return savedPosition;
-      // }
       return { left: 0, top: 0 };
     },
     routes,
