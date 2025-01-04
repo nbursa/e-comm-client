@@ -1,4 +1,10 @@
 export default {
+  main: {
+    home: 'Home',
+    products: 'Products',
+    settings: 'Settings',
+    ecomm: 'E-comm',
+  },
   settings: {
     title: 'Settings',
     themeSettings: 'Theme',
@@ -8,7 +14,7 @@ export default {
     languageLabel: 'Language',
   },
   home: {
-    title: 'Welcome to E-Commerce Platform',
+    title: 'Welcome to E-Comm Platform',
     subtitle: 'Start shopping with us!',
     products: 'Products',
   },

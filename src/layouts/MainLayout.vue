@@ -2,12 +2,14 @@
   <q-layout view="hHh lpR fFf" class="shadow-2 text-body1">
     <q-header elevated bordered :class="themeStyle">
       <q-toolbar>
-        <q-toolbar-title class="header-title">E-comm</q-toolbar-title>
+        <q-toolbar-title class="header-title"
+          >{{ $t('main.ecomm') }}<q-btn flat to="/" :label="$t('main.ecomm')"
+        /></q-toolbar-title>
 
         <div class="gt-md">
-          <q-btn flat to="/" label="Home" />
-          <q-btn flat to="/products" label="Products" />
-          <q-btn flat to="/settings" label="Settings" />
+          <q-btn flat to="/" :label="$t('main.home')" />
+          <q-btn flat to="/products" :label="$t('main.products')" />
+          <q-btn flat to="/settings" :label="$t('main.settings')" />
         </div>
 
         <q-btn flat round dense to="/cart" icon="shopping_cart" class="q-mr-sm cart-btn">
@@ -49,19 +51,21 @@ import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 const drawerOpen = ref(false);
 const router = useRouter();
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
+const { t } = useI18n();
 
 const totalItems = computed(() => cartStore.totalItems);
 
 const menuItems = [
-  { label: 'Home', path: '/' },
-  { label: 'Products', path: '/products' },
-  { label: 'Settings', path: '/settings' },
+  { label: t('main.home'), path: '/' },
+  { label: t('main.products'), path: '/products' },
+  { label: t('main.settings'), path: '/settings' },
 ];
 
 const drawerWidth = computed<number>(() => {

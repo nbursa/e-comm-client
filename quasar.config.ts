@@ -8,6 +8,9 @@ export default defineConfig((ctx: { modeName: string }) => {
     css: ['app.scss'],
     extras: ['roboto-font', 'material-icons'],
     build: {
+      postcss: {
+        plugins: ['tailwindcss', 'autoprefixer'],
+      },
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',
@@ -79,6 +82,7 @@ export default defineConfig((ctx: { modeName: string }) => {
         dark: true,
       },
       plugins: ['Notify', 'Loading'],
+      cssAddon: false,
     },
     animations: 'all',
     ssr: {

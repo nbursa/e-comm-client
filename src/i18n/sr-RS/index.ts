@@ -1,4 +1,10 @@
 export default {
+  main: {
+    home: 'Početna',
+    products: 'Proizvodi',
+    settings: 'Podešavanja',
+    ecomm: 'E-Kom',
+  },
   settings: {
     title: 'Podešavanja',
     themeSettings: 'Tema',
@@ -8,7 +14,7 @@ export default {
     languageLabel: 'Jezik',
   },
   home: {
-    title: 'Dobrodošli na E-Commerce platformu',
+    title: 'Dobrodošli na E-Kom platformu',
     subtitle: 'Započnite kupovinu sa nama!',
     products: 'Proizvodi',
   },

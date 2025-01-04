@@ -41,13 +41,17 @@
 
     <q-separator class="q-my-md" />
 
-    <div class="row justify-center q-mb-xl q-gutter-md" style="max-width: 2400px">
+    <div class="tw-container tw-mx-auto">
       <div
-        v-for="product in paginatedProducts"
-        :key="product.id"
-        class="col-xs-12 col-sm-10 col-md-5 col-lg-3 cursor-pointer"
+        class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 tw-gap-4"
       >
-        <q-card class="q-mb-m full-width" bordered @click="viewProduct(product)">
+        <q-card
+          v-for="product in paginatedProducts"
+          :key="product.id"
+          class="q-mb-m full-width"
+          bordered
+          @click="viewProduct(product)"
+        >
           <q-img :src="product.image" :alt="product.name" class="q-card-img-top" />
           <q-card-section>
             <div class="text-bold product-name">{{ product.name }}</div>
