@@ -82,7 +82,6 @@
           @click="toggleZoom"
           @mousedown="startPanning"
           @mousemove="panImage"
-          @mouseup="stopPanning"
           @mouseleave="stopPanning"
         />
       </q-card>
