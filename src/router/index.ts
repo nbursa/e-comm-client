@@ -24,10 +24,11 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       : createWebHashHistory;
 
   const Router = createRouter({
-    scrollBehavior(to, from, savedPosition) {
-      if (savedPosition) {
-        return savedPosition;
-      }
+    // scrollBehavior(to, from, savedPosition) {
+    scrollBehavior() {
+      // if (savedPosition) {
+      //   return savedPosition;
+      // }
       return { left: 0, top: 0 };
     },
     routes,

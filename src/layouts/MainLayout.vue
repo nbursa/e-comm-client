@@ -2,9 +2,7 @@
   <q-layout view="hHh lpR fFf" class="shadow-2 text-body1">
     <q-header elevated bordered :class="themeStyle">
       <q-toolbar>
-        <q-toolbar-title class="header-title"
-          >{{ $t('main.ecomm') }}<q-btn flat to="/" :label="$t('main.ecomm')"
-        /></q-toolbar-title>
+        <q-toolbar-title class="header-title">{{ $t('main.ecomm') }}</q-toolbar-title>
 
         <div class="gt-md">
           <q-btn flat to="/" :label="$t('main.home')" />

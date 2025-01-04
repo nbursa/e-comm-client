@@ -5,5 +5,3 @@
     <q-btn flat to="/" :label="$t('404.goHome')" />
   </q-page>
 </template>
-
-<script lang="ts" setup></script>
