@@ -107,12 +107,14 @@ import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { scroll } from 'quasar';
 import CartPreview from '@/components/CartPreview.vue';
 import { useProductCacheStore } from '@/stores/products';
+import { useI18n } from 'vue-i18n';
 
 const { getVerticalScrollPosition } = scroll;
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const productCache = useProductCacheStore();
+const { t } = useI18n();
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
 const products = ref<Product[]>([]);
@@ -173,7 +175,7 @@ const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
   $q.notify({
     color: 'positive',
-    message: 'Product added to cart!',
+    message: t('products.itemAdded'),
     icon: 'check_circle',
   });
 };

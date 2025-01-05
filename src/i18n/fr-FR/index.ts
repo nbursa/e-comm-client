@@ -22,6 +22,7 @@ export default {
     title: 'Produits',
     selectCategory: 'Sélectionner une catégorie',
     addToCart: 'Ajouter au panier',
+    itemAdded: 'Produit ajouté au panier!',
     categories: {
       allProducts: 'Tous les produits',
       jewelry: 'Bijoux',
@@ -66,6 +67,7 @@ export default {
   singleProduct: {
     addToCart: 'Ajouter au panier',
     backToProducts: 'Retour aux produits',
+    itemAdded: 'Produit ajouté au panier!',
   },
   404: {
     error: 'Erreur',

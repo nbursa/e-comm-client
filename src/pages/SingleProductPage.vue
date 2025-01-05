@@ -102,6 +102,7 @@ import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { scroll } from 'quasar';
 import CartPreview from '@/components/CartPreview.vue';
+import { useI18n } from 'vue-i18n';
 
 const { getVerticalScrollPosition } = scroll;
 
@@ -109,6 +110,7 @@ const route = useRoute();
 const router = useRouter();
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
+const { t } = useI18n();
 
 const product = ref<Product>({
   id: 0,
@@ -159,7 +161,7 @@ const addToCart = (product: Product) => {
   scrollToTop();
   $q.notify({
     color: 'positive',
-    message: 'Product added to cart!',
+    message: t('singleProduct.itemAdded'),
     icon: 'check_circle',
   });
 };

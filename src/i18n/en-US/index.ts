@@ -22,6 +22,7 @@ export default {
     title: 'Products',
     selectCategory: 'Select Category',
     addToCart: 'Add to Cart',
+    itemAdded: 'Product added to cart!',
     categories: {
       allProducts: 'All Products',
       jewelry: 'Jewelry',
@@ -66,6 +67,7 @@ export default {
   singleProduct: {
     addToCart: 'Add to Cart',
     backToProducts: 'Back to Products',
+    itemAdded: 'Product added to cart!',
   },
   404: {
     error: 'Error',

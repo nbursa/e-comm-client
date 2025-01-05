@@ -22,6 +22,7 @@ export default {
     title: 'Proizvodi',
     selectCategory: 'Izaberite kategoriju',
     addToCart: 'Dodaj u korpu',
+    itemAdded: 'Proizvod dodat u korpu!',
     categories: {
       allProducts: 'Svi proizvodi',
       jewelry: 'Nakit',
@@ -66,6 +67,7 @@ export default {
   singleProduct: {
     addToCart: 'Dodaj u korpu',
     backToProducts: 'Nazad na proizvode',
+    itemAdded: 'Proizvod dodat u korpu!',
   },
   404: {
     error: 'Greška',

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
-import { type MessageLanguages } from '@/boot/i18n';
+import { setLanguage, type MessageLanguages } from '@/boot/i18n';
 import type { QVueGlobals } from 'quasar/dist/types';
 
 interface UserSettings {
@@ -51,6 +51,14 @@ export const useUserStore = defineStore('user', () => {
     $q.value.dark.set(isDark);
   };
 
+  const updateI18n = () => {
+    try {
+      setLanguage(settings.value.language);
+    } catch (err) {
+      console.error('Failed to update language:', err);
+    }
+  };
+
   const handleSystemChange = () => {
     if (settings.value.useSystemPreference) {
       updateTheme();
@@ -62,6 +70,7 @@ export const useUserStore = defineStore('user', () => {
     () => {
       saveSettings();
       updateTheme();
+      updateI18n();
     },
     { deep: true },
   );
