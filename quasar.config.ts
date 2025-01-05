@@ -25,7 +25,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       },
       extendViteConf(viteConf) {
         viteConf.base = process.env.NODE_ENV === 'production' ? '/e-commerce-platform/' : '/';
-        viteConf.base = '/';
+        // viteConf.base = '/';
         viteConf.resolve ??= {};
         viteConf.resolve.alias = {
           ...viteConf.resolve.alias,
