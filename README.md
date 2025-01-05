@@ -1,43 +1,56 @@
-# E-Commerce Platform (e-commerce-platform)
+# E-Commerce Platform
 
-A Quasar Project
+Modern e-commerce platform built with Quasar Framework and Vue 3.
 
-## Install the dependencies
+## Features
+
+- 🛍️ Product catalog with categories
+- 🛒 Shopping cart with real-time updates
+- 🌐 Multi-language support (EN/ES)
+- 🎨 Light/Dark theme
+- 💾 Caching system for products and categories
+- 📱 Responsive design for mobile and desktop
+
+## Tech Stack
+
+- Vue 3 + TypeScript
+- Quasar Framework
+- Pinia for state management
+- Vue-i18n for internationalization
+- Tailwind CSS for styling
+
+## Installation
 
 ```bash
-yarn
-# or
+# Install dependencies
 npm install
-```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+# Start development server
+npm run dev
 
-```bash
-quasar dev
-```
-
-### Lint the files
-
-```bash
-yarn lint
-# or
+# Lint files
 npm run lint
-```
 
-### Format the files
-
-```bash
-yarn format
-# or
+# Format files
 npm run format
 ```
 
-### Build the app for production
+## Development
 
-```bash
-quasar build
+The app will be available at: http://localhost:9000
+
+Network URL will be displayed in the terminal
+
+## Environment Variables
+
+Create a .env file:
+
+```
+VITE_API_URL=your_api_url_here
 ```
 
-### Customize the configuration
+## Caching
 
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+Products are cached for 5 minutes
+Categories are cached separately
+Cache is stored in localStorage
