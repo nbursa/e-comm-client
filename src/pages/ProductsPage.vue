@@ -36,7 +36,9 @@
       :text-color="text"
       :label="$t('products.selectCategory')"
       outlined
-      :option-label="(opt) => (opt === 'all' ? 'All Products' : formatCategoryLabel(opt))"
+      :option-label="
+        (opt) => (opt === 'all' ? $t('products.categories.allProducts') : formatCategoryLabel(opt))
+      "
     />
 
     <q-separator class="q-my-md" />
