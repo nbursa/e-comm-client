@@ -27,10 +27,19 @@
         borderless
         emit-value
         map-options
-        class="q-mr-sm"
-        style="min-width: 100px"
+        class="lang-select q-mr-sm"
+        style="min-width: 80px"
         @update:model-value="handleLanguageChange"
-      />
+      >
+        <template #selected>
+          <q-btn
+            flat
+            dense
+            :label="String(userStore.currentLanguage?.value.split('-')[0])"
+            class="text-no-wrap"
+          />
+        </template>
+      </q-select>
 
       <q-btn flat round dense icon="menu" class="lt-lg" @click="$emit('update:drawerOpen')" />
     </q-toolbar>
@@ -137,6 +146,31 @@ watch(
     color: white;
     border-color: white;
     background-color: red;
+  }
+}
+
+:deep(.lang-select) {
+  .q-field__native {
+    display: block;
+    padding: 0;
+  }
+
+  .q-field__control {
+    min-height: 36px;
+    padding: 0 8px;
+  }
+
+  .q-field__append {
+    padding: 0 4px;
+  }
+
+  .q-field__marginal {
+    height: 36px;
+  }
+
+  .q-btn {
+    min-height: 36px;
+    padding: 0 8px;
   }
 }
 </style>
