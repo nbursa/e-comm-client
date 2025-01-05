@@ -81,7 +81,7 @@ export default defineConfig((ctx: { modeName: string }) => {
         },
         dark: true,
       },
-      plugins: ['Notify', 'Loading'],
+      plugins: ['Notify', 'Loading', 'Dialog'],
       cssAddon: false,
     },
     animations: 'all',

@@ -40,6 +40,12 @@ export default {
     free: 'Free',
     total: 'Total',
     checkout: 'Proceed to Checkout',
+    errorRemoving: 'Failed to remove item from cart!',
+    itemRemoved: 'Item removed from cart!',
+    confirmDelete: 'Are you sure you want to delete this item?',
+    deleteMessage: 'This action cannot be undone.',
+    cancel: 'Cancel',
+    delete: 'Delete',
   },
   checkout: {
     shipping: 'Shipping',

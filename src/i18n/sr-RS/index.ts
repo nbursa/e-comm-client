@@ -40,6 +40,12 @@ export default {
     free: 'Besplatno',
     total: 'Ukupno',
     checkout: 'Nastavi na kasu',
+    errorRemoving: 'Nije uspelo uklanjanje proizvoda iz korpe!',
+    itemRemoved: 'Proizvod uklonjen iz korpe!',
+    confirmDelete: 'Da li ste sigurni da želite da obrišete ovaj proizvod?',
+    deleteMessage: 'Ova akcija je nepovratna.',
+    cancel: 'Otkaži',
+    delete: 'Obriši',
   },
   checkout: {
     shipping: 'Dostava',

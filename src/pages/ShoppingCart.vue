@@ -14,14 +14,14 @@
             :key="item.id"
             class="tw-flex tw-flex-col md:tw-flex-row md:!tw-justify-end !tw-gap-3 tw-p-3 !tw-bg-grey-1 tw-rounded-lg tw-shadow-md"
           >
-            <q-item-section class="tw-w-full md:tw-w-32 tw-h-full md:tw-h-32">
-              <q-img :src="item.image" :ratio="1" class="tw-w-full tw-h-full" fit="contain" />
+            <!-- Image section -->
+            <q-item-section class="tw-w-full md:tw-w-32 !tw-flex-shrink-0">
+              <q-img :src="item.image" :ratio="1" class="tw-w-full" fit="contain" />
             </q-item-section>
 
-            <q-item-section
-              class="!tw-flex-1 !tw-flex-grow tw-flex tw-flex-col tw-gap-2 !tw-w-auto"
-            >
-              <q-item-label class="text-subtitle1 text-weight-medium">
+            <!-- Content section -->
+            <q-item-section class="tw-flex-1 tw-min-w-0 md:tw-px-4">
+              <q-item-label class="text-subtitle1 text-weight-medium tw-truncate">
                 {{ item.title }}
               </q-item-label>
               <q-item-label caption>
@@ -53,8 +53,9 @@
               </div>
             </q-item-section>
 
+            <!-- Delete button section -->
             <q-item-section
-              class="!tw-flex-shrink-0 tw-flex tw-items-center tw-justify-center !tw-w-auto !tw-flex-0"
+              class="!tw-flex-shrink-0 tw-flex tw-items-center tw-justify-center md:!tw-max-w-[60px] md:tw-ml-4"
             >
               <q-btn
                 flat
@@ -148,7 +149,16 @@ const removeItem = (id: number) => {
   $q.dialog({
     title: t('cart.confirmDelete'),
     message: t('cart.deleteMessage'),
-    cancel: true,
+    cancel: {
+      color: 'grey',
+      flat: true,
+      label: t('cart.cancel'),
+    },
+    ok: {
+      color: 'negative',
+      flat: true,
+      label: t('cart.delete'),
+    },
     persistent: true,
   }).onOk(() => {
     cartStore.removeItem(id);
@@ -156,6 +166,7 @@ const removeItem = (id: number) => {
       color: 'positive',
       message: t('cart.itemRemoved'),
       icon: 'delete',
+      position: 'top',
     });
   });
 };
