@@ -24,8 +24,7 @@ export default defineConfig((ctx: { modeName: string }) => {
         VITE_API_URL: process.env.VITE_API_URL,
       },
       extendViteConf(viteConf) {
-        // viteConf.base = process.env.NODE_ENV === 'production' ? '/e-commerce-platform/' : '/';
-        viteConf.base = '/';
+        viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';
         viteConf.resolve ??= {};
         viteConf.resolve.alias = {
           ...viteConf.resolve.alias,
@@ -38,7 +37,7 @@ export default defineConfig((ctx: { modeName: string }) => {
 
         const distDir = path.resolve(process.cwd(), 'dist/spa');
 
-        await fs.writeFile(path.join(distDir, 'CNAME'), 'https://shop.nenadbursac.com');
+        await fs.writeFile(path.join(distDir, 'CNAME'), 'shop.nenadbursac.com');
         await fs.copyFile(path.join(distDir, 'index.html'), path.join(distDir, '404.html'));
       },
       vitePlugins: [
