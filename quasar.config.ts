@@ -24,7 +24,7 @@ export default defineConfig((ctx: { modeName: string }) => {
         VITE_API_URL: process.env.VITE_API_URL,
       },
       extendViteConf(viteConf) {
-        // viteConf.base = process.env.NODE_ENV === 'production' ? '/e-commerce-platform' : '/';
+        viteConf.base = process.env.NODE_ENV === 'production' ? '/e-commerce-platform/' : '/';
         viteConf.base = '/';
         viteConf.resolve ??= {};
         viteConf.resolve.alias = {

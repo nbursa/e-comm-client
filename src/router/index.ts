@@ -37,8 +37,8 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
-    // history: createHistory(process.env.NODE_ENV === 'production' ? '/e-commerce-platform' : '/'),
-    history: createHistory('/'),
+    history: createHistory(process.env.NODE_ENV === 'production' ? '/e-commerce-platform' : '/'),
+    // history: createHistory('/'),
   });
 
   return Router;
