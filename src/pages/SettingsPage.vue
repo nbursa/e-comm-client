@@ -46,50 +46,49 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { themeManager } from '@/boot/theme';
-import { type MessageLanguages, setLanguage } from '@/boot/i18n';
+import { computed } from 'vue';
+import { useUserStore } from '@/stores/user';
 
-const { locale } = useI18n();
+const userStore = useUserStore();
 
-const languageOptions = [
-  { value: 'en-US', label: 'English' },
-  { value: 'sr-RS', label: 'Serbian' },
-  { value: 'fr-FR', label: 'French' },
-];
+const languageOptions = userStore.languageOptions;
+
+const currentLanguage = computed({
+  get: () =>
+    languageOptions.find((option) => option.value === userStore.language) ?? languageOptions[0],
+  set: (newLang: { value: string; label: string }) => {
+    userStore.language = newLang.value as 'en-US' | 'sr-RS' | 'fr-FR';
+  },
+});
+
 const themeOptions = [
   { value: 'light', label: 'Light' },
   { value: 'dark', label: 'Dark' },
 ];
 
-const useSystemPreference = ref(localStorage.getItem('useSystemPreference') === 'true');
-const theme = ref(
-  themeOptions.find((t) => t.value === localStorage.getItem('theme')) || themeOptions[0],
-);
-
-const currentLanguage = ref<{ value: string; label: string }>(
-  languageOptions.find((option) => option.value === locale.value) || {
-    value: 'en-US',
-    label: 'English',
+const theme = computed({
+  get: () => userStore.theme,
+  set: (newTheme: string) => {
+    userStore.theme = newTheme;
   },
-);
+});
+
+const useSystemPreference = computed({
+  get: () => userStore.useSystemPreference,
+  set: (value: boolean) => {
+    userStore.useSystemPreference = value;
+  },
+});
+
+const onLanguageChange = (selectedLanguage: { value: string; label: string }) => {
+  currentLanguage.value = selectedLanguage;
+};
 
 const updateTheme = (selectedTheme: { value: string; label: string }) => {
-  themeManager.setTheme(selectedTheme.value === 'dark');
+  theme.value = selectedTheme.value;
 };
 
 const onSystemPreferenceChange = (value: boolean) => {
-  if (value) {
-    themeManager.enableSystemTheme();
-  } else {
-    themeManager.disableSystemTheme();
-  }
-};
-
-const onLanguageChange = (selectedLanguage: { value: string; label: string }) => {
-  const lang = selectedLanguage.value as MessageLanguages;
-  locale.value = lang;
-  setLanguage(lang);
+  useSystemPreference.value = value;
 };
 </script>
