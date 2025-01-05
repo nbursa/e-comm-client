@@ -38,7 +38,7 @@ export default defineConfig((ctx: { modeName: string }) => {
 
         const distDir = path.resolve(process.cwd(), 'dist/spa');
 
-        await fs.writeFile(path.join(distDir, 'CNAME'), 'https://shop.nenadbursac.com');
+        // await fs.writeFile(path.join(distDir, 'CNAME'), 'https://shop.nenadbursac.com');
         await fs.copyFile(path.join(distDir, 'index.html'), path.join(distDir, '404.html'));
       },
       vitePlugins: [
