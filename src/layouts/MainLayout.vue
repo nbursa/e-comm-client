@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import MobileDrawer from '@/components/MobileDrawer.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import AppHeader from '../components/AppHeader.vue';
@@ -25,11 +25,11 @@ const router = useRouter();
 const { t } = useI18n();
 const drawerOpen = ref(false);
 
-const menuItems = [
+const menuItems = computed(() => [
   { label: t('main.home'), path: '/' },
   { label: t('main.products'), path: '/products' },
   { label: t('main.settings'), path: '/settings' },
-];
+]);
 
 function navigate(item: { label: string; path: string }) {
   drawerOpen.value = false;
