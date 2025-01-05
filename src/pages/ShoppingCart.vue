@@ -8,7 +8,7 @@
 
     <div v-else class="tw-container tw-max-w-screen-xl tw-mx-auto">
       <div class="row q-col-gutter-lg">
-        <div class="col-12 col-md-8 tw-space-y-0 md:tw-space-y-4">
+        <div class="col-12 col-md-8 tw-space-y-4">
           <q-item
             v-for="item in cartStore.items"
             :key="item.id"
