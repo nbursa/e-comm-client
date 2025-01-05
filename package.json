@@ -6,7 +6,7 @@
   "author": "Nenad <nbursa@gmail.com>",
   "type": "module",
   "private": true,
-  "homepage": "https://nbursa.github.io/e-commerce-platform",
+  "homepage": "https://shop.nenadbursac.com",
   "scripts": {
     "lint": "eslint -c ./eslint.config.js \"./src*/**/*.{ts,js,cjs,mjs,vue}\"",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
@@ -17,9 +17,8 @@
     "postinstall": "quasar prepare",
     "analyze": "quasar build --analyze",
     "predeploy": "npm run build",
-    "deploy-old": "cross-env NODE_ENV=production quasar build -m spa && gh-pages -d dist/spa",
-    "deploy-old2": "cross-env NODE_ENV=production quasar build -m spa && rm -f dist/spa/CNAME && gh-pages -d dist/spa",
-    "deploy": "cross-env NODE_ENV=production quasar build -m spa && gh-pages -d dist/spa"
+    "deploy": "cross-env NODE_ENV=production quasar build -m spa && gh-pages -d dist/spa",
+    "deploy-old": "cross-env NODE_ENV=production quasar build -m spa && rm -f dist/spa/CNAME && gh-pages -d dist/spa"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
