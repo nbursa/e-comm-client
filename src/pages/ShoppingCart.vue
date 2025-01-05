@@ -20,7 +20,9 @@
             </q-item-section>
 
             <!-- Content section -->
-            <q-item-section class="tw-flex-1 tw-min-w-0 md:tw-px-4">
+            <q-item-section
+              class="tw-flex-1 tw-min-w-0 md:tw-flex md:!tw-flex-col md:!tw-justify-between"
+            >
               <q-item-label class="text-subtitle1 text-weight-medium tw-truncate">
                 {{ item.title }}
               </q-item-label>
@@ -28,25 +30,26 @@
                 {{ formatPrice(item.price) }} {{ $t('cart.each') }}
               </q-item-label>
 
-              <div class="q-mt-sm">
-                <q-btn-group
-                  flat
-                  class="tw-w-full tw-flex tw-justify-between tw-items-center delete-section"
-                >
-                  <q-btn
-                    flat
-                    dense
-                    icon="remove"
-                    @click="updateQuantity(item.id, item.quantity - 1)"
-                  />
-                  <q-btn flat dense class="text-weight-bold">{{ item.quantity }}</q-btn>
-                  <q-btn
-                    flat
-                    dense
-                    icon="add"
-                    @click="updateQuantity(item.id, item.quantity + 1)"
-                  />
-                </q-btn-group>
+              <div
+                class="tw-flex tw-flex-col tw-flex-grow tw-items-center tw-gap-2 md:tw-text-left"
+              >
+                <div class="tw-flex tw-items-center tw-h-full">
+                  <q-btn-group flat class="">
+                    <q-btn
+                      flat
+                      dense
+                      icon="remove"
+                      @click="updateQuantity(item.id, item.quantity - 1)"
+                    />
+                    <q-btn flat dense class="text-weight-bold">{{ item.quantity }}</q-btn>
+                    <q-btn
+                      flat
+                      dense
+                      icon="add"
+                      @click="updateQuantity(item.id, item.quantity + 1)"
+                    />
+                  </q-btn-group>
+                </div>
                 <div class="text-subtitle1 text-weight-bold mobile-price">
                   {{ $t('cart.total') }}: {{ formatPrice(item.price * item.quantity) }}
                 </div>
@@ -171,13 +174,3 @@ const removeItem = (id: number) => {
   });
 };
 </script>
-
-<style lang="scss" scoped>
-.delete-section {
-  flex-shrink: 0 !important;
-  width: auto !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>
