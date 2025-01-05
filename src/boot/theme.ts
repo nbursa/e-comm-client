@@ -1,6 +1,7 @@
 import { boot } from 'quasar/wrappers';
 import type { App } from 'vue';
 import type { QVueGlobals } from 'quasar/dist/types';
+import { useUserStore } from '@/stores/user';
 
 class ThemeManager {
   private static instance: ThemeManager;
@@ -21,45 +22,14 @@ class ThemeManager {
 
   init($q: QVueGlobals): void {
     this.$q = $q;
-
-    const useSystemPreference = localStorage.getItem('useSystemPreference');
-    const savedTheme = localStorage.getItem('theme');
-
-    if (useSystemPreference === null) {
-      localStorage.setItem('useSystemPreference', 'true');
-    }
-    if (savedTheme === null) {
-      localStorage.setItem('theme', 'light');
-    }
-
-    if (useSystemPreference === 'true' || useSystemPreference === null) {
-      this.enableSystemTheme();
-    } else {
-      this.setTheme(savedTheme === 'dark');
-    }
+    const userStore = useUserStore();
+    userStore.initTheme($q);
   }
 
-  private handleSystemChange(e: MediaQueryListEvent): void {
-    if (this.$q && localStorage.getItem('useSystemPreference') === 'true') {
-      this.setTheme(e.matches);
-    }
-  }
-
-  enableSystemTheme(): void {
-    this.mediaQuery.addEventListener('change', this.handleSystemChange);
-    this.setTheme(this.mediaQuery.matches);
-    localStorage.setItem('useSystemPreference', 'true');
-  }
-
-  disableSystemTheme(): void {
-    this.mediaQuery.removeEventListener('change', this.handleSystemChange);
-    localStorage.setItem('useSystemPreference', 'false');
-  }
-
-  setTheme(isDark: boolean): void {
-    if (this.$q) {
-      this.$q.dark.set(isDark);
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  private handleSystemChange(): void {
+    const userStore = useUserStore();
+    if (userStore.settings.useSystemPreference) {
+      userStore.updateTheme();
     }
   }
 }

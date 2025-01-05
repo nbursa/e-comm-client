@@ -2,7 +2,6 @@
   <q-header elevated bordered :class="themeStyle">
     <q-toolbar>
       <q-toolbar-title class="header-title">{{ $t('main.ecomm') }}</q-toolbar-title>
-
       <div class="gt-md">
         <q-btn
           v-for="item in menuItems"
@@ -20,8 +19,10 @@
       </q-btn>
 
       <q-select
-        v-model="userStore.language"
-        :options="userStore.languageOptions"
+        v-model="currentLanguage"
+        :options="languageOptions"
+        option-value="value"
+        option-label="label"
         dense
         options-dense
         borderless
@@ -29,15 +30,10 @@
         map-options
         class="lang-select q-mr-sm"
         style="min-width: 80px"
-        @update:model-value="handleLanguageChange"
+        @update:model-value="setLanguage"
       >
         <template #selected>
-          <q-btn
-            flat
-            dense
-            :label="String(userStore.currentLanguage?.value.split('-')[0])"
-            class="text-no-wrap"
-          />
+          <q-btn flat dense :label="displayLanguage" class="text-no-wrap" />
         </template>
       </q-select>
 
@@ -48,18 +44,50 @@
 
 <script lang="ts" setup>
 import { computed, PropType, ref, watch } from 'vue';
-
 import { useCartStore } from '@/stores/cart';
-import { useQuasar } from 'quasar';
-import { QVueGlobals } from 'quasar/dist/types/globals';
-import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/user';
-import { MessageLanguages } from '@/boot/i18n';
+import { useQuasar } from 'quasar';
+import { MessageLanguages, setLanguage } from '@/boot/i18n';
+import { QVueGlobals } from 'quasar/dist/types/globals';
 
 const cartStore = useCartStore();
 const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
-const { locale } = useI18n();
+
+const languageOptions = computed(() => userStore.languageOptions);
+
+const currentLanguage = computed<string>({
+  get: () => userStore.settings.language,
+  set: (value: string) => {
+    userStore.settings.language = value as MessageLanguages;
+  },
+});
+
+const displayLanguage = computed(() => {
+  const lang = currentLanguage.value;
+  const option = languageOptions.value.find((opt) => opt.value === lang);
+  return option?.value.split('-')[0] || 'EN';
+});
+
+const totalItems = computed(() => cartStore.totalItems);
+
+const themeStyle = computed(() =>
+  $q.dark.isActive ? 'bg-dark text-light shadow-dark' : 'bg-light text-dark shadow-light',
+);
+
+const isAnimating = ref(false);
+
+watch(
+  () => totalItems.value,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      isAnimating.value = true;
+      setTimeout(() => {
+        isAnimating.value = false;
+      }, 1000);
+    }
+  },
+);
 
 defineProps({
   menuItems: {
@@ -75,30 +103,6 @@ defineProps({
 defineEmits<{
   'update:drawerOpen': [];
 }>();
-
-const handleLanguageChange = (value: MessageLanguages) => {
-  userStore.language = value;
-  locale.value = value;
-};
-
-const isAnimating = ref(false);
-
-const totalItems = computed(() => cartStore.totalItems);
-const themeStyle = computed(() =>
-  $q.dark.isActive ? 'bg-dark text-light shadow-dark' : 'bg-light text-dark shadow-light',
-);
-
-watch(
-  () => totalItems.value,
-  (newVal, oldVal) => {
-    if (newVal !== oldVal) {
-      isAnimating.value = true;
-      setTimeout(() => {
-        isAnimating.value = false;
-      }, 1000);
-    }
-  },
-);
 </script>
 
 <style lang="scss" scoped>

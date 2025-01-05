@@ -1,56 +1,77 @@
 import { defineStore } from 'pinia';
-import { ref, computed, watch } from 'vue';
-import { themeManager } from '@/boot/theme';
-import { type MessageLanguages, setLanguage } from '@/boot/i18n';
+import { ref, watch } from 'vue';
+import { type MessageLanguages } from '@/boot/i18n';
+import type { QVueGlobals } from 'quasar/dist/types';
+
+interface UserSettings {
+  language: MessageLanguages;
+  theme: 'light' | 'dark';
+  useSystemPreference: boolean;
+}
 
 export const useUserStore = defineStore('user', () => {
+  const $q = ref<QVueGlobals | null>(null);
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   const languageOptions = [
     { value: 'en-US', label: 'English' },
     { value: 'sr-RS', label: 'Serbian' },
     { value: 'fr-FR', label: 'French' },
   ];
 
-  const language = ref<MessageLanguages>(
-    (localStorage.getItem('language') as MessageLanguages) || 'en-US',
+  const settings = ref<UserSettings>({
+    language: 'en-US',
+    theme: 'light',
+    useSystemPreference: false,
+  });
+
+  const loadSettings = () => {
+    const stored = localStorage.getItem('user_settings');
+    if (stored) {
+      settings.value = JSON.parse(stored);
+    }
+  };
+
+  const saveSettings = () => {
+    localStorage.setItem('user_settings', JSON.stringify(settings.value));
+  };
+
+  const initTheme = (quasar: QVueGlobals) => {
+    $q.value = quasar;
+    loadSettings();
+    updateTheme();
+  };
+
+  const updateTheme = () => {
+    if (!$q.value) return;
+
+    const isDark = settings.value.useSystemPreference
+      ? mediaQuery.matches
+      : settings.value.theme === 'dark';
+
+    $q.value.dark.set(isDark);
+  };
+
+  const handleSystemChange = () => {
+    if (settings.value.useSystemPreference) {
+      updateTheme();
+    }
+  };
+
+  watch(
+    () => settings.value,
+    () => {
+      saveSettings();
+      updateTheme();
+    },
+    { deep: true },
   );
 
-  const theme = ref(localStorage.getItem('theme') || 'light');
-  const useSystemPreference = ref(localStorage.getItem('useSystemPreference') === 'true');
-
-  const currentLanguage = computed(() => {
-    return languageOptions.find((option) => option.value === language.value) || languageOptions[0];
-  });
-
-  watch(language, (newLang) => {
-    localStorage.setItem('language', newLang);
-    setLanguage(newLang);
-  });
-
-  watch(theme, (newTheme) => {
-    localStorage.setItem('theme', newTheme);
-    themeManager.setTheme(newTheme === 'dark');
-  });
-
-  watch(useSystemPreference, (newValue) => {
-    localStorage.setItem('useSystemPreference', newValue.toString());
-    if (newValue) {
-      themeManager.enableSystemTheme();
-    } else {
-      themeManager.disableSystemTheme();
-    }
-  });
-
-  setLanguage(language.value);
-  themeManager.setTheme(theme.value === 'dark');
-  if (useSystemPreference.value) {
-    themeManager.enableSystemTheme();
-  }
+  mediaQuery.addEventListener('change', handleSystemChange);
 
   return {
-    language,
-    currentLanguage,
     languageOptions,
-    theme,
-    useSystemPreference,
+    settings,
+    initTheme,
+    updateTheme,
   };
 });

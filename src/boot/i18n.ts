@@ -13,7 +13,7 @@ declare module 'vue-i18n' {
   export interface DefineNumberFormat {}
 }
 
-const STORAGE_LANGUAGE_KEY = 'language';
+export const STORAGE_LANGUAGE_KEY = 'language';
 
 const i18n = createI18n<{ message: MessageSchema }, MessageLanguages>({
   locale: getStoredLanguage(),
@@ -38,7 +38,6 @@ function getStoredLanguage(): MessageLanguages {
 }
 
 export function setLanguage(lang: MessageLanguages) {
-  localStorage.setItem(STORAGE_LANGUAGE_KEY, lang);
   const i18nGlobal = i18n.global as unknown as Composer;
   i18nGlobal.locale.value = lang;
 }

@@ -48,16 +48,27 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useUserStore } from '@/stores/user';
+import { useQuasar } from 'quasar';
+import { MessageLanguages, setLanguage } from '@/boot/i18n';
 
 const userStore = useUserStore();
+const $q = useQuasar();
 
 const languageOptions = userStore.languageOptions;
 
+interface LanguageOption {
+  value: MessageLanguages;
+  label: string;
+}
+
 const currentLanguage = computed({
-  get: () =>
-    languageOptions.find((option) => option.value === userStore.language) ?? languageOptions[0],
-  set: (newLang: { value: string; label: string }) => {
-    userStore.language = newLang.value as 'en-US' | 'sr-RS' | 'fr-FR';
+  get: () => {
+    const currentLang = userStore.settings.language;
+    const option = userStore.languageOptions.find((opt) => opt.value === currentLang);
+    return option || userStore.languageOptions[0];
+  },
+  set: (option: LanguageOption) => {
+    userStore.settings.language = option.value;
   },
 });
 
@@ -67,24 +78,28 @@ const themeOptions = [
 ];
 
 const theme = computed({
-  get: () => userStore.theme,
-  set: (newTheme: string) => {
-    userStore.theme = newTheme;
+  get: () =>
+    themeOptions.find((option) => option.value === userStore.settings.theme) ?? themeOptions[0],
+  set: (value: 'light' | 'dark') => {
+    userStore.settings.theme = value;
+    $q.dark.set(value === 'dark');
   },
 });
 
 const useSystemPreference = computed({
-  get: () => userStore.useSystemPreference,
+  get: () => userStore.settings.useSystemPreference,
   set: (value: boolean) => {
-    userStore.useSystemPreference = value;
+    userStore.settings.useSystemPreference = value;
+    userStore.updateTheme();
   },
 });
 
-const onLanguageChange = (selectedLanguage: { value: string; label: string }) => {
-  currentLanguage.value = selectedLanguage;
+const onLanguageChange = (option: LanguageOption) => {
+  userStore.settings.language = option.value;
+  setLanguage(option.value);
 };
 
-const updateTheme = (selectedTheme: { value: string; label: string }) => {
+const updateTheme = (selectedTheme: { value: 'light' | 'dark'; label: string }) => {
   theme.value = selectedTheme.value;
 };
 
