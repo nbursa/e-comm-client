@@ -53,6 +53,6 @@ defineEmits<{
 const $q = useQuasar() as QVueGlobals;
 
 const drawerWidth = computed<number>(() => {
-  return $q.screen.lt.md ? $q.screen.width : 300;
+  return $q.screen.lt.sm ? $q.screen.width : 300;
 });
 </script>
