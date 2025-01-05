@@ -79,6 +79,12 @@ a.q-btn {
 button.q-btn {
   padding: 0.5rem 2rem;
   font-size: 1rem;
+  &.q-btn--round {
+    padding: 0.5rem;
+  }
+  &.q-btn--rectangle {
+    padding: 0.5rem 1rem;
+  }
 }
 
 .q-card__actions button.q-btn--rectangle {

@@ -6,83 +6,110 @@
       <q-btn to="/products" color="white" text-color="black" :label="$t('cart.continue')" />
     </div>
 
-    <div v-else class="row q-col-gutter-md">
-      <div class="col-12 col-md-8">
-        <q-item v-for="item in cartStore.items" :key="item.id" class="cart-item">
-          <q-item-section thumbnail class="q-pr-md product-image-container">
-            <q-img :src="item.image" :ratio="1" class="product-image" fit="contain" />
-          </q-item-section>
+    <div v-else class="tw-container tw-max-w-screen-xl tw-mx-auto">
+      <div class="row q-col-gutter-lg">
+        <div class="col-12 col-md-8 tw-space-y-0 md:tw-space-y-4">
+          <q-item
+            v-for="item in cartStore.items"
+            :key="item.id"
+            class="tw-flex tw-flex-col md:tw-flex-row md:!tw-justify-end !tw-gap-3 tw-p-3 !tw-bg-grey-1 tw-rounded-lg tw-shadow-md"
+          >
+            <q-item-section class="tw-w-full md:tw-w-32 tw-h-full md:tw-h-32">
+              <q-img :src="item.image" :ratio="1" class="tw-w-full tw-h-full" fit="contain" />
+            </q-item-section>
 
-          <q-item-section>
-            <q-item-label class="text-subtitle1 text-weight-medium">
-              {{ item.name }}
-            </q-item-label>
-            <q-item-label caption>
-              {{ formatPrice(item.price) }} {{ $t('cart.each') }}
-            </q-item-label>
+            <q-item-section
+              class="!tw-flex-1 !tw-flex-grow tw-flex tw-flex-col tw-gap-2 !tw-w-auto"
+            >
+              <q-item-label class="text-subtitle1 text-weight-medium">
+                {{ item.title }}
+              </q-item-label>
+              <q-item-label caption>
+                {{ formatPrice(item.price) }} {{ $t('cart.each') }}
+              </q-item-label>
 
-            <div class="mobile-controls q-mt-sm">
-              <q-btn-group flat>
-                <q-btn
+              <div class="q-mt-sm">
+                <q-btn-group
                   flat
-                  dense
-                  icon="remove"
-                  @click="updateQuantity(item.id, item.quantity - 1)"
-                />
-                <q-btn flat dense class="text-weight-bold">{{ item.quantity }}</q-btn>
-                <q-btn flat dense icon="add" @click="updateQuantity(item.id, item.quantity + 1)" />
-              </q-btn-group>
-              <div class="text-subtitle1 text-weight-bold mobile-price">
-                {{ formatPrice(item.price * item.quantity) }}
+                  class="tw-w-full tw-flex tw-justify-between tw-items-center delete-section"
+                >
+                  <q-btn
+                    flat
+                    dense
+                    icon="remove"
+                    @click="updateQuantity(item.id, item.quantity - 1)"
+                  />
+                  <q-btn flat dense class="text-weight-bold">{{ item.quantity }}</q-btn>
+                  <q-btn
+                    flat
+                    dense
+                    icon="add"
+                    @click="updateQuantity(item.id, item.quantity + 1)"
+                  />
+                </q-btn-group>
+                <div class="text-subtitle1 text-weight-bold mobile-price">
+                  {{ $t('cart.total') }}: {{ formatPrice(item.price * item.quantity) }}
+                </div>
               </div>
-            </div>
-          </q-item-section>
+            </q-item-section>
 
-          <q-item-section side>
-            <q-btn flat round color="negative" icon="delete" @click="removeItem(item.id)" />
-          </q-item-section>
-        </q-item>
-      </div>
+            <q-item-section
+              class="!tw-flex-shrink-0 tw-flex tw-items-center tw-justify-center !tw-w-auto !tw-flex-0"
+            >
+              <q-btn
+                flat
+                round
+                rectangle
+                color="negative"
+                icon="delete"
+                @click="removeItem(item.id)"
+              />
+            </q-item-section>
+          </q-item>
+        </div>
 
-      <!-- Order Summary -->
-      <div class="col-12 col-md-4">
-        <q-card class="order-summary">
-          <q-card-section>
-            <div class="text-h6">{{ $t('cart.orderSummary') }}</div>
-            <q-list dense>
-              <q-item>
-                <q-item-section>{{ $t('cart.items') }} ({{ cartStore.totalItems }})</q-item-section>
-                <q-item-section side>
-                  {{ formatPrice(cartStore.totalPrice) }}
-                </q-item-section>
-              </q-item>
-              <q-item>
-                <q-item-section>{{ $t('cart.shipping') }}</q-item-section>
-                <q-item-section side>{{ $t('cart.free') }}</q-item-section>
-              </q-item>
-              <q-separator class="q-my-md" />
-              <q-item>
-                <q-item-section>
-                  <span class="text-subtitle1 text-weight-bold">{{ $t('cart.total') }}</span>
-                </q-item-section>
-                <q-item-section side>
-                  <span class="text-subtitle1 text-weight-bold">
+        <!-- Order Summary -->
+        <div class="col-12 col-md-4">
+          <q-card class="tw-flex tw-justify-between">
+            <q-card-section class="tw-w-full">
+              <div class="text-h6">{{ $t('cart.orderSummary') }}</div>
+              <q-list dense class="tw-w-full tw-flex tw-flex-col tw-justify-between">
+                <q-item class="tw-justify-between">
+                  <q-item-section
+                    >{{ $t('cart.items') }} ({{ cartStore.totalItems }})</q-item-section
+                  >
+                  <q-item-section side>
                     {{ formatPrice(cartStore.totalPrice) }}
-                  </span>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-card-section>
-          <q-card-actions align="center">
-            <q-btn
-              :color="color"
-              :text-color="text"
-              :label="$t('cart.checkout')"
-              class="full-width"
-              @click="checkout"
-            />
-          </q-card-actions>
-        </q-card>
+                  </q-item-section>
+                </q-item>
+                <q-item class="tw-justify-between">
+                  <q-item-section>{{ $t('cart.shipping') }}</q-item-section>
+                  <q-item-section side>{{ $t('cart.free') }}</q-item-section>
+                </q-item>
+                <q-separator class="q-my-md" />
+                <q-item class="tw-justify-between">
+                  <q-item-section>
+                    <span class="text-subtitle1 text-weight-bold">{{ $t('cart.total') }}</span>
+                  </q-item-section>
+                  <q-item-section side>
+                    <span class="text-subtitle1 text-weight-bold">
+                      {{ formatPrice(cartStore.totalPrice) }}
+                    </span>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+            <q-card-actions align="center">
+              <q-btn
+                :color="color"
+                :text-color="text"
+                :label="$t('cart.checkout')"
+                class="full-width"
+                @click="checkout"
+              />
+            </q-card-actions>
+          </q-card>
+        </div>
       </div>
     </div>
   </q-page>
@@ -135,129 +162,11 @@ const removeItem = (id: number) => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.q-slide-item) {
-  .q-slide-item__left {
-    background: var(--q-negative);
-    color: white;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-  }
-}
-
-:deep(.q-slide-item__content) {
-  @media (max-width: 599px) {
-    flex-direction: column;
-
-    .q-item {
-      flex-direction: column;
-      align-items: center;
-      padding: 16px;
-
-      .product-image-container {
-        width: 100%;
-        max-width: 200px;
-        margin-bottom: 16px;
-      }
-
-      .q-item__section--main {
-        text-align: center;
-      }
-
-      .q-item__section--side {
-        padding-left: 0;
-        margin-top: 16px;
-        width: 100%;
-        text-align: center;
-      }
-
-      .product-price {
-        width: 100%;
-        font-size: 1.25rem;
-        margin: 0;
-        margin-top: 16px;
-        text-align: center;
-      }
-    }
-  }
-}
-
-.product-image-container {
-  width: 100px;
-  height: 100px;
-
-  .product-image {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.product-image {
-  width: 100%;
-  max-height: 150px;
-
-  :deep(.q-img__content) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  :deep(.q-img__image) {
-    object-fit: contain;
-    max-width: 100%;
-    max-height: 100%;
-  }
-}
-
-.order-summary {
-  width: 100%;
-
-  :deep(.q-card__section) {
-    padding: 20px;
-
-    .q-list {
-      width: 100%;
-
-      .q-item {
-        padding: 12px 0;
-        width: 100%;
-      }
-    }
-  }
-}
-.cart-item {
-  @media (max-width: 599px) {
-    flex-direction: column;
-    align-items: center;
-    padding: 16px;
-
-    .product-image-container {
-      width: 200px;
-      height: 200px;
-      margin-bottom: 16px;
-    }
-
-    .q-item__section--main {
-      width: 100%;
-      text-align: center;
-    }
-
-    .mobile-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-
-      .q-btn-group {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .mobile-price {
-        margin-top: 8px;
-      }
-    }
-  }
+.delete-section {
+  flex-shrink: 0 !important;
+  width: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
