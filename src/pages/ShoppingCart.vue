@@ -150,6 +150,7 @@ const checkout = () => {
 
 const removeItem = (id: number) => {
   $q.dialog({
+    class: 'custom-dialog',
     title: t('cart.confirmDelete'),
     message: t('cart.deleteMessage'),
     cancel: {
@@ -174,3 +175,37 @@ const removeItem = (id: number) => {
   });
 };
 </script>
+
+<style lang="scss">
+.custom-dialog {
+  border-radius: 8px;
+
+  .q-dialog__title {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 20px 20px 0;
+    margin-bottom: 20px;
+  }
+
+  .q-dialog__message {
+    padding: 20px;
+    color: #666;
+    font-size: 0.8rem;
+  }
+
+  .q-dialog__inner {
+    min-width: 300px;
+  }
+
+  .q-card__actions {
+    padding: 12px 20px;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .custom-dialog-btn {
+    min-width: 85px;
+    font-weight: 500;
+  }
+}
+</style>

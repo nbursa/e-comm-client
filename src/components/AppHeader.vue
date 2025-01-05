@@ -14,7 +14,7 @@
       </div>
 
       <q-btn flat round dense to="/cart" icon="shopping_cart" class="q-mr-sm cart-btn">
-        <q-badge color="white" floating class="cart-badge">
+        <q-badge floating class="cart-badge" :class="{ 'blink-animation': isAnimating }">
           {{ totalItems }}
         </q-badge>
       </q-btn>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed, PropType, ref, watch } from 'vue';
 
 import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
@@ -49,9 +49,23 @@ defineEmits<{
   'update:drawerOpen': [];
 }>();
 
+const isAnimating = ref(false);
+
 const totalItems = computed(() => cartStore.totalItems);
 const themeStyle = computed(() =>
   $q.dark.isActive ? 'bg-dark text-light shadow-dark' : 'bg-light text-dark shadow-light',
+);
+
+watch(
+  () => totalItems.value,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      isAnimating.value = true;
+      setTimeout(() => {
+        isAnimating.value = false;
+      }, 1000);
+    }
+  },
 );
 </script>
 
@@ -77,6 +91,29 @@ const themeStyle = computed(() =>
     align-items: center;
     justify-content: center;
     color: black;
+  }
+}
+
+:deep(.cart-badge) {
+  background-color: white;
+  &.blink-animation {
+    animation: blink 0.5s ease-in-out;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    transform: scale(1);
+    color: white;
+    border-color: white;
+    background-color: red;
+  }
+  50% {
+    transform: scale(1.5);
+    color: white;
+    border-color: white;
+    background-color: red;
   }
 }
 </style>
