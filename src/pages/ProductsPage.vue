@@ -187,7 +187,6 @@ const addToCart = (product: Product) => {
     message: 'Product added to cart!',
     icon: 'check_circle',
   });
-  scrollToTop();
 };
 
 const viewProduct = (product: Product) => {
