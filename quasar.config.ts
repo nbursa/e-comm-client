@@ -24,11 +24,20 @@ export default defineConfig((ctx: { modeName: string }) => {
         VITE_API_URL: process.env.VITE_API_URL,
       },
       extendViteConf(viteConf) {
+        viteConf.base = process.env.NODE_ENV === 'production' ? '/e-commerce-platform' : '/';
         viteConf.resolve ??= {};
         viteConf.resolve.alias = {
           ...viteConf.resolve.alias,
           '@': fileURLToPath(new URL('./src', import.meta.url)),
         };
+      },
+      afterBuild: async () => {
+        const fs = await import('fs/promises');
+        const path = await import('path');
+
+        const distDir = path.resolve(process.cwd(), 'dist/spa');
+
+        await fs.copyFile(path.join(distDir, 'index.html'), path.join(distDir, '404.html'));
       },
       vitePlugins: [
         [
