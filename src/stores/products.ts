@@ -57,13 +57,13 @@ export const useProductCacheStore = defineStore('productCache', {
         categories,
         timestamp: Date.now(),
       };
-      localStorage.setItem('categories_cache', JSON.stringify(this.categoryCache));
+      localStorage.setItem('categories', JSON.stringify(this.categoryCache));
     },
 
     getCategoryCache(): CategoryCache | null {
       if (this.categoryCache) return this.categoryCache;
 
-      const stored = localStorage.getItem('categories_cache');
+      const stored = localStorage.getItem('categories');
       if (!stored) return null;
 
       this.categoryCache = JSON.parse(stored);
