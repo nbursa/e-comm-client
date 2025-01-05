@@ -19,6 +19,19 @@
         </q-badge>
       </q-btn>
 
+      <q-select
+        v-model="userStore.language"
+        :options="userStore.languageOptions"
+        dense
+        options-dense
+        borderless
+        emit-value
+        map-options
+        class="q-mr-sm"
+        style="min-width: 100px"
+        @update:model-value="handleLanguageChange"
+      />
+
       <q-btn flat round dense icon="menu" class="lt-lg" @click="$emit('update:drawerOpen')" />
     </q-toolbar>
   </q-header>
@@ -30,9 +43,14 @@ import { computed, PropType, ref, watch } from 'vue';
 import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
 import { QVueGlobals } from 'quasar/dist/types/globals';
+import { useI18n } from 'vue-i18n';
+import { useUserStore } from '@/stores/user';
+import { MessageLanguages } from '@/boot/i18n';
 
 const cartStore = useCartStore();
+const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
+const { locale } = useI18n();
 
 defineProps({
   menuItems: {
@@ -48,6 +66,11 @@ defineProps({
 defineEmits<{
   'update:drawerOpen': [];
 }>();
+
+const handleLanguageChange = (value: MessageLanguages) => {
+  userStore.language = value;
+  locale.value = value;
+};
 
 const isAnimating = ref(false);
 
