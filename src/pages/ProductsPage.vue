@@ -106,11 +106,13 @@ import { useRouter } from 'vue-router';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { scroll } from 'quasar';
 import CartPreview from '@/components/CartPreview.vue';
+import { useProductCacheStore } from '@/stores/products';
 
 const { getVerticalScrollPosition } = scroll;
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
+const productCache = useProductCacheStore();
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
 const products = ref<Product[]>([]);
@@ -139,19 +141,6 @@ const paginatedProducts = computed(() => {
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
 const totalItems = computed(() => cartStore.totalItems);
 const totalPrice = computed(() => cartStore.totalPrice);
-
-const fetchCategories = async () => {
-  try {
-    isLoadingCategories.value = true;
-    const response = await fetch(`${apiUrl}/products/categories`);
-    categories.value = await response.json();
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    categories.value = [];
-  } finally {
-    isLoadingCategories.value = false;
-  }
-};
 
 const formatCategoryLabel = (category: string) => {
   if (!category) return '';
@@ -203,9 +192,44 @@ watch(selectedCategory, async (newCategory) => {
   await fetchProducts(newCategory);
 });
 
+const fetchCategories = async () => {
+  try {
+    isLoadingCategories.value = true;
+
+    if (productCache.isCategoryCacheValid()) {
+      const cached = productCache.getCategoryCache();
+      if (cached) {
+        categories.value = cached.categories;
+        return;
+      }
+    }
+
+    const response = await fetch(`${apiUrl}/products/categories`);
+    const data = await response.json();
+    categories.value = data;
+    productCache.setCategoryCache(data);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    categories.value = [];
+  } finally {
+    isLoadingCategories.value = false;
+  }
+};
+
 const fetchProducts = async (category?: string) => {
   $q.loading.show();
   try {
+    const cacheCategory = category || 'all';
+
+    if (productCache.isCacheValid(cacheCategory)) {
+      const cached = productCache.getCache(cacheCategory);
+      if (cached) {
+        products.value = cached.products;
+        $q.loading.hide();
+        return;
+      }
+    }
+
     const url =
       category && category !== 'all'
         ? `${apiUrl}/products/category/${category}`
@@ -215,7 +239,9 @@ const fetchProducts = async (category?: string) => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    products.value = await response.json();
+    const data = await response.json();
+    products.value = data;
+    productCache.setCache(data, cacheCategory);
   } catch {
     $q.notify({
       color: 'negative',
