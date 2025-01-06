@@ -4,7 +4,7 @@ Modern e-commerce platform built with Quasar Framework and Vue 3.
 
 ## Live Demo
 
-🚀 <a href="https://shop.nenadbursac.com" target="_blank" rel="noopener noreferrer">Live Demo</a>
+🚀 [Live Demo](https://shop.nenadbursac.com)
 
 ## Features
 
