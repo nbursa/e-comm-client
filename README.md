@@ -51,6 +51,7 @@ Create a .env file:
 
 ```
 VITE_API_URL=your_api_url_here
+NODE_ENV=development // or production
 ```
 
 ## Caching
