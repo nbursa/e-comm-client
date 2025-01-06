@@ -2,11 +2,15 @@
 
 Modern e-commerce platform built with Quasar Framework and Vue 3.
 
+## Live Demo
+
+🚀 <a href="https://shop.nenadbursac.com" target="_blank" rel="noopener noreferrer">Live Demo</a>
+
 ## Features
 
 - 🛍️ Product catalog with categories
 - 🛒 Shopping cart with real-time updates
-- 🌐 Multi-language support (EN/ES)
+- 🌐 Multi-language support (EN/SR)
 - 🎨 Light/Dark theme
 - 💾 Caching system for products and categories
 - 📱 Responsive design for mobile and desktop
