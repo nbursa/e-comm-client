@@ -21,7 +21,7 @@ export default [
   }),
 
   {
-    files: ['*.vue'],
+    files: ['*.vue', 'server/**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
