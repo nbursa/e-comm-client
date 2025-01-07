@@ -43,19 +43,24 @@
 
     <q-separator class="q-my-md" />
 
-    <div class="tw-container tw-mx-auto">
+    <div class="tw-container tw-mx-auto tw-max-w-screen-xl tw-mb-8">
       <div
         class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 tw-gap-4"
       >
         <q-card
           v-for="product in paginatedProducts"
           :key="product.id"
-          class="q-mb-m full-width"
+          class="tw-w-full tw-transition tw-duration-200 tw-ease-in-out hover:tw-cursor-pointer hover:tw-scale-105"
           bordered
           @click="viewProduct(product)"
         >
-          <q-img :src="product.image" :alt="product.name" class="q-card-img-top" />
-          <q-card-section>
+          <q-img
+            :src="product.image"
+            :alt="product.name"
+            fit="contain"
+            class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"
+          />
+          <q-card-section class="tw-flex-grow">
             <div class="text-bold product-name">{{ product.name }}</div>
             <div class="text-caption">{{ getFirstSentence(product.description) }}</div>
           </q-card-section>
