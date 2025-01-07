@@ -1,0 +1,1 @@
+.zoomable-image{transition:transform .3s ease}.zoomable-image.zoom-in{cursor:grab;transform:scale(2) translate(var(--translate-x, 0),var(--translate-y, 0));transition:transform .3s ease;will-change:transform}.zoomable-image.zoom-out{cursor:pointer;transform:scale(1);transition:transform .3s ease}
