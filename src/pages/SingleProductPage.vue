@@ -97,12 +97,13 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useCartStore, type Product } from '@/stores/cart';
+import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { scroll } from 'quasar';
 import CartPreview from '@/components/CartPreview.vue';
 import { useI18n } from 'vue-i18n';
+import { Product } from '@/types';
 
 const { getVerticalScrollPosition } = scroll;
 

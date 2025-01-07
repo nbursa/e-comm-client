@@ -137,6 +137,7 @@ import { useCartStore } from '../stores/cart';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { OrderDetails } from '@/types';
 
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
@@ -183,26 +184,44 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
-const placeOrder = () => {
+const placeOrder = async () => {
   $q.loading.show();
   try {
-    setTimeout(() => {
-      cartStore.clearCart();
-      $q.loading.hide();
-      $q.notify({
-        color: 'positive',
-        message: t('checkout.orderPlaced'),
-        icon: 'check',
-      });
-      router.push('/products');
-    }, 2000);
+    const email = import.meta.env.VITE_EMAIL_ADMIN || '';
+    const orderDetails: OrderDetails = {
+      id: Math.floor(Math.random() * 1000),
+      items: cartStore.items,
+      total: totalPrice.value,
+      firstName: form.value.firstName,
+      lastName: form.value.lastName,
+      email: form.value.email,
+      address: form.value.address,
+      cardNumber: payment.value.cardNumber,
+      cvv: payment.value.cvv,
+      expiry: payment.value.expiry,
+    };
+
+    const response = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        orderDetails,
+      }),
+    });
+
+    if (!response.ok) throw new Error('Failed to send email');
+
+    cartStore.clearCart();
+    router.push('/thankyou');
   } catch {
-    $q.loading.hide();
     $q.notify({
       color: 'negative',
       message: t('checkout.orderFailed'),
       icon: 'error',
     });
+  } finally {
+    $q.loading.hide();
   }
 };
 

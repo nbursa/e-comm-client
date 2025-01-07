@@ -101,7 +101,6 @@
 
 <script lang="ts" setup>
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
-import type { Product } from '../stores/cart';
 import { useCartStore } from '../stores/cart';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
@@ -110,6 +109,7 @@ import { scroll } from 'quasar';
 import CartPreview from '@/components/CartPreview.vue';
 import { useProductCacheStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
+import { Product } from '@/types';
 
 const { getVerticalScrollPosition } = scroll;
 const cartStore = useCartStore();

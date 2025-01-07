@@ -36,6 +36,12 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    path: '/thankyou',
+    component: MainLayout,
+    children: [{ path: '', component: loadPage('ThankYouPage'), meta: { title: 'Thank You!' } }],
+  },
+
+  {
     path: '/settings',
     component: MainLayout,
     children: [{ path: '', component: loadPage('SettingsPage'), meta: { title: 'Settings' } }],

@@ -41,7 +41,13 @@ export default [
         project: path.resolve(__dirname, './tsconfig.json'),
         tsconfigRootDir: __dirname,
         extraFileExtensions: ['.vue'],
+        ecmaVersion: 'latest',
+        sourceType: 'module',
       },
+    },
+    env: {
+      node: true,
+      es2022: true,
     },
     rules: {
       'prefer-promise-reject-errors': 'off',

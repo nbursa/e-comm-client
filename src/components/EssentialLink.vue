@@ -12,12 +12,7 @@
 </template>
 
 <script setup lang="ts">
-export interface EssentialLinkProps {
-  title: string;
-  caption?: string;
-  link?: string;
-  icon?: string;
-}
+import { EssentialLinkProps } from '@/types';
 
 withDefaults(defineProps<EssentialLinkProps>(), {
   caption: '',

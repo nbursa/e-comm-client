@@ -1,23 +1,5 @@
+import { Product } from '@/types';
 import { defineStore } from 'pinia';
-
-type ProductRating = {
-  rate: number;
-  count: number;
-};
-
-export interface Product {
-  id: number;
-  title: string;
-  name: string;
-  price: number;
-  discountedPrice?: number;
-  quantity: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: ProductRating;
-  discount?: boolean;
-}
 
 export const useCartStore = defineStore('cart', {
   state: () => ({

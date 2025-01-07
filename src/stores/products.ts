@@ -1,5 +1,5 @@
+import { Product } from '@/types';
 import { defineStore } from 'pinia';
-import { Product } from './cart';
 
 export interface CacheEntry {
   products: Product[];
