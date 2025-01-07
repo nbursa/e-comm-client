@@ -77,6 +77,7 @@ export default defineConfig((ctx: { modeName: string }) => {
           target: 'http://localhost:3000',
           changeOrigin: true,
           secure: true,
+          ws: true,
           configure: (proxy) => {
             proxy.on('error', (err) => {
               console.log('proxy error', err);
