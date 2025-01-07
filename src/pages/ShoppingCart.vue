@@ -1,9 +1,9 @@
 <template>
   <q-page padding>
     <div v-if="cartStore.items.length === 0" class="text-center q-pa-xl">
-      <q-icon name="shopping_cart" size="100px" color="grey-4" />
-      <h5 class="text-grey-6 q-mb-md">{{ $t('cart.emptyCart') }}</h5>
-      <q-btn to="/products" color="white" text-color="black" :label="$t('cart.continue')" />
+      <q-icon name="shopping_cart" size="6rem" :color="color" />
+      <h5 class="q-mb-md" :color="color">{{ $t('cart.emptyCart') }}</h5>
+      <q-btn to="/products" :color="color" :text-color="text" :label="$t('cart.continue')" />
     </div>
 
     <div v-else class="tw-container tw-max-w-screen-xl tw-mx-auto">
@@ -23,10 +23,10 @@
             <q-item-section
               class="tw-flex-1 tw-min-w-0 md:tw-flex md:!tw-flex-col md:!tw-justify-between"
             >
-              <q-item-label class="text-subtitle1 text-weight-medium tw-truncate">
+              <q-item-label class="text-subtitle2 text-weight-medium tw-truncate">
                 {{ item.title }}
               </q-item-label>
-              <q-item-label caption>
+              <q-item-label caption class="!tw-text-xs">
                 {{ formatPrice(item.price) }} {{ $t('cart.each') }}
               </q-item-label>
 

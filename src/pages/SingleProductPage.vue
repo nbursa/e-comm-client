@@ -8,36 +8,41 @@
       class="q-ml-auto q-mb-md"
     />
 
-    <h5 class="q-m-sm">{{ product.title }}</h5>
+    <h5 class="q-m-sm q-">{{ product.title }}</h5>
     <q-separator class="q-my-md" />
 
-    <q-card bordered class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1600px">
+    <div class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1200px">
       <div class="row items-stretch full-height" :class="{ 'col-reverse-md': $q.screen.md }">
-        <div class="col-12 col-md-4">
+        <div
+          class="col-12 col-md-4 q-py-lg tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
+        >
           <q-img
             :src="product.image"
             :alt="product.name"
-            fit="cover"
+            fit="contain"
             class="cursor-pointer full-width full-height"
             @click="openImageOverlay(product.image)"
           />
         </div>
 
         <div
-          class="col-12 col-md-8 q-pa-md"
+          class="col-12 col-md-8 sm:tw-p-3 !tw-align-top"
           style="
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
+            flex-grow: 0;
             height: auto;
             min-height: 100%;
           "
         >
-          <q-card-section style="flex: 1; display: flex; flex-direction: column; height: 100%">
-            <div class="text-body1 q-mt-sm">{{ product.description }}</div>
+          <q-card-section
+            class="q-pa-sm !tw-pb-0"
+            style="flex: 1; display: flex; flex-direction: column; height: 100%"
+          >
+            <div class="text-caption q-mt-sm">{{ product.description }}</div>
           </q-card-section>
 
-          <q-card-actions align="right" class="row justify-between items-end">
+          <q-card-actions align="right" class="row justify-between items-end !tw-pt-0">
             <div class="q-mt-sm text-bold price-text">
               <template v-if="product.discount">
                 <s class="text-grey">{{ formatPrice(product.price) }}</s>
@@ -59,7 +64,7 @@
           </q-card-actions>
         </div>
       </div>
-    </q-card>
+    </div>
 
     <div class="row justify-center q-mt-xl">
       <q-btn
@@ -74,16 +79,17 @@
     <q-dialog v-model="showImageOverlay" maximized>
       <q-card class="q-pa-md" style="max-width: 90vw; max-height: 90vh; overflow: hidden">
         <div class="row justify-between items-center q-mb-md">
-          <div class="text-h6">{{ product.name }}</div>
+          <div class="text-caption">{{ product.name }}</div>
           <q-btn flat dense round icon="close" @click="showImageOverlay = false" />
         </div>
         <q-img
           :src="imageUrl"
           :alt="imageUrl"
-          class="zoomable-image"
+          class="zoomable-image tw-cursor-pointer"
           :class="{ 'zoom-in': isZoomed, 'zoom-out': !isZoomed }"
           style="max-width: 100%; max-height: 100%"
           :style="imageStyle"
+          fit="contain"
           @click="toggleZoom"
           @mousedown="startPanning"
           @mousemove="panImage"

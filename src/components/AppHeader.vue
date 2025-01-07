@@ -1,8 +1,8 @@
 <template>
   <q-header elevated bordered :class="themeStyle">
     <q-toolbar>
-      <q-toolbar-title class="header-title">{{ $t('main.ecomm') }}</q-toolbar-title>
-      <div class="gt-md">
+      <q-toolbar-title class="">{{ $t('main.ecomm') }}</q-toolbar-title>
+      <div class="gt-md tw-text-lg">
         <q-btn
           v-for="item in menuItems"
           :key="item.label"
@@ -12,8 +12,8 @@
         />
       </div>
 
-      <q-btn flat round dense to="/cart" icon="shopping_cart" class="q-mr-sm cart-btn">
-        <q-badge floating class="cart-badge" :class="{ 'blink-animation': isAnimating }">
+      <q-btn flat round dense to="/cart" icon="shopping_cart" size=".8rem" class="cart-btn !tw-p-2">
+        <q-badge class="cart-badge" :class="{ 'blink-animation': isAnimating }">
           {{ totalItems }}
         </q-badge>
       </q-btn>
@@ -28,16 +28,29 @@
         borderless
         emit-value
         map-options
-        class="lang-select q-mr-sm"
-        style="min-width: 80px"
+        hide-dropdown-icon
+        class="lang-select q-p-none"
+        style="min-width: 60px"
         @update:model-value="setLanguage"
       >
         <template #selected>
-          <q-btn flat dense :label="displayLanguage" class="text-no-wrap" />
+          <q-btn
+            flat
+            dense
+            :label="displayLanguage"
+            class="text-no-wrap !tw-w-full !tw-h-full !tw-p-0"
+          />
         </template>
       </q-select>
 
-      <q-btn flat round dense icon="menu" class="lt-lg" @click="$emit('update:drawerOpen')" />
+      <q-btn
+        flat
+        round
+        dense
+        icon="menu"
+        class="lt-lg !tw-p-2"
+        @click="$emit('update:drawerOpen')"
+      />
     </q-toolbar>
   </q-header>
 </template>
@@ -111,22 +124,24 @@ defineEmits<{
 
   :deep(.cart-badge) {
     position: absolute;
-    top: 7px;
-    right: 7px;
-    min-width: 20px;
-    min-height: 20px;
-    width: fit-content;
+    top: 0px;
+    right: -3px;
+    min-width: 18px;
+    min-height: 18px;
     aspect-ratio: 1;
-    padding: 4px;
+    padding: 2px;
+    padding-left: 3px;
     border: 2px solid black;
-    border-radius: 50%;
-    font-size: 16px;
+    border-radius: 5px;
+    font-size: 14px;
     font-weight: bold;
-    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     color: black;
+    transform: translate(0, 0);
+    line-height: 0;
+    text-align: center;
   }
 }
 
@@ -150,6 +165,35 @@ defineEmits<{
     color: white;
     border-color: white;
     background-color: red;
+  }
+}
+
+:deep(.lang-select) {
+  .q-menu.q-position-engine.scroll {
+    min-width: 150px !important;
+    padding: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    transform-origin: top;
+    animation: menuIn 0.2s ease-out;
+
+    .q-item {
+      min-height: 48px !important;
+      padding: 12px 20px !important;
+      font-size: 16px !important;
+      font-weight: 500;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05) !important;
+        transform: translateX(4px);
+      }
+
+      &--active {
+        background: rgba(0, 0, 0, 0.08) !important;
+        color: var(--q-primary);
+      }
+    }
   }
 }
 

@@ -78,6 +78,9 @@ export default defineConfig((ctx: { modeName: string }) => {
           changeOrigin: true,
           secure: true,
           ws: true,
+          pathRewrite: {
+            '^/api': '',
+          },
           configure: (proxy) => {
             proxy.on('error', (err) => {
               console.log('proxy error', err);

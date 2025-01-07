@@ -7,13 +7,14 @@
     behavior="desktop"
     @update:model-value="$emit('update:drawerOpen', $event)"
   >
-    <q-scroll-area class="fit">
-      <div class="q-pa-sm">
-        <q-list class="padding">
+    <q-scroll-area class="tw-h-full">
+      <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-py-8">
+        <q-list class="tw-w-full tw-text-center">
           <q-item
             v-for="item in menuItems"
             :key="item.label"
             clickable
+            class="!tw-p-3 tw-justify-center"
             @click="$emit('navigate', item)"
           >
             <q-item-section avatar>{{ item.label }}</q-item-section>

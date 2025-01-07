@@ -73,12 +73,10 @@ body {
 
 a.q-btn {
   padding: 0.5rem 2rem;
-  font-size: 1rem;
 }
 
 button.q-btn {
   padding: 0.5rem 2rem;
-  font-size: 1rem;
   &.q-btn--round {
     padding: 0.5rem;
   }
@@ -89,31 +87,25 @@ button.q-btn {
 
 .q-card__actions button.q-btn--rectangle {
   padding: 1rem 2rem;
-}
-
-.q-drawer-container {
-  .q-list {
-    .q-item {
-      font-size: 1.25rem;
-      padding: 1rem;
-      justify-content: center;
-      .q-item__section--side {
-        padding-right: 0;
-      }
-    }
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.03);
   }
 }
 
 .q-header {
   .q-btn.q-btn--dense.q-btn--round {
     padding: 15px;
-    font-size: 1.1rem;
+    font-size: 16px;
   }
   .q-toolbar {
     padding: 0;
-    padding-left: 0.75rem;
+    padding-left: 1rem;
     .q-toolbar__title.header-title {
       font-size: 34px;
+    }
+    @media screen and (min-width: 0px) and (max-width: 599px) {
+      padding-left: 0.5rem;
     }
   }
 
@@ -235,4 +227,24 @@ button.q-btn {
 .q-header.q-layout__section--marginal.bg-light {
   background-color: var(--q-light) !important;
   color: var(--q-dark) !important;
+}
+
+.q-notify {
+  .q-notify__message {
+    font-size: 1.5rem;
+  }
+}
+
+.q-dialog .q-select__dialog {
+  max-width: 500px !important;
+  .q-virtual-scroll__content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 0.45rem 0;
+  }
 }
