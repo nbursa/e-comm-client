@@ -23,6 +23,11 @@
       async
       src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VITE_GA_ID %>"
     ></script>
+    <% } %>
+  </head>
+  <body>
+    <!-- quasar:entry-point -->
+    <% if (process.env.NODE_ENV === 'production' && process.env.VITE_GA_ID) { %>
     <script>
       if (typeof window !== 'undefined') {
         window.dataLayer = window.dataLayer || [];
@@ -34,8 +39,5 @@
       }
     </script>
     <% } %>
-  </head>
-  <body>
-    <!-- quasar:entry-point -->
   </body>
 </html>
