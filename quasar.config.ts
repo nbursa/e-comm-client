@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig((ctx: { modeName: string }) => {
   return {
     preFetch: true,
-    boot: ['i18n', 'axios', 'theme'],
+    boot: ['ga', 'i18n', 'axios', 'theme'],
     css: ['app.scss'],
     extras: ['roboto-font', 'material-icons'],
     build: {
@@ -22,6 +22,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       vueRouterMode: 'history',
       env: {
         VITE_API_URL: process.env.VITE_API_URL,
+        GA_ID: process.env.NODE_ENV === 'development' ? '' : process.env.VITE_GA_ID,
       },
       extendViteConf(viteConf) {
         viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';

@@ -16,11 +16,16 @@
     "dev:server": "node -r dotenv/config server/index.js dotenv_config_path=.env",
     "dev:client": "quasar dev",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "build": "quasar build",
+    "build-all": "quasar build",
+    "build:client": "quasar build -m spa",
+    "build:server": "mkdir -p dist/server && cp server/* dist/server/",
+    "build": "npm run build:client && npm run build:server",
+    "predeploy": "npm run build",
+    "deploy": "cross-env NODE_ENV=production gh-pages -d dist --add",
+    "postdeploy": "echo 'CNAME' > dist/CNAME && echo 'shop.nenadbursac.com' >> dist/CNAME",
     "postinstall": "quasar prepare",
     "analyze": "quasar build --analyze",
-    "predeploy": "npm run build",
-    "deploy": "cross-env NODE_ENV=production quasar build -m spa && gh-pages -d dist/spa"
+    "deploy-spa": "cross-env NODE_ENV=production quasar build -m spa && gh-pages -d dist/spa"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",

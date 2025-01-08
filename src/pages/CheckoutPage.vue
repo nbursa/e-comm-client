@@ -41,7 +41,7 @@
                       v-model="form.email"
                       :label="$t('checkout.email')"
                       type="email"
-                      :rules="[required, email]"
+                      :rules="[required, emailRules]"
                     />
                   </div>
                   <div class="col-12">
@@ -121,7 +121,7 @@
               :text-color="text"
               :label="step === 2 ? $t('checkout.placeOrder') : $t('checkout.continue')"
               class="full-width"
-              @click="step === 2 ? placeOrder() : nextStep()"
+              @click="step === 2 ? showOrderConfirmation() : nextStep()"
             />
           </q-card-actions>
         </q-card>
@@ -165,8 +165,22 @@ const totalPrice = computed(() =>
   cartStore.items.reduce((total, item) => total + item.price * item.quantity, 0),
 );
 
+const email = import.meta.env.VITE_EMAIL_ADMIN || '';
+const orderDetails: OrderDetails = {
+  id: Math.floor(Math.random() * 1000),
+  items: cartStore.items,
+  total: totalPrice.value,
+  firstName: form.value.firstName,
+  lastName: form.value.lastName,
+  email: form.value.email,
+  address: form.value.address,
+  cardNumber: payment.value.cardNumber,
+  cvv: payment.value.cvv,
+  expiry: payment.value.expiry,
+};
+
 const required = (val: string) => !!val || 'Field is required';
-const email = (val: string) =>
+const emailRules = (val: string) =>
   /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val) || 'Invalid email';
 
 const validateShipping = () => {
@@ -184,23 +198,73 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
+const showOrderConfirmation = () => {
+  $q.dialog({
+    title: 'Order Confirmation',
+    message: `
+      <div class="q-pa-md">
+        <h6 class="q-my-none">Order Summary</h6>
+        <p class="text-h6 q-mb-md">Total: ${formatPrice(orderDetails.total)}</p>
+
+        <div class="q-mb-md">
+          <strong>Shipping Details:</strong>
+          <p class="q-mb-none">${orderDetails.firstName} ${orderDetails.lastName}</p>
+          <p class="q-mb-none">${orderDetails.email}</p>
+          <p class="q-mb-none">${orderDetails.address}</p>
+        </div>
+
+        <div class="q-mb-md">
+          <strong>Payment Information:</strong>
+          <p class="q-mb-none">Card: **** **** **** ${orderDetails.cardNumber.slice(-4)}</p>
+          <p class="q-mb-none">Expiry: ${orderDetails.expiry}</p>
+        </div>
+
+        <div class="q-mt-sm">
+          <strong>Items:</strong>
+          ${orderDetails.items
+            .map(
+              (item) => `
+            <div class="q-py-sm">
+              <span>${item.title}</span>
+              <span class="float-right">
+                ${item.quantity}x ${formatPrice(item.price)}
+              </span>
+            </div>
+          `,
+            )
+            .join('')}
+        </div>
+      </div>
+    `,
+    html: true,
+    persistent: true,
+    class: 'q-dialog-plugin',
+    ok: {
+      label: 'Confirm Order',
+      flat: true,
+      style: 'opacity: 1 !important;',
+      class: `bg-${color.value} text-${text.value} lt-sm:full-width gt-sm:!tw-w-auto !tw-py-2 gt-sm:tw-py-4 lt-sm:q-mt-sm`,
+    },
+    cancel: {
+      label: 'Cancel',
+      flat: true,
+      style: 'opacity: 1 !important; box-shadow: inset 0 0 0 2px currentColor;',
+      class: `bg-${text.value} text-${color.value} lt-sm:full-width gt-sm:!tw-w-auto !tw-py-2 gt-sm:tw-py-4`,
+    },
+  }).onOk(() => {
+    // if (process.env.NODE_ENV === 'production') {
+    //   cartStore.clearCart();
+    //   router.push('/thankyou');
+    // } else {
+    //   placeOrder();
+    // }
+    placeOrder();
+  });
+};
+
 const placeOrder = async () => {
   $q.loading.show();
   try {
-    const email = import.meta.env.VITE_EMAIL_ADMIN || '';
-    const orderDetails: OrderDetails = {
-      id: Math.floor(Math.random() * 1000),
-      items: cartStore.items,
-      total: totalPrice.value,
-      firstName: form.value.firstName,
-      lastName: form.value.lastName,
-      email: form.value.email,
-      address: form.value.address,
-      cardNumber: payment.value.cardNumber,
-      cvv: payment.value.cvv,
-      expiry: payment.value.expiry,
-    };
-
     const response = await fetch('/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
