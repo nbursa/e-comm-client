@@ -20,12 +20,12 @@
     "build:client": "quasar build -m spa",
     "build:server": "mkdir -p dist/server && cp server/* dist/server/",
     "build": "npm run build:client && npm run build:server",
-    "predeploy": "npm run build",
-    "deploy": "cross-env NODE_ENV=production gh-pages -d dist --add",
-    "postdeploy": "echo 'shop.nenadbursac.com' >> dist/CNAME",
+    "predeploy": "npm run build && rm -f dist/CNAME",
+    "deploy-full": "cross-env NODE_ENV=production gh-pages -d dist --add",
+    "postdeploy": "echo 'shop.nenadbursac.com' > dist/CNAME",
     "postinstall": "quasar prepare",
     "analyze": "quasar build --analyze",
-    "deploy-spa": "cross-env NODE_ENV=production quasar build -m spa && gh-pages -d dist/spa"
+    "deploy": "cross-env NODE_ENV=production quasar build -m spa && mkdir -p dist/spa/server && cp server/* dist/spa/server/ && gh-pages -d dist/spa "
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
