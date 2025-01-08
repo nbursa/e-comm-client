@@ -18,16 +18,18 @@ export default boot(({ router }) => {
     script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.VITE_GA_ID}`;
     document.head.appendChild(script);
 
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function (type: GtagArg, action: string | Date, params?: GtagParams) {
-      window.dataLayer.push(params ? [type, action, params] : [type, action]);
-    };
-    window.gtag('js', new Date());
-    window.gtag('config', process.env.VITE_GA_ID);
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function (type: GtagArg, action: string | Date, params?: GtagParams) {
+        window.dataLayer.push(params ? [type, action, params] : [type, action]);
+      };
+      window.gtag('js', new Date());
+      window.gtag('config', process.env.VITE_GA_ID);
+    }
   }
 
   router.beforeEach((to) => {
-    if (window.gtag && process.env.VITE_GA_ID) {
+    if (typeof window !== 'undefined' && window.gtag && process.env.VITE_GA_ID) {
       window.gtag('config', process.env.VITE_GA_ID, {
         page_path: to.path,
         send_page_view: true,
