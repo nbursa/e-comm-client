@@ -200,27 +200,27 @@ const formatPrice = (price: number) => {
 
 const showOrderConfirmation = () => {
   $q.dialog({
-    title: 'Order Confirmation',
+    title: t('checkout.title'),
     message: `
-      <div class="q-pa-md">
-        <h6 class="q-my-none">Order Summary</h6>
-        <p class="text-h6 q-mb-md">Total: ${formatPrice(orderDetails.total)}</p>
+      <div>
+        <h6 class="q-my-none">${t('checkout.summary')}</h6>
+        <p class="text-h6 q-mb-md">${t('checkout.total')}: ${formatPrice(orderDetails.total)}</p>
 
         <div class="q-mb-md">
-          <strong>Shipping Details:</strong>
+          <strong>${t('checkout.shippingDetails')}:</strong>
           <p class="q-mb-none">${orderDetails.firstName} ${orderDetails.lastName}</p>
           <p class="q-mb-none">${orderDetails.email}</p>
           <p class="q-mb-none">${orderDetails.address}</p>
         </div>
 
         <div class="q-mb-md">
-          <strong>Payment Information:</strong>
-          <p class="q-mb-none">Card: **** **** **** ${orderDetails.cardNumber.slice(-4)}</p>
-          <p class="q-mb-none">Expiry: ${orderDetails.expiry}</p>
+          <strong>${t('checkout.paymentInfo')}:</strong>
+          <p class="q-mb-none">${t('checkout.card')}: **** **** **** ${orderDetails.cardNumber.slice(-4)}</p>
+          <p class="q-mb-none">${t('checkout.expiry')}: ${orderDetails.expiry}</p>
         </div>
 
         <div class="q-mt-sm">
-          <strong>Items:</strong>
+          <strong>${t('checkout.items')}:</strong>
           ${orderDetails.items
             .map(
               (item) => `
@@ -238,18 +238,23 @@ const showOrderConfirmation = () => {
     `,
     html: true,
     persistent: true,
-    class: 'q-dialog-plugin',
+    class: 'confirm-dialog',
     ok: {
-      label: 'Confirm Order',
+      label: t('checkout.confirmButton'),
       flat: true,
       style: 'opacity: 1 !important;',
-      class: `bg-${color.value} text-${text.value} lt-sm:full-width gt-sm:!tw-w-auto !tw-py-2 gt-sm:tw-py-4 lt-sm:q-mt-sm`,
+      class: `bg-${color.value} text-${text.value} lt-sm:full-width`,
     },
     cancel: {
-      label: 'Cancel',
+      label: t('checkout.cancelButton'),
       flat: true,
       style: 'opacity: 1 !important; box-shadow: inset 0 0 0 2px currentColor;',
-      class: `bg-${text.value} text-${color.value} lt-sm:full-width gt-sm:!tw-w-auto !tw-py-2 gt-sm:tw-py-4`,
+      class: `text-${color.value} lt-sm:full-width lt-sm:q-mt-sm`,
+    },
+    style: {
+      maxWidth: '600px',
+      width: '95vw',
+      margin: '0 auto',
     },
   }).onOk(() => {
     if (process.env.NODE_ENV === 'production') {

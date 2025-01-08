@@ -248,3 +248,26 @@ button.q-btn {
     padding: 0.45rem 0;
   }
 }
+
+.q-card.q-dialog-plugin.confirm-dialog {
+  .q-card__actions {
+    padding: 20px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+
+    @media (min-width: 600px) {
+      flex-direction: row !important;
+      justify-content: flex-end !important;
+    }
+
+    .q-btn {
+      margin: 0 !important;
+      width: 100% !important;
+
+      @media (min-width: 600px) {
+        width: auto !important;
+        min-width: 120px;
+      }
+    }
+  }
+}
