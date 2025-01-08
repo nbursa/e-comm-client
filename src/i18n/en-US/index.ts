@@ -69,6 +69,11 @@ export default {
     backToProducts: 'Back to Products',
     itemAdded: 'Product added to cart!',
   },
+  thankYou: {
+    title: 'Thank you for shopping with us!',
+    subtitle: 'Your order has been placed successfully!',
+    button: 'Continue Shopping',
+  },
   404: {
     error: 'Error',
     notExist: 'The page you are looking for does not exist.',

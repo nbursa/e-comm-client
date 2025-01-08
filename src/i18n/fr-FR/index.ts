@@ -69,6 +69,11 @@ export default {
     backToProducts: 'Retour aux produits',
     itemAdded: 'Produit ajouté au panier!',
   },
+  thankYou: {
+    title: 'Merci pour votre commande!',
+    subtitle: 'Votre commande a été passée avec succès.',
+    button: 'Continuer vos achats',
+  },
   404: {
     error: 'Erreur',
     notExist: "La page que vous recherchez n'existe pas.",

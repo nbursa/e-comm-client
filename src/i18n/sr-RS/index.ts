@@ -69,6 +69,11 @@ export default {
     backToProducts: 'Nazad na proizvode',
     itemAdded: 'Proizvod dodat u korpu!',
   },
+  thankYou: {
+    title: 'Hvala na porudžbini!',
+    subtitle: 'Vaša porudžbina je uspešno završena!',
+    button: 'Nastavi kupovinu',
+  },
   404: {
     error: 'Greška',
     notExist: 'Stranica koju tražite ne postoji.',
