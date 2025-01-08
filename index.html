@@ -24,12 +24,14 @@
       src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VITE_GA_ID %>"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
+      if (typeof window !== 'undefined') {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', '<%= process.env.VITE_GA_ID %>');
       }
-      gtag('js', new Date());
-      gtag('config', '<%= process.env.VITE_GA_ID %>');
     </script>
     <% } %>
   </head>
