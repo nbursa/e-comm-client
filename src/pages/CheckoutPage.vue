@@ -252,13 +252,13 @@ const showOrderConfirmation = () => {
       class: `bg-${text.value} text-${color.value} lt-sm:full-width gt-sm:!tw-w-auto !tw-py-2 gt-sm:tw-py-4`,
     },
   }).onOk(() => {
-    // if (process.env.NODE_ENV === 'production') {
-    //   cartStore.clearCart();
-    //   router.push('/thankyou');
-    // } else {
-    //   placeOrder();
-    // }
-    placeOrder();
+    if (process.env.NODE_ENV === 'production') {
+      cartStore.clearCart();
+      router.push('/thankyou');
+    } else {
+      placeOrder();
+    }
+    // placeOrder();
   });
 };
 
