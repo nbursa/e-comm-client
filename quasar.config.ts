@@ -1,5 +1,8 @@
 import { defineConfig } from '@quasar/app-vite/wrappers';
 import { fileURLToPath } from 'node:url';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default defineConfig((ctx: { modeName: string }) => {
   return {
@@ -8,6 +11,10 @@ export default defineConfig((ctx: { modeName: string }) => {
     css: ['app.scss'],
     extras: ['roboto-font', 'material-icons'],
     build: {
+      env: {
+        VITE_API_URL: process.env.VITE_API_URL,
+        VITE_GA_ID: process.env.NODE_ENV === 'development' ? '' : process.env.VITE_GA_ID,
+      },
       postcss: {
         plugins: ['tailwindcss', 'autoprefixer'],
       },
@@ -20,10 +27,6 @@ export default defineConfig((ctx: { modeName: string }) => {
         vueShim: true,
       },
       vueRouterMode: 'history',
-      env: {
-        VITE_API_URL: process.env.VITE_API_URL,
-        GA_ID: process.env.NODE_ENV === 'development' ? '' : process.env.VITE_GA_ID,
-      },
       extendViteConf(viteConf) {
         viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';
         viteConf.resolve ??= {};
@@ -35,10 +38,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       afterBuild: async () => {
         const fs = await import('fs/promises');
         const path = await import('path');
-
         const distDir = path.resolve(process.cwd(), 'dist/spa');
-
-        await fs.writeFile(path.join(distDir, 'CNAME'), 'shop.nenadbursac.com');
         await fs.copyFile(path.join(distDir, 'index.html'), path.join(distDir, '404.html'));
       },
       vitePlugins: [
@@ -82,11 +82,6 @@ export default defineConfig((ctx: { modeName: string }) => {
           pathRewrite: {
             '^/api': '',
           },
-          configure: (proxy) => {
-            proxy.on('error', (err) => {
-              console.log('proxy error', err);
-            });
-          },
         },
       },
     },
@@ -99,12 +94,6 @@ export default defineConfig((ctx: { modeName: string }) => {
           accent: '#00ffcc',
           dark: '#0D0A0B',
           light: '#F3EFF5',
-          white: '#ffffff',
-          night: '#0D0A0B',
-          charcoal: '#454955',
-          magnolia: '#F3EFF5',
-          applegreen: '#72B01D',
-          officegreen: '#3F7D20',
         },
         dark: true,
       },
@@ -120,21 +109,15 @@ export default defineConfig((ctx: { modeName: string }) => {
     pwa: {
       workboxMode: 'GenerateSW',
     },
-    cordova: {},
     capacitor: {
       hideSplashscreen: true,
     },
     electron: {
-      preloadScripts: ['electron-preload'],
+      bundler: 'builder',
       inspectPort: 5858,
-      bundler: 'packager',
-      packager: {},
       builder: {
         appId: 'e-commerce-platform',
       },
-    },
-    bex: {
-      extraScripts: [],
     },
   };
 });

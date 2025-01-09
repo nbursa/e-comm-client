@@ -25,7 +25,9 @@
     ".quasar/**/*",
     "quasar.d.ts",
     "node_modules/quasar/types/index.d.ts",
-    "src/shims-quasar.d.ts"
+    "src/shims-quasar.d.ts",
+    "src/env.d.ts",
+    "src/plugins.d.ts"
   ],
   "exclude": ["node_modules", "dist", "server"]
 }
