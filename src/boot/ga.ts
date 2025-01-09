@@ -1,4 +1,7 @@
 import { boot } from 'quasar/wrappers';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 type GtagArg = 'config' | 'js' | 'event';
 type GtagParams = Record<string, unknown>;
