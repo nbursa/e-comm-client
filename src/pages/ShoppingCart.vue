@@ -16,7 +16,7 @@
           >
             <!-- Image section -->
             <q-item-section class="tw-w-full md:tw-w-32 !tw-flex-shrink-0">
-              <q-img :src="item.image" :ratio="1" class="tw-w-full" fit="contain" />
+              <q-img :src="`${apiUrl}${item.image}`" :ratio="1" class="tw-w-full" fit="contain" />
             </q-item-section>
 
             <!-- Content section -->
@@ -24,7 +24,7 @@
               class="tw-flex-1 tw-min-w-0 md:tw-flex md:!tw-flex-col md:!tw-justify-between"
             >
               <q-item-label class="text-subtitle2 text-weight-medium tw-truncate">
-                {{ item.title }}
+                {{ item.name }}
               </q-item-label>
               <q-item-label caption class="!tw-text-xs">
                 {{ formatPrice(item.price) }} {{ $t('cart.each') }}
@@ -76,7 +76,7 @@
         <div class="col-12 col-md-4">
           <q-card class="tw-flex tw-justify-between">
             <q-card-section class="tw-w-full">
-              <div class="text-h6">{{ $t('cart.orderSummary') }}</div>
+              <div class="tw-text-xl tw-mb-4">{{ $t('cart.orderSummary') }}</div>
               <q-list dense class="tw-w-full tw-flex tw-flex-col tw-justify-between">
                 <q-item class="tw-justify-between">
                   <q-item-section
@@ -131,6 +131,8 @@ const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const { t } = useI18n();
+
+const apiUrl = import.meta.env.VITE_API_URL || '';
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));

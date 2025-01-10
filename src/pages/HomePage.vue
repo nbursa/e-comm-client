@@ -1,8 +1,13 @@
 <template>
   <q-page padding class="flex flex-center items-center">
     <div class="text-center">
-      <h1 class="text-h4 q-mb-lg">{{ $t('home.title') }}</h1>
-      <p class="text-h6 q-mb-lg">{{ $t('home.subtitle') }}</p>
+      <h1 class="tw-text-3xl tw-leading-tight sm:tw-text-6xl tw-font-serif q-mb-lg">
+        {{ $t('home.title') }}
+      </h1>
+      <p class="tw-text-base tw-font-serif tw-text-emerald-500 q-mb-lg">
+        {{ $t('home.description') }}
+      </p>
+      <p class="tw-text-base sm:tw-text-xl q-mb-lg">{{ $t('home.subtitle') }}</p>
       <q-btn :color="color" :text-color="text" to="/products" :label="$t('home.products')" />
     </div>
   </q-page>

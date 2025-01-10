@@ -5,7 +5,7 @@ export type ProductRating = {
 
 export interface Product {
   id: number;
-  title: string;
+  title?: string;
   name: string;
   price: number;
   discountedPrice?: number;
@@ -13,7 +13,7 @@ export interface Product {
   description: string;
   category: string;
   image: string;
-  rating: ProductRating;
+  rating?: ProductRating;
   discount?: boolean;
 }
 

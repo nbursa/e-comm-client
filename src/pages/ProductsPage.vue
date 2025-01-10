@@ -55,7 +55,7 @@
           @click="viewProduct(product)"
         >
           <q-img
-            :src="product.image"
+            :src="`${apiUrl}${product.image}`"
             :alt="product.name"
             fit="contain"
             class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"

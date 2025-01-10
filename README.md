@@ -1,12 +1,14 @@
 # E-Commerce Platform
 
-Modern e-commerce platform built with Quasar Framework and Vue 3.
+This project is a comprehensive client application for an e-commerce platform, built using the Quasar Framework and Vue 3. It forms the frontend layer of a three-tier system, providing a modern, responsive, and user-friendly interface for managing products and their categories. This client app ensures efficient interaction with the backend API and delivers a seamless shopping experience. 🚀 [Live Demo](https://shop.nenadbursac.com)
 
-## Live Demo
+## Backend
 
-🚀 [Live Demo](https://shop.nenadbursac.com)
+The backend for this application is built using the Gin framework in Go. It provides a simple API for managing products and their categories. Repository can be found at: [E-commerce Backend](https://github.com/nbursa/e-comm-backend)
 
 ## Features
+
+**🚧 Work In Progress 🚧**
 
 - 🛍️ Product catalog with categories
 - 🛒 Shopping cart with real-time updates
@@ -14,14 +16,6 @@ Modern e-commerce platform built with Quasar Framework and Vue 3.
 - 🎨 Light/Dark theme
 - 💾 Caching system for products and categories
 - 📱 Responsive design for mobile and desktop
-
-## Tech Stack
-
-- Vue 3 + TypeScript
-- Quasar Framework
-- Pinia for state management
-- Vue-i18n for internationalization
-- Tailwind CSS for styling
 
 ## Installation
 

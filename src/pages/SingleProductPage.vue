@@ -8,16 +8,13 @@
       class="q-ml-auto q-mb-md"
     />
 
-    <h5 class="q-m-sm q-">{{ product.title }}</h5>
-    <q-separator class="q-my-md" />
-
     <div class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1200px">
       <div class="row items-stretch full-height" :class="{ 'col-reverse-md': $q.screen.md }">
         <div
           class="col-12 col-md-4 q-py-lg tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
         >
           <q-img
-            :src="product.image"
+            :src="`${apiUrl}${product.image}`"
             :alt="product.name"
             fit="contain"
             class="cursor-pointer full-width full-height"
@@ -39,6 +36,7 @@
             class="q-pa-sm !tw-pb-0"
             style="flex: 1; display: flex; flex-direction: column; height: 100%"
           >
+            <h5>{{ product.name }}</h5>
             <div class="text-caption q-mt-sm">{{ product.description }}</div>
           </q-card-section>
 
@@ -79,11 +77,11 @@
     <q-dialog v-model="showImageOverlay" maximized>
       <q-card class="q-pa-md" style="max-width: 90vw; max-height: 90vh; overflow: hidden">
         <div class="row justify-between items-center q-mb-md">
-          <div class="text-caption">{{ product.name }}</div>
+          <div class="text-caption tw-font-black">{{ product.name }}</div>
           <q-btn flat dense round icon="close" @click="showImageOverlay = false" />
         </div>
         <q-img
-          :src="imageUrl"
+          :src="`${apiUrl}${imageUrl}`"
           :alt="imageUrl"
           class="zoomable-image tw-cursor-pointer"
           :class="{ 'zoom-in': isZoomed, 'zoom-out': !isZoomed }"
@@ -91,9 +89,12 @@
           :style="imageStyle"
           fit="contain"
           @click="toggleZoom"
-          @mousedown="startPanning"
+          @mouseenter="startHoverPanning"
           @mousemove="panImage"
           @mouseleave="stopPanning"
+          @touchstart="startTouchPanning"
+          @touchmove="panTouchImage"
+          @touchend="stopTouchPanning"
         />
       </q-card>
     </q-dialog>
@@ -113,6 +114,7 @@ import { Product } from '@/types';
 
 const { getVerticalScrollPosition } = scroll;
 
+const apiUrl = import.meta.env.VITE_API_URL || '';
 const route = useRoute();
 const router = useRouter();
 const $q = useQuasar() as QVueGlobals;
@@ -136,7 +138,6 @@ const product = ref<Product>({
 
 const isCollapsed = ref(false);
 const showImageOverlay = ref(false);
-
 const imageUrl = ref('');
 const isZoomed = ref(false);
 const isPanning = ref(false);
@@ -149,9 +150,9 @@ const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const totalItems = computed(() => cartStore.totalItems);
 const totalPrice = computed(() => cartStore.totalPrice);
+
 const imageStyle = computed(() => ({
-  '--translate-x': `${translateX.value}px`,
-  '--translate-y': `${translateY.value}px`,
+  transform: `translate(${translateX.value}px, ${translateY.value}px) scale(${isZoomed.value ? 2 : 1})`,
 }));
 
 const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
@@ -180,29 +181,77 @@ const openImageOverlay = (image: string) => {
 };
 
 const toggleZoom = () => {
-  if (!isZoomed.value) {
-    translateX.value = 0;
-    translateY.value = 0;
+  console.log('toggleZoom');
+  if (isZoomed.value) {
+    resetZoom();
+  } else {
+    isZoomed.value = true;
   }
-  isZoomed.value = !isZoomed.value;
 };
 
-const startPanning = (event: MouseEvent) => {
-  if (!isZoomed.value) return;
+const resetZoom = () => {
+  isZoomed.value = false;
+  translateX.value = 0;
+  translateY.value = 0;
+};
+
+const startHoverPanning = (event: MouseEvent) => {
+  if (!isZoomed.value) {
+    toggleZoom();
+    return;
+  }
   isPanning.value = true;
   startX.value = event.clientX - translateX.value;
   startY.value = event.clientY - translateY.value;
 };
 
+// const handleTouchStart = (event: TouchEvent) => {
+//   if (!isZoomed.value) {
+//     toggleZoom();
+//   } else {
+//     startTouchPanning(event);
+//   }
+// };
+
+const startTouchPanning = (event: TouchEvent) => {
+  isPanning.value = true;
+  const touch = event.touches[0];
+  if (touch) {
+    startX.value = touch.clientX - translateX.value;
+    startY.value = touch.clientY - translateY.value;
+    document.addEventListener('touchmove', panTouchImage);
+    document.addEventListener('touchend', stopTouchPanning);
+  }
+};
+
+const panTouchImage = (event: TouchEvent) => {
+  if (!isZoomed.value || !isPanning.value) return;
+  const touch = event.touches[0];
+  if (touch) {
+    translateX.value = (touch.clientX - startX.value) * -1;
+    translateY.value = (touch.clientY - startY.value) * -1;
+  }
+};
+
 const panImage = (event: MouseEvent) => {
   if (!isZoomed.value || !isPanning.value) return;
-  translateX.value = event.clientX - startX.value;
-  translateY.value = event.clientY - startY.value;
+  translateX.value = (event.clientX - startX.value) * -1;
+  translateY.value = (event.clientY - startY.value) * -1;
 };
 
 const stopPanning = () => {
   if (!isZoomed.value) return;
   isPanning.value = false;
+};
+
+const stopTouchPanning = () => {
+  if (!isZoomed.value) {
+    isZoomed.value = true;
+    return;
+  }
+  isPanning.value = false;
+  document.removeEventListener('touchmove', panTouchImage);
+  document.removeEventListener('touchend', stopTouchPanning);
 };
 
 const goBack = () => {
@@ -213,11 +262,11 @@ const fetchProductDetails = async () => {
   const { slug } = route.params;
   $q.loading.show();
   try {
-    const response = await fetch(`https://fakestoreapi.com/products/${slug}`);
+    const response = await fetch(`${apiUrl}/products/${slug}`);
     const data = await response.json();
     product.value = {
       id: data.id,
-      name: data.title,
+      name: data.name,
       title: data.title,
       price: data.price,
       description: data.description,
