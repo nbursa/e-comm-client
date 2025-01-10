@@ -12,8 +12,8 @@ export default defineConfig((ctx: { modeName: string }) => {
     extras: ['roboto-font', 'material-icons'],
     build: {
       env: {
-        VITE_API_URL: process.env.VITE_API_URL,
         VITE_GA_ID: process.env.NODE_ENV === 'development' ? '' : process.env.VITE_GA_ID,
+        VITE_API_URL: process.env.VITE_API_URL,
         VITE_RN: process.env.VITE_RN,
         VITE_RATES_API_URL: process.env.VITE_RATES_API_URL,
         VITE_EMAIL_ADMIN: process.env.VITE_EMAIL_ADMIN,
