@@ -7,3 +7,4 @@ export default {
   'sr-RS': srRS,
   'fr-FR': frFR,
 };
+

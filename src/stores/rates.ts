@@ -1,22 +1,21 @@
 import { defineStore } from 'pinia';
 
-export const useCurrencyStore = defineStore('currency', {
+const ratesUrl = import.meta.env.VITE_RATES_API_URL as string;
+
+export const useRatesStore = defineStore('rates', {
   state: () => ({
-    selectedCurrency: 'USD',
     exchangeRates: {} as Record<string, number>,
   }),
   actions: {
-    async loadExchangeRates() {
+    async loadExchangeRates(baseCurrency: string = 'EUR') {
       try {
-        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        console.log('Loading exchange rates for', baseCurrency, ratesUrl);
+        const response = await fetch(`${ratesUrl}${baseCurrency}`);
         const data = await response.json();
         this.exchangeRates = data.rates;
       } catch (error) {
         console.error('Failed to load exchange rates:', error);
       }
-    },
-    setCurrency(currency: string) {
-      this.selectedCurrency = currency;
     },
   },
   getters: {

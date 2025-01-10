@@ -115,6 +115,7 @@ import CartPreview from '@/components/CartPreview.vue';
 import { useProductCacheStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import { Product } from '@/types';
+import { formatPrice } from '@/utils';
 
 const { getVerticalScrollPosition } = scroll;
 const cartStore = useCartStore();
@@ -167,8 +168,6 @@ const getFirstSentence = (text: string): string => {
 const imageUrl = (imagePath: string) => {
   return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
 };
-
-const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
 
 const scrollToTop = () => {
   const target = document.querySelector('body') as HTMLElement;

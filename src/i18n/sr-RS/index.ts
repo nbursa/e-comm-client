@@ -1,4 +1,5 @@
 export default {
+  currency: 'RSD',
   main: {
     home: 'Početna',
     products: 'Proizvodi',
@@ -12,6 +13,7 @@ export default {
     followSystemTheme: 'Pratite sistemsku temu',
     languageSettings: 'Jezik',
     languageLabel: 'Jezik',
+    currencyLabel: 'Valuta',
   },
   home: {
     title: 'Dobrodošli na E-Kom platformu',
@@ -74,11 +76,14 @@ export default {
     confirmButton: 'Potvrdi porudžbinu',
     cancelButton: 'Otkaži',
     cart: 'Korpa',
+    cardPayment: 'Plaćanje karticom',
+    ipsScanQrCode: 'IPS Skeniraj QR kod',
   },
   singleProduct: {
     addToCart: 'Dodaj u korpu',
     backToProducts: 'Nazad na proizvode',
     itemAdded: 'Proizvod dodat u korpu!',
+    quantity: 'Na stanju',
   },
   thankYou: {
     title: 'Hvala na porudžbini!',

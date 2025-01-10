@@ -65,7 +65,23 @@
               :done="step > 2"
               :header-nav="true"
             >
-              <q-card flat bordered>
+              <q-item class="!tw-p-0">
+                <q-item-section class="tw-text-sm">
+                  <q-radio v-model="paymentMethod" val="card" :label="$t('checkout.cardPayment')" />
+                  <q-radio v-model="paymentMethod" val="ips" :disable="!isIpsEnabled">
+                    <template #default>
+                      <span>
+                        {{ $t('checkout.ipsScanQrCode') }}
+                        <span v-if="!isIpsEnabled" class="text-warning text-xs">
+                          - Available only for RSD payments.</span
+                        >
+                      </span>
+                    </template>
+                  </q-radio>
+                </q-item-section>
+              </q-item>
+
+              <q-card v-if="paymentMethod === 'card'" flat bordered>
                 <q-card-section>
                   <q-form class="row q-col-gutter-md" @submit.prevent="validatePayment">
                     <div class="col-12">
@@ -90,10 +106,19 @@
                   </q-form>
                 </q-card-section>
               </q-card>
+              <div v-if="isIpsEnabled && paymentMethod === 'ips'">
+                <div v-if="qrCodeDataUrl" class="q-mt-lg">
+                  <q-img
+                    :src="qrCodeDataUrl"
+                    alt="QR Code for Payment"
+                    fit="contain"
+                    class="tw-w-48 tw-h-48"
+                  />
+                </div>
+              </div>
             </q-step>
           </q-stepper>
         </div>
-
         <!-- Order Summary -->
         <div class="col-12 col-md-4">
           <q-card class="tw-flex tw-justify-between">
@@ -146,42 +171,47 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useCartStore } from '../stores/cart';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { OrderDetails } from '@/types';
+import QRCode from 'qrcode';
+import { formatPrice } from '@/utils';
+import { useRatesStore } from '@/stores/rates';
 
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
+const currencyStore = useRatesStore();
 const router = useRouter();
 const { t } = useI18n();
 
 const step = ref(1);
-
+const paymentMethod = ref('card');
 const form = ref({
   firstName: '',
   lastName: '',
   email: '',
   address: '',
 });
-
 const payment = ref({
   cardNumber: '',
   expiry: '',
   cvv: '',
 });
+const qrCodeDataUrl = ref<string | null>(null);
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
-
+const isIpsEnabled = true;
 const totalPrice = computed(() =>
   cartStore.items.reduce((total, item) => total + item.price * item.quantity, 0),
 );
 
 const email = import.meta.env.VITE_EMAIL_ADMIN || '';
+
 const orderDetails: OrderDetails = {
   id: Math.floor(Math.random() * 1000),
   items: cartStore.items,
@@ -195,6 +225,28 @@ const orderDetails: OrderDetails = {
   expiry: payment.value.expiry,
 };
 
+const generateQrCode = async () => {
+  const paymentPurpose = 'Payment for E-comm-platform';
+  const orderNr = Math.floor(Math.random() * 1000);
+  const rn = import.meta.env.VITE_RN || '';
+  const ttl = formatPrice(totalPrice.value, 'RSD')
+    .trim()
+    .replace(/\s+/, '')
+    .replace(',', '')
+    .replace('.', ',')
+    .replace(/(,\d{2})?$/, (match) => (match ? match : ',00'));
+
+  const qrCodeInfo =
+    `K:PR|V:01|C:1|P:${totalPrice.value.toFixed(2)}|S:${paymentPurpose}|N:E-comm-platform|I:${ttl}|R:${rn}|RO:00${orderNr}|SF:289`.trim();
+
+  try {
+    console.log('Generating QR code...', qrCodeInfo);
+    qrCodeDataUrl.value = await QRCode.toDataURL(qrCodeInfo);
+  } catch (error) {
+    console.error('Error generating QR code:', error);
+  }
+};
+
 const required = (val: string) => !!val || 'Field is required';
 const emailRules = (val: string) =>
   /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val) || 'Invalid email';
@@ -205,13 +257,6 @@ const validateShipping = () => {
 
 const validatePayment = () => {
   step.value++;
-};
-
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(price);
 };
 
 const goBack = () => {
@@ -316,6 +361,11 @@ const emailOrder = async () => {
 const nextStep = () => {
   step.value++;
 };
+
+onMounted(async () => {
+  await currencyStore.loadExchangeRates();
+  generateQrCode();
+});
 </script>
 
 <style lang="scss" scoped>

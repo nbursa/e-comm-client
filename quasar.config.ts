@@ -7,7 +7,7 @@ dotenv.config();
 export default defineConfig((ctx: { modeName: string }) => {
   return {
     preFetch: true,
-    boot: ['ga', 'i18n', 'axios', 'theme'],
+    boot: ['init', 'ga', 'i18n', 'axios', 'theme'],
     css: ['app.scss'],
     extras: ['roboto-font', 'material-icons'],
     build: {

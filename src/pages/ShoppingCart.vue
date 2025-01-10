@@ -126,18 +126,15 @@ import { useCartStore } from 'src/stores/cart';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { formatPrice } from '@/utils';
 
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const { t } = useI18n();
 
-// const apiUrl = import.meta.env.VITE_API_URL || '';
-
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
-
-const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
 const updateQuantity = (id: number, quantity: number) => {
   if (quantity < 1) return;

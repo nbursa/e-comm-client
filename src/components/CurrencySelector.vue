@@ -10,21 +10,24 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { useCurrencyStore } from '@/stores/currency';
+import { useRatesStore } from '@/stores/rates';
+import { Currencies } from '@/pages/SettingsPage.vue';
+import { useUserStore } from '@/stores/user';
 
-const currencyStore = useCurrencyStore();
+const ratesStore = useRatesStore();
+const userStore = useUserStore();
 
-const selectedCurrency = ref<string>(currencyStore.selectedCurrency);
+const selectedCurrency = ref<string>(userStore.settings.currency);
 const currencyOptions = ref<string[]>([]);
 
 onMounted(async (): Promise<void> => {
-  if (!Object.keys(currencyStore.exchangeRates).length) {
-    await currencyStore.loadExchangeRates();
+  if (!Object.keys(ratesStore.exchangeRates).length) {
+    await ratesStore.loadExchangeRates();
   }
-  currencyOptions.value = Object.keys(currencyStore.exchangeRates);
+  currencyOptions.value = Object.keys(ratesStore.exchangeRates);
 });
 
-const onCurrencyChange = (currency: string): void => {
-  currencyStore.setCurrency(currency);
+const onCurrencyChange = (currency: Currencies): void => {
+  userStore.setCurrency(currency);
 };
 </script>

@@ -2,6 +2,7 @@ import express from 'express';
 import nodemailer from 'nodemailer';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { formatPrice } from '../shared/utils';
 
 dotenv.config({ path: '../.env' });
 
@@ -105,13 +106,6 @@ app.post('/api/send-email', async (req, res) => {
     });
   }
 });
-
-const formatPrice = (amount) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
-};
 
 const createOrderConfirmationEmail = (orderDetails) => {
   const items = orderDetails.items

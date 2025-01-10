@@ -36,7 +36,14 @@
             class="q-pa-sm !tw-pb-0"
             style="flex: 1; display: flex; flex-direction: column; height: 100%"
           >
-            <h5>{{ product.name || product.title }}</h5>
+            <h5 class="tw-flex tw-justify-start tw-gap-2">
+              <span>{{ product.name || product.title }}</span>
+              <span class="tw-text-sm tw-mb-2"
+                >({{ product.quantity }}
+                <span class="tw-text-xs">{{ $t('singleProduct.quantity') }}</span
+                >)</span
+              >
+            </h5>
             <div class="text-caption q-mt-sm">{{ product.description }}</div>
           </q-card-section>
 
@@ -111,6 +118,7 @@ import { scroll } from 'quasar';
 import CartPreview from '@/components/CartPreview.vue';
 import { useI18n } from 'vue-i18n';
 import { Product } from '@/types';
+import { formatPrice } from '@/utils';
 
 const { getVerticalScrollPosition } = scroll;
 
@@ -158,8 +166,6 @@ const imageLocalUrl = (imagePath: string) => {
 const imageStyle = computed(() => ({
   transform: `translate(${translateX.value}px, ${translateY.value}px) scale(${isZoomed.value ? 2 : 1})`,
 }));
-
-const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -276,13 +282,10 @@ const fetchProductDetails = async () => {
       description: data.description,
       image: data.image,
       category: data.category,
-      discount: Math.random() > 0.5,
-      discountedPrice: data.price * (Math.random() > 0.5 ? 0.9 : 1),
-      quantity: 0,
-      rating: {
-        rate: 0,
-        count: 0,
-      },
+      discount: data.discount || 0,
+      discountedPrice: data.price - (data.price * (data.discount || 10)) / 100,
+      quantity: data.quantity,
+      rating: data.rating,
     };
   } catch {
     $q.notify({

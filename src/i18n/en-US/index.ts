@@ -1,4 +1,5 @@
 export default {
+  currency: 'USD',
   main: {
     home: 'Home',
     products: 'Products',
@@ -12,6 +13,7 @@ export default {
     followSystemTheme: 'Follow System Theme',
     languageSettings: 'Language',
     languageLabel: 'Language',
+    currencyLabel: 'Currency',
   },
   home: {
     title: 'Welcome to E-Comm Platform',
@@ -74,11 +76,14 @@ export default {
     confirmButton: 'Confirm Order',
     cancelButton: 'Cancel',
     cart: 'Shopping Cart',
+    cardPayment: 'Card Payment',
+    ipsScanQrCode: 'IPS Scan QR Code',
   },
   singleProduct: {
     addToCart: 'Add to Cart',
     backToProducts: 'Back to Products',
     itemAdded: 'Product added to cart!',
+    quantity: 'In Stock',
   },
   thankYou: {
     title: 'Thank you for shopping with us!',

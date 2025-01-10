@@ -1,4 +1,5 @@
 export default {
+  currency: 'EUR',
   main: {
     home: 'Accueil',
     products: 'Produits',
@@ -12,6 +13,7 @@ export default {
     followSystemTheme: 'Suivre le thème du système',
     languageSettings: 'Langue',
     languageLabel: 'Langue',
+    currencyLabel: 'Devise',
   },
   home: {
     title: 'Bienvenue sur notre Plateforme E-Comm',
@@ -74,11 +76,14 @@ export default {
     confirmButton: 'Confirmer la commande',
     cancelButton: 'Annuler',
     cart: 'Panier',
+    cardPayment: 'Paiement par carte',
+    ipsScanQrCode: 'IPS Scan QR Code',
   },
   singleProduct: {
     addToCart: 'Ajouter au panier',
     backToProducts: 'Retour aux produits',
     itemAdded: 'Produit ajouté au panier!',
+    quantity: 'Na stanju',
   },
   thankYou: {
     title: 'Merci pour votre commande!',

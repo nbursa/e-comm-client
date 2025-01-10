@@ -18,6 +18,18 @@
             />
           </q-card-section>
         </q-card>
+        <q-card>
+          <q-card-section>
+            <q-select
+              v-model="currentCurrency"
+              :options="currencyOptions"
+              :label="$t('settings.currencyLabel')"
+              outlined
+              class="full-width"
+              @update:model-value="onCurrencyChange"
+            />
+          </q-card-section>
+        </q-card>
       </div>
       <div class="col-12 col-sm-8 col-md-4">
         <q-card>
@@ -56,10 +68,12 @@ const $q = useQuasar();
 
 const languageOptions = userStore.languageOptions;
 
-interface LanguageOption {
+export interface LanguageOption {
   value: MessageLanguages;
   label: string;
 }
+
+export type Currencies = 'USD' | 'EUR' | 'RSD';
 
 const currentLanguage = computed({
   get: () => {
@@ -76,6 +90,28 @@ const themeOptions = [
   { value: 'light', label: 'Light' },
   { value: 'dark', label: 'Dark' },
 ];
+
+const currencyOptions = [
+  { value: 'USD', label: 'US Dollar' },
+  { value: 'EUR', label: 'Euro' },
+  { value: 'RSD', label: 'Serbian Dinar' },
+];
+
+const currentCurrency = computed({
+  get: () => {
+    return (
+      currencyOptions.find((option) => option.value === userStore.settings.currency) ??
+      currencyOptions[0]
+    );
+  },
+  set: (option: { value: Currencies; label: string }) => {
+    userStore.settings.currency = option.value;
+  },
+});
+
+const onCurrencyChange = (option: { value: Currencies; label: string }) => {
+  userStore.settings.currency = option.value;
+};
 
 const theme = computed({
   get: () =>

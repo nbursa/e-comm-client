@@ -7,32 +7,42 @@ interface UserSettings {
   language: MessageLanguages;
   theme: 'light' | 'dark';
   useSystemPreference: boolean;
+  currency: 'USD' | 'EUR' | 'RSD';
 }
 
 export const useUserStore = defineStore('user', () => {
   const $q = ref<QVueGlobals | null>(null);
+
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   const languageOptions = [
     { value: 'en-US', label: 'English' },
-    { value: 'sr-RS', label: 'Serbian' },
-    { value: 'fr-FR', label: 'French' },
+    { value: 'sr-RS', label: 'Srpski' },
+    { value: 'fr-FR', label: 'Français' },
   ];
 
   const settings = ref<UserSettings>({
     language: 'en-US',
     theme: 'light',
     useSystemPreference: false,
+    currency: 'EUR',
   });
 
   const loadSettings = () => {
     const stored = localStorage.getItem('user_settings');
     if (stored) {
       settings.value = JSON.parse(stored);
+    } else {
+      saveSettings();
     }
   };
 
   const saveSettings = () => {
     localStorage.setItem('user_settings', JSON.stringify(settings.value));
+  };
+
+  const setCurrency = (currency: 'USD' | 'EUR' | 'RSD') => {
+    settings.value.currency = currency;
+    saveSettings();
   };
 
   const initTheme = (quasar: QVueGlobals) => {
@@ -65,6 +75,13 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
+  const initApp = (quasar: QVueGlobals) => {
+    $q.value = quasar;
+    loadSettings();
+    updateTheme();
+    updateI18n();
+  };
+
   watch(
     () => settings.value,
     () => {
@@ -82,5 +99,7 @@ export const useUserStore = defineStore('user', () => {
     settings,
     initTheme,
     updateTheme,
+    initApp,
+    setCurrency,
   };
 });
