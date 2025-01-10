@@ -14,6 +14,9 @@ export default defineConfig((ctx: { modeName: string }) => {
       env: {
         VITE_API_URL: process.env.VITE_API_URL,
         VITE_GA_ID: process.env.NODE_ENV === 'development' ? '' : process.env.VITE_GA_ID,
+        VITE_RN: process.env.VITE_RN,
+        VITE_RATES_API_URL: process.env.VITE_RATES_API_URL,
+        VITE_EMAIL_ADMIN: process.env.VITE_EMAIL_ADMIN,
       },
       postcss: {
         plugins: ['tailwindcss', 'autoprefixer'],
@@ -26,6 +29,7 @@ export default defineConfig((ctx: { modeName: string }) => {
         strict: true,
         vueShim: true,
       },
+      publicPath: '/',
       vueRouterMode: 'history',
       extendViteConf(viteConf) {
         viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';
@@ -72,7 +76,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       prefetchChunks: true,
     },
     devServer: {
-      port: 9000,
+      port: 8080,
       proxy: {
         '/api': {
           target: 'http://localhost:3000',
