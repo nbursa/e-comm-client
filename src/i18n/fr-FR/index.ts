@@ -73,6 +73,7 @@ export default {
     expiry: 'Expiration',
     confirmButton: 'Confirmer la commande',
     cancelButton: 'Annuler',
+    cart: 'Panier',
   },
   singleProduct: {
     addToCart: 'Ajouter au panier',

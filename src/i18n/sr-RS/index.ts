@@ -73,6 +73,7 @@ export default {
     expiry: 'Ističe',
     confirmButton: 'Potvrdi porudžbinu',
     cancelButton: 'Otkaži',
+    cart: 'Korpa',
   },
   singleProduct: {
     addToCart: 'Dodaj u korpu',
