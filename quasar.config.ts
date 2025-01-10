@@ -40,9 +40,13 @@ export default defineConfig((ctx: { modeName: string }) => {
         };
       },
       afterBuild: async () => {
+        if (typeof window !== 'undefined') {
+          return;
+        }
         const fs = await import('fs/promises');
         const path = await import('path');
-        const distDir = path.resolve(process.cwd(), 'dist/spa');
+        const distDir = path.resolve(fileURLToPath(new URL('.', import.meta.url)), 'dist/spa');
+
         await fs.copyFile(path.join(distDir, 'index.html'), path.join(distDir, '404.html'));
       },
       vitePlugins: [
@@ -76,7 +80,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       prefetchChunks: true,
     },
     devServer: {
-      port: 8080,
+      port: 9000,
       proxy: {
         '/api': {
           target: 'http://localhost:3000',

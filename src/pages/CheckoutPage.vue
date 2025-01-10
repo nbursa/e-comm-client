@@ -180,11 +180,9 @@ import { useI18n } from 'vue-i18n';
 import { OrderDetails } from '@/types';
 import QRCode from 'qrcode';
 import { formatPrice } from '@/utils';
-import { useRatesStore } from '@/stores/rates';
 
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
-const currencyStore = useRatesStore();
 const router = useRouter();
 const { t } = useI18n();
 
@@ -229,15 +227,17 @@ const generateQrCode = async () => {
   const paymentPurpose = 'Payment for E-comm-platform';
   const orderNr = Math.floor(Math.random() * 1000);
   const rn = import.meta.env.VITE_RN || '';
-  const ttl = formatPrice(totalPrice.value, 'RSD')
-    .trim()
-    .replace(/\s+/, '')
-    .replace(',', '')
-    .replace('.', ',')
-    .replace(/(,\d{2})?$/, (match) => (match ? match : ',00'));
+  const ttl = computed(() => {
+    return formatPrice(totalPrice.value, 'RSD')
+      .trim()
+      .replace(/\s+/, '')
+      .replace(',', '')
+      .replace('.', ',')
+      .replace(/(,\d{2})?$/, (match) => (match ? match : ',00'));
+  });
 
   const qrCodeInfo =
-    `K:PR|V:01|C:1|P:${totalPrice.value.toFixed(2)}|S:${paymentPurpose}|N:E-comm-platform|I:${ttl}|R:${rn}|RO:00${orderNr}|SF:289`.trim();
+    `K:PR|V:01|C:1|P:${totalPrice.value.toFixed(2)}|S:${paymentPurpose}|N:E-comm-platform|I:${ttl.value}|R:${rn}|RO:00${orderNr}|SF:289`.trim();
 
   try {
     qrCodeDataUrl.value = await QRCode.toDataURL(qrCodeInfo);
@@ -361,8 +361,7 @@ const nextStep = () => {
   step.value++;
 };
 
-onMounted(async () => {
-  await currencyStore.loadExchangeRates();
+onMounted(() => {
   generateQrCode();
 });
 </script>
