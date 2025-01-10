@@ -1,1 +1,0 @@
-import{b as s,u as r}from"./index-DGoFsrKc.js";import{u as a}from"./rates-DU24mSJM.js";const i=a(),p=s(({app:o})=>{const t=r(),e=o.config.globalProperties.$q;i.loadExchangeRates(),t.initApp(e)});export{p as default};
