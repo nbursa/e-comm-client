@@ -29,16 +29,24 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   //   }
   // }
   const Router = createRouter({
-    scrollBehavior() {
-      return { left: 0, top: 0 };
+    scrollBehavior(to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition;
+      } else {
+        return { left: 0, top: 0 };
+      }
     },
     routes,
-
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.NODE_ENV === 'production' ? '' : '/'),
-    // history: createHistory('/'),
+  });
+
+  Router.beforeEach((to, from, next) => {
+    const defaultTitle = 'E-Comm Platform';
+    document.title = to.meta.title ? `${to.meta.title} - ${defaultTitle}` : defaultTitle;
+    next();
   });
 
   return Router;

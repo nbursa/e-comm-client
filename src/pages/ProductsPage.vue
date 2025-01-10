@@ -37,7 +37,8 @@
       :label="$t('products.selectCategory')"
       outlined
       :option-label="
-        (opt) => (opt === 'all' ? $t('products.categories.allProducts') : formatCategoryLabel(opt))
+        (opt: string) =>
+          opt === 'all' ? $t('products.categories.allProducts') : formatCategoryLabel(opt)
       "
     />
 
