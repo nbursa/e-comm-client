@@ -1,6 +1,6 @@
 # E-Commerce Platform
 
-This project is a comprehensive client application for an e-commerce platform, built using the Quasar Framework and Vue 3. It forms the frontend layer of a three-tier system, providing a modern, responsive, and user-friendly interface for managing products and their categories. This client app ensures efficient interaction with the backend API and delivers a seamless shopping experience. 🚀 [Live Demo](https://shop.nenadbursac.com)
+This project is a simple client application for an e-commerce platform, built using the Quasar Framework and Vue 3. It forms the frontend layer of a three-tier system, providing a modern, responsive, and user-friendly interface for managing products and their categories. This client app ensures efficient interaction with the backend API and delivers a seamless shopping experience. 🚀 [Live Demo](https://shop.nenadbursac.com)
 
 ## Backend
 
