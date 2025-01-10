@@ -72,8 +72,8 @@
                     <template #default>
                       <span>
                         {{ $t('checkout.ipsScanQrCode') }}
-                        <span v-if="!isIpsEnabled" class="text-warning text-xs">
-                          - Available only for RSD payments.</span
+                        <span v-if="!isIpsEnabled" class="text-positive text-xs">
+                          - {{ $t('checkout.ipsInfo') }}</span
                         >
                       </span>
                     </template>
@@ -203,7 +203,7 @@ const qrCodeDataUrl = ref<string | null>(null);
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
-const isIpsEnabled = true;
+const isIpsEnabled = false;
 const totalPrice = computed(() =>
   cartStore.items.reduce((total, item) => total + item.price * item.quantity, 0),
 );

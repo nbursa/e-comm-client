@@ -78,6 +78,8 @@ export default {
     cart: 'Shopping Cart',
     cardPayment: 'Card Payment',
     ipsScanQrCode: 'IPS Scan QR Code',
+    ipsUnavailable: 'Available only for RSD payments.',
+    ipsInfo: 'Coming soon',
   },
   singleProduct: {
     addToCart: 'Add to Cart',

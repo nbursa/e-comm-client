@@ -78,6 +78,8 @@ export default {
     cart: 'Panier',
     cardPayment: 'Paiement par carte',
     ipsScanQrCode: 'IPS Scan QR Code',
+    ipsUnavailable: 'Disponible uniquement pour les paiements en RSD',
+    ipsInfo: 'Bientôt disponible',
   },
   singleProduct: {
     addToCart: 'Ajouter au panier',

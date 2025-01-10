@@ -78,6 +78,8 @@ export default {
     cart: 'Korpa',
     cardPayment: 'Plaćanje karticom',
     ipsScanQrCode: 'IPS Skeniraj QR kod',
+    ipsUnavailable: 'Dostupno samo za plaćanja u RSD',
+    ipsInfo: 'Uskoro dostupno',
   },
   singleProduct: {
     addToCart: 'Dodaj u korpu',
