@@ -16,7 +16,7 @@
           >
             <!-- Image section -->
             <q-item-section class="tw-w-full md:tw-w-32 !tw-flex-shrink-0">
-              <q-img :src="`${apiUrl}${item.image}`" :ratio="1" class="tw-w-full" fit="contain" />
+              <q-img :src="`${item.image}`" :ratio="1" class="tw-w-full" fit="contain" />
             </q-item-section>
 
             <!-- Content section -->
@@ -132,7 +132,7 @@ const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const { t } = useI18n();
 
-const apiUrl = import.meta.env.VITE_API_URL || '';
+// const apiUrl = import.meta.env.VITE_API_URL || '';
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));

@@ -14,7 +14,7 @@
           class="col-12 col-md-4 q-py-lg tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
         >
           <q-img
-            :src="`${apiUrl}${product.image}`"
+            :src="`${product.image}`"
             :alt="product.name"
             fit="contain"
             class="cursor-pointer full-width full-height"
