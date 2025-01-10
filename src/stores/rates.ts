@@ -9,7 +9,6 @@ export const useRatesStore = defineStore('rates', {
   actions: {
     async loadExchangeRates(baseCurrency: string = 'EUR') {
       try {
-        console.log('Loading exchange rates for', baseCurrency, ratesUrl);
         const response = await fetch(`${ratesUrl}${baseCurrency}`);
         const data = await response.json();
         this.exchangeRates = data.rates;

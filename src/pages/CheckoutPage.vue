@@ -240,7 +240,6 @@ const generateQrCode = async () => {
     `K:PR|V:01|C:1|P:${totalPrice.value.toFixed(2)}|S:${paymentPurpose}|N:E-comm-platform|I:${ttl}|R:${rn}|RO:00${orderNr}|SF:289`.trim();
 
   try {
-    console.log('Generating QR code...', qrCodeInfo);
     qrCodeDataUrl.value = await QRCode.toDataURL(qrCodeInfo);
   } catch (error) {
     console.error('Error generating QR code:', error);

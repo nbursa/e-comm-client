@@ -7,10 +7,6 @@ export const formatPrice = (price: number, currency?: string) => {
   const selectedCurrency = currency || userStore.settings.currency || 'EUR';
   const exchangeRate = ratesStore.getRate(selectedCurrency);
 
-  if (!ratesStore.exchangeRates[selectedCurrency]) {
-    console.warn(`Rate for ${selectedCurrency} is not available.`);
-  }
-
   const convertedPrice = price * exchangeRate;
 
   return new Intl.NumberFormat(userStore.settings.language || 'en-US', {
