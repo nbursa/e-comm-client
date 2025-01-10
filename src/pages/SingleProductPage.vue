@@ -14,7 +14,7 @@
           class="col-12 col-md-4 q-py-lg tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
         >
           <q-img
-            :src="`${product.image}`"
+            :src="imageLocalUrl(product.image)"
             :alt="product.name"
             fit="contain"
             class="cursor-pointer full-width full-height"
@@ -150,6 +150,10 @@ const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const totalItems = computed(() => cartStore.totalItems);
 const totalPrice = computed(() => cartStore.totalPrice);
+
+const imageLocalUrl = (imagePath: string) => {
+  return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
+};
 
 const imageStyle = computed(() => ({
   transform: `translate(${translateX.value}px, ${translateY.value}px) scale(${isZoomed.value ? 2 : 1})`,

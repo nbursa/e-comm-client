@@ -55,7 +55,7 @@
           @click="viewProduct(product)"
         >
           <q-img
-            :src="`${product.image}`"
+            :src="imageUrl(product.image)"
             :alt="product.name"
             fit="contain"
             class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"
@@ -162,6 +162,10 @@ const formatCategoryLabel = (category: string) => {
 const getFirstSentence = (text: string): string => {
   const match = text.match(/[^.!?]*[.!?]/);
   return match ? match[0] : text;
+};
+
+const imageUrl = (imagePath: string) => {
+  return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
 };
 
 const formatPrice = (price: number): string => `$${price.toFixed(2)}`;
