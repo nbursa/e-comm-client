@@ -61,7 +61,7 @@
             class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"
           />
           <q-card-section class="tw-flex-grow q-pa-sm !tw-pb-0">
-            <div class="text-bold product-name">{{ product.name }}</div>
+            <div class="text-bold product-name">{{ product.name || product.title }}</div>
             <div class="text-caption">{{ getFirstSentence(product.description) }}</div>
           </q-card-section>
 

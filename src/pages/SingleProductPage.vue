@@ -36,7 +36,7 @@
             class="q-pa-sm !tw-pb-0"
             style="flex: 1; display: flex; flex-direction: column; height: 100%"
           >
-            <h5>{{ product.name }}</h5>
+            <h5>{{ product.name || product.title }}</h5>
             <div class="text-caption q-mt-sm">{{ product.description }}</div>
           </q-card-section>
 

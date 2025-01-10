@@ -24,7 +24,7 @@
               class="tw-flex-1 tw-min-w-0 md:tw-flex md:!tw-flex-col md:!tw-justify-between"
             >
               <q-item-label class="text-subtitle2 text-weight-medium tw-truncate">
-                {{ item.name }}
+                {{ item.name || item.title }}
               </q-item-label>
               <q-item-label caption class="!tw-text-xs">
                 {{ formatPrice(item.price) }} {{ $t('cart.each') }}

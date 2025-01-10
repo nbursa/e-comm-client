@@ -115,16 +115,16 @@ const formatPrice = (amount) => {
 
 const createOrderConfirmationEmail = (orderDetails) => {
   const items = orderDetails.items
-    .map(
-      (item) => `
-    <tr>
-      <td>${item.title}</td>
-      <td>${item.quantity}</td>
-      <td>${formatPrice(item.price)}</td>
-      <td>${formatPrice(item.price * item.quantity)}</td>
-    </tr>
-  `,
-    )
+    .map((item) => {
+      return `
+      <tr>
+        <td style="text-align: left;">${item.name || item.title}</td>
+        <td style="text-align: left;">${item.quantity}</td>
+        <td style="text-align: left;">${formatPrice(item.price)}</td>
+        <td style="text-align: left;">${formatPrice(item.quantity * item.price)}</td>
+      </tr>
+    `;
+    })
     .join('');
 
   return `
@@ -138,12 +138,12 @@ const createOrderConfirmationEmail = (orderDetails) => {
         <h3>Items</h3>
         <table style="width: 100%; border-collapse: collapse;">
           <tr>
-            <th>Item</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-          </tr>
-          ${items}
+          <th style="text-align: left;">Item</th>
+          <th style="text-align: left;">Quantity</th>
+          <th style="text-align: left;">Price</th>
+          <th style="text-align: left;">Total</th>
+        </tr>
+        ${items}
         </table>
 
         <h3>Shipping Information</h3>
@@ -160,5 +160,4 @@ const createOrderConfirmationEmail = (orderDetails) => {
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
-  await verifyConnection();
 });

@@ -96,13 +96,13 @@
 
         <!-- Order Summary -->
         <div class="col-12 col-md-4">
-          <q-card class="order-summary">
-            <q-card-section>
-              <div class="text-h6">{{ $t('checkout.orderSummary') }}</div>
-              <q-list>
-                <q-item v-for="item in cartStore.items" :key="item.id">
+          <q-card class="tw-flex tw-justify-between">
+            <q-card-section class="tw-w-full">
+              <div class="tw-text-xl tw-mb-4">{{ $t('checkout.orderSummary') }}</div>
+              <q-list dense class="tw-w-full tw-flex tw-flex-col tw-justify-between">
+                <q-item v-for="item in cartStore.items" :key="item.id" class="tw-justify-between">
                   <q-item-section>
-                    <q-item-label>{{ item.name }}</q-item-label>
+                    <q-item-label>{{ item.name || item.title }}</q-item-label>
                     <q-item-label caption
                       >{{ $t('checkout.qty') }}: {{ item.quantity }}</q-item-label
                     >
@@ -111,10 +111,14 @@
                     {{ formatPrice(item.price * item.quantity) }}
                   </q-item-section>
                 </q-item>
-                <q-separator />
+                <q-separator class="q-my-md" />
                 <q-item>
-                  <q-item-section>{{ $t('checkout.total') }}</q-item-section>
-                  <q-item-section side>{{ formatPrice(totalPrice) }}</q-item-section>
+                  <q-item-section class="text-subtitle1 text-weight-bold">{{
+                    $t('checkout.total')
+                  }}</q-item-section>
+                  <q-item-section side class="text-subtitle1 text-weight-bold tw-text-">{{
+                    formatPrice(totalPrice)
+                  }}</q-item-section>
                 </q-item>
               </q-list>
             </q-card-section>
@@ -123,8 +127,15 @@
                 :color="color"
                 :text-color="text"
                 :label="step === 2 ? $t('checkout.placeOrder') : $t('checkout.continue')"
-                class="full-width"
+                class="full-width tw-mb-2"
                 @click="step === 2 ? showOrderConfirmation() : nextStep()"
+              />
+              <q-btn
+                :color="text"
+                :text-color="color"
+                :label="$t('checkout.cart')"
+                class="full-width"
+                @click="goBack()"
               />
             </q-card-actions>
           </q-card>
@@ -165,6 +176,7 @@ const payment = ref({
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
+
 const totalPrice = computed(() =>
   cartStore.items.reduce((total, item) => total + item.price * item.quantity, 0),
 );
@@ -202,11 +214,15 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
+const goBack = () => {
+  router.push('/cart');
+};
+
 const showOrderConfirmation = () => {
   $q.dialog({
     title: t('checkout.title'),
     message: `
-      <div>
+      <div class="tw-flex tw-flex-col tw-items-start full-width">
         <h6 class="q-my-none">${t('checkout.summary')}</h6>
         <p class="text-h6 q-mb-md">${t('checkout.total')}: ${formatPrice(orderDetails.total)}</p>
 
@@ -223,16 +239,16 @@ const showOrderConfirmation = () => {
           <p class="q-mb-none">${t('checkout.expiry')}: ${orderDetails.expiry}</p>
         </div>
 
-        <div class="q-mt-sm">
+        <div class="q-mt-sm full-width">
           <strong>${t('checkout.items')}:</strong>
           ${orderDetails.items
             .map(
               (item) => `
-            <div class="q-py-sm">
-              <span>${item.title}</span>
-              <span class="float-right">
-                ${item.quantity}x ${formatPrice(item.price)}
-              </span>
+            <div class="q-py-sm full-width tw-flex tw-justify-between tw-items-center">
+              <div class="tw-flex-shrink-0 tw-mr-32">${item.name || item.title}</div>
+              <div class="tw-flex-grow tw-flex tw-justify-between tw-items-center tw-gap-2">
+                <div>${item.quantity}</div> <div>${formatPrice(item.price)}</div>
+              </div>
             </div>
           `,
             )
@@ -246,14 +262,14 @@ const showOrderConfirmation = () => {
     ok: {
       label: t('checkout.confirmButton'),
       flat: true,
-      style: 'opacity: 1 !important;',
-      class: `bg-${color.value} text-${text.value} lt-sm:full-width`,
+      style: `opacity: 1 !important; box-shadow: inset 0 0 0 2px ${color.value}; color: ${text.value} !important;`,
+      class: `bg-${color.value} lt-sm:full-width`,
     },
     cancel: {
       label: t('checkout.cancelButton'),
       flat: true,
-      style: 'opacity: 1 !important; box-shadow: inset 0 0 0 2px currentColor;',
-      class: `text-${color.value} lt-sm:full-width lt-sm:q-mt-sm`,
+      style: `opacity: 1 !important; box-shadow: inset 0 0 0 2px ${color.value}; color: ${color.value} !important;`,
+      class: `lt-sm:full-width lt-sm:q-mt-sm tw-border-${color.value}`,
     },
     style: {
       maxWidth: '600px',
@@ -265,13 +281,12 @@ const showOrderConfirmation = () => {
       cartStore.clearCart();
       router.push('/thankyou');
     } else {
-      placeOrder();
+      emailOrder();
     }
-    // placeOrder();
   });
 };
 
-const placeOrder = async () => {
+const emailOrder = async () => {
   $q.loading.show();
   try {
     const response = await fetch('/api/send-email', {
