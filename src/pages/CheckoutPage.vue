@@ -209,6 +209,7 @@ const totalPrice = computed(() =>
 );
 
 const email = import.meta.env.VITE_EMAIL_ADMIN || '';
+const rn = import.meta.env.VITE_RN || '';
 
 const orderDetails: OrderDetails = {
   id: Math.floor(Math.random() * 1000),
@@ -226,7 +227,6 @@ const orderDetails: OrderDetails = {
 const generateQrCode = async () => {
   const paymentPurpose = 'Payment for E-comm-platform';
   const orderNr = Math.floor(Math.random() * 1000);
-  const rn = import.meta.env.VITE_RN || '';
   const ttl = computed(() => {
     return formatPrice(totalPrice.value, 'RSD')
       .trim()
