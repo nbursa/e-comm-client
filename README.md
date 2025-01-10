@@ -6,17 +6,6 @@ This project is a comprehensive client application for an e-commerce platform, b
 
 The backend for this application is built using the Gin framework in Go. It provides a simple API for managing products and their categories. Repository can be found at: [E-commerce Backend](https://github.com/nbursa/e-comm-backend)
 
-## Features
-
-**🚧 Work In Progress 🚧**
-
-- 🛍️ Product catalog with categories
-- 🛒 Shopping cart with real-time updates
-- 🌐 Multi-language support (EN/SR)
-- 🎨 Light/Dark theme
-- 💾 Caching system for products and categories
-- 📱 Responsive design for mobile and desktop
-
 ## Installation
 
 ```bash
