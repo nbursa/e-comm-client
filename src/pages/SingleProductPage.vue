@@ -81,7 +81,7 @@
           <q-btn flat dense round icon="close" @click="showImageOverlay = false" />
         </div>
         <q-img
-          :src="`${apiUrl}${imageUrl}`"
+          :src="imageLocalUrl(product.image)"
           :alt="imageUrl"
           class="zoomable-image tw-cursor-pointer"
           :class="{ 'zoom-in': isZoomed, 'zoom-out': !isZoomed }"
