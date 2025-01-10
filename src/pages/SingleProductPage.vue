@@ -72,7 +72,7 @@
         @click="goBack"
       />
     </div>
-    {{ imageLocalUrl(product.image) }}
+
     <!-- Image Overlay -->
     <q-dialog v-model="showImageOverlay" maximized>
       <q-card class="q-pa-md" style="max-width: 90vw; max-height: 90vh; overflow: hidden">
