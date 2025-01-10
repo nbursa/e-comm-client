@@ -40,7 +40,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
-    history: createHistory(process.env.NODE_ENV === 'production' ? '' : '/'),
+    history: createHistory('/'),
   });
 
   Router.beforeEach((to, from, next) => {

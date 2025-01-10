@@ -1,7 +1,4 @@
 import { boot } from 'quasar/wrappers';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 type GtagArg = 'config' | 'js' | 'event';
 type GtagParams = Record<string, unknown>;
@@ -15,22 +12,21 @@ declare global {
 }
 
 export default boot(({ router }) => {
-  const gaId = process.env.VITE_GA_ID;
+  const gaId = import.meta.env.VITE_GA_ID;
 
-  if (process.env.NODE_ENV === 'production' && gaId) {
+  if (gaId) {
     router.afterEach((to) => {
-      try {
-        if (window.gtag) {
+      if (window.gtag && gaId) {
+        try {
           window.gtag('config', gaId, {
             page_path: to.path,
             page_location: window.location.href,
-            page_title: document.title,
+            page_title: document.title || 'E-Comm Platform',
           });
+        } catch (error) {
+          console.error('GA tracking error:', error);
         }
-      } catch (error) {
-        console.error('GA tracking error:', error);
       }
     });
   }
-  console.error('GA tracking id:', gaId);
 });

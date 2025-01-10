@@ -40,9 +40,6 @@ export default defineConfig((ctx: { modeName: string }) => {
         };
       },
       afterBuild: async () => {
-        if (typeof window !== 'undefined') {
-          return;
-        }
         const fs = await import('fs/promises');
         const path = await import('path');
         const distDir = path.resolve(fileURLToPath(new URL('.', import.meta.url)), 'dist/spa');

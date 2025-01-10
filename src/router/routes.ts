@@ -1,7 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router';
 import MainLayout from 'layouts/MainLayout.vue';
 
-const loadPage = (page: string) => () => import(`pages/${page}.vue`);
+const loadPage = (page: string) => () =>
+  import(`pages/${page}.vue`).catch((err) => {
+    console.error(`Failed to load page: ${page}`, err);
+    throw err;
+  });
 
 const routes: RouteRecordRaw[] = [
   {
