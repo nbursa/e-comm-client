@@ -30,7 +30,7 @@
         :color="color"
         :text-color="text"
         :label="$t('products.addToCart')"
-        class="full-width q-mt-md"
+        class="full-width q-mt-md !tw-py-4"
         @click.stop="addToCart(product)"
       />
     </q-card-actions>
