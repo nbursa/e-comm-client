@@ -1,57 +1,25 @@
 <template>
   <q-page padding>
-    <h5 class="q-m-sm">{{ $t('settings.title') }}</h5>
+    <h5 class="q-m-sm tw-font-serif">{{ $t('settings.title') }}</h5>
 
     <q-separator class="q-my-md" />
 
     <div class="row justify-center q-gutter-md">
-      <div class="col-12 col-sm-8 col-md-4">
-        <q-card>
-          <q-card-section>
-            <q-select
-              v-model="currentLanguage"
-              :options="languageOptions"
-              :label="$t('settings.languageLabel')"
-              outlined
-              class="full-width"
-              @update:model-value="onLanguageChange"
-            />
-          </q-card-section>
-        </q-card>
-        <q-card>
-          <q-card-section>
-            <q-select
-              v-model="currentCurrency"
-              :options="currencyOptions"
-              :label="$t('settings.currencyLabel')"
-              outlined
-              class="full-width"
-              @update:model-value="onCurrencyChange"
-            />
-          </q-card-section>
-        </q-card>
+      <div class="col-12 col-sm-8 col-md-4 tw-flex tw-flex-col tw-gap-4">
+        <LanguageSelector v-model="currentLanguage" :language-options="languageOptions" />
+        <CurrencySelector
+          v-model="currentCurrency"
+          :use-system-preference="useSystemPreference"
+          :currency-options="currencyOptions"
+        />
       </div>
       <div class="col-12 col-sm-8 col-md-4">
-        <q-card>
-          <q-card-section>
-            <q-select
-              v-model="theme"
-              :options="themeOptions"
-              :label="$t('settings.themeLabel')"
-              outlined
-              :disable="useSystemPreference"
-              class="full-width"
-              @update:model-value="updateTheme"
-            />
-            <q-toggle
-              v-model="useSystemPreference"
-              :label="$t('settings.followSystemTheme')"
-              color="primary"
-              class="q-mt-md"
-              @update:model-value="onSystemPreferenceChange"
-            />
-          </q-card-section>
-        </q-card>
+        <ThemeSelector
+          v-model="theme"
+          :theme-options="themeOptions"
+          :use-system-preference="useSystemPreference"
+          @update:use-system-preference="onSystemPreferenceChange"
+        />
       </div>
     </div>
   </q-page>
@@ -61,64 +29,69 @@
 import { computed } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useQuasar } from 'quasar';
-import { MessageLanguages, setLanguage } from '@/boot/i18n';
+import { setLanguage } from '@/boot/i18n';
+import LanguageSelector from '@/components/base/LanguageSelector.vue';
+import { CurrencyOption, LanguageOption, ThemeOption } from '@/types';
+import CurrencySelector from '@/components/base/CurrencySelector.vue';
+import ThemeSelector from '@/components/base/ThemeSelector.vue';
+import { useI18n } from 'vue-i18n';
 
 const userStore = useUserStore();
 const $q = useQuasar();
+const { t } = useI18n();
 
-const languageOptions = userStore.languageOptions;
+const languageOptions = computed(() =>
+  userStore.languageOptions.map((option) => ({
+    ...option,
+    label: t(`language.${option.value}`),
+  })),
+);
 
-export interface LanguageOption {
-  value: MessageLanguages;
-  label: string;
-}
+const themeOptions = computed(() =>
+  userStore.themeOptions.map((option) => ({
+    ...option,
+    label: t(`theme.${option.value}`),
+  })),
+);
 
-export type Currencies = 'USD' | 'EUR' | 'RSD';
+const currencyOptions = computed(() =>
+  userStore.currencyOptions.map((option) => ({
+    ...option,
+    label: t(`currencyLabel.${option.value}`),
+  })),
+);
 
-const currentLanguage = computed({
+const currentLanguage = computed<LanguageOption>({
   get: () => {
     const currentLang = userStore.settings.language;
-    const option = userStore.languageOptions.find((opt) => opt.value === currentLang);
-    return option || userStore.languageOptions[0];
+    return (languageOptions.value.find((opt) => opt.value === currentLang) ||
+      languageOptions.value[0])!;
   },
   set: (option: LanguageOption) => {
     userStore.settings.language = option.value;
+    setLanguage(option.value);
   },
 });
 
-const themeOptions = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-];
-
-const currencyOptions = [
-  { value: 'USD', label: 'US Dollar' },
-  { value: 'EUR', label: 'Euro' },
-  { value: 'RSD', label: 'Serbian Dinar' },
-];
-
-const currentCurrency = computed({
+const currentCurrency = computed<CurrencyOption>({
   get: () => {
-    return (
-      currencyOptions.find((option) => option.value === userStore.settings.currency) ??
-      currencyOptions[0]
-    );
+    const currentCur = userStore.settings.currency;
+    return (currencyOptions.value.find((opt) => opt.value === currentCur) ||
+      currencyOptions.value[0])!;
   },
-  set: (option: { value: Currencies; label: string }) => {
+  set: (option: CurrencyOption) => {
     userStore.settings.currency = option.value;
   },
 });
 
-const onCurrencyChange = (option: { value: Currencies; label: string }) => {
-  userStore.settings.currency = option.value;
-};
-
-const theme = computed({
-  get: () =>
-    themeOptions.find((option) => option.value === userStore.settings.theme) ?? themeOptions[0],
-  set: (value: 'light' | 'dark') => {
-    userStore.settings.theme = value;
-    $q.dark.set(value === 'dark');
+const theme = computed<ThemeOption>({
+  get: () => {
+    const currentTheme = userStore.settings.theme;
+    return (themeOptions.value.find((opt) => opt.value === currentTheme) || themeOptions.value[0])!;
+  },
+  set: (option: ThemeOption) => {
+    userStore.settings.theme = option.value;
+    $q.dark.set(option.value === 'dark');
   },
 });
 
@@ -129,15 +102,6 @@ const useSystemPreference = computed({
     userStore.updateTheme();
   },
 });
-
-const onLanguageChange = (option: LanguageOption) => {
-  userStore.settings.language = option.value;
-  setLanguage(option.value);
-};
-
-const updateTheme = (selectedTheme: { value: 'light' | 'dark'; label: string }) => {
-  theme.value = selectedTheme.value;
-};
 
 const onSystemPreferenceChange = (value: boolean) => {
   useSystemPreference.value = value;

@@ -2,22 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-$shadow-dark: 0px 4px 10px rgba(0, 0, 0, 0.1);
-$shadow-light: 0px 4px 10px rgba(255, 255, 255, 0.05);
+@import 'lights.scss';
+@import 'q-card.scss';
+@import 'q-header.scss';
+@import 'q-pagination.scss';
+@import 'q-item.scss';
+@import 'q-notify.scss';
+@import 'q-dialog.scss';
+@import 'q-layout.scss';
 
-:root {
-  --q-primary: #1a1a2e;
-  --q-primary-light: #c4c4c4;
-  --q-secondary: #3c3c69;
-  --q-accent: #00ffcc;
-  --q-dark: #0d0a0b;
-  --q-light: #f3eff5;
-  --q-white: #ffffff;
-  --q-night: #0d0a0b;
-  --q-charcoal: #454955;
-  --q-magnolia: #f3eff5;
-  --q-applegreen: #72b01d;
-  --q-officegreen: #3f7d20;
+$grey: #77312b;
+
+html {
+  background-color: black;
+}
+
+.body--light {
+  background: var(--q-light-page);
+}
+
+.body--dark {
+  background: var(--q-dark-page);
 }
 
 h1,
@@ -44,105 +49,6 @@ body {
   font-size: 100%;
 }
 
-.q-layout__section--marginal {
-  background-color: unset !important;
-}
-
-.q-layout-padding {
-  @media screen and (min-width: 0px) and (max-width: 599px) {
-    // xs
-    padding: 1rem !important;
-  }
-  @media screen and (min-width: 600px) and (max-width: 1023px) {
-    // sm
-    padding: 16px;
-  }
-  @media screen and (min-width: 1024px) and (max-width: 1439px) {
-    // md
-    padding: 24px;
-  }
-  @media screen and (min-width: 1440px) and (max-width: 1919px) {
-    // lg
-    padding: 32px;
-  }
-  @media screen and (min-width: 1920px) {
-    // xl
-    padding: 40px;
-  }
-}
-
-a.q-btn {
-  padding: 0.5rem 2rem;
-}
-
-button.q-btn {
-  padding: 0.5rem 2rem;
-  &.q-btn--round {
-    padding: 0.5rem;
-  }
-  &.q-btn--rectangle {
-    padding: 0.5rem 1rem;
-  }
-}
-
-.q-card__actions button.q-btn--rectangle {
-  padding: 1rem 2rem;
-  transition: transform 0.2s ease-in-out;
-  &:hover {
-    transform: scale(1.03);
-  }
-}
-
-.q-header {
-  .q-btn.q-btn--dense.q-btn--round {
-    padding: 15px;
-    font-size: 16px;
-  }
-  .q-toolbar {
-    padding: 0;
-    padding-left: 1rem;
-    .q-toolbar__title.header-title {
-      font-size: 34px;
-    }
-    @media screen and (min-width: 0px) and (max-width: 599px) {
-      padding-left: 0.5rem;
-    }
-  }
-
-  .bg-dark {
-    .q-layout__shadow::after {
-      box-shadow: $shadow-light !important;
-    }
-  }
-  .bg-light {
-    .q-layout__shadow::after {
-      box-shadow: $shadow-dark !important;
-    }
-  }
-}
-
-.q-pagination {
-  .q-pagination__content {
-    .q-pagination__middle {
-      gap: 1rem;
-    }
-  }
-}
-
-.q-card--dark {
-  box-shadow: $shadow-light !important;
-}
-
-.q-card {
-  box-shadow: $shadow-dark !important;
-}
-
-.q-item.q-router-link--active,
-.q-item--active,
-.q-field__control {
-  color: var(--q-item-active) !important;
-}
-
 .price-text {
   font-size: 1.2rem;
   display: flex;
@@ -155,119 +61,4 @@ button.q-btn {
   font-size: 1.4rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
-}
-
-.q-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  height: auto;
-
-  .q-img {
-    max-height: 500px;
-  }
-
-  .q-card__section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-
-    .text-caption {
-      flex-grow: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: normal;
-    }
-  }
-
-  &.cart-summary {
-    z-index: 1000;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    width: 100%;
-
-    &.collapsed {
-      position: fixed;
-      top: 50px;
-      left: 0;
-      right: 0;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 14px;
-      padding: 0;
-      h5 {
-        font-size: 1rem;
-        margin: 0;
-      }
-      &:first-child {
-        width: 100%;
-      }
-    }
-
-    &.expanded {
-      height: auto;
-    }
-
-    &.bg-light {
-      background-color: var(--q-light) !important;
-      color: var(--q-dark) !important;
-    }
-
-    &.bg-dark {
-      background-color: var(--q-dark) !important;
-      color: var(--q-light) !important;
-    }
-  }
-}
-
-.q-header.q-layout__section--marginal.bg-light {
-  background-color: var(--q-light) !important;
-  color: var(--q-dark) !important;
-}
-
-.q-notify {
-  .q-notify__message {
-    font-size: 1.5rem;
-  }
-}
-
-.q-dialog .q-select__dialog {
-  max-width: 500px !important;
-  .q-virtual-scroll__content {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
-    justify-items: center;
-    text-align: center;
-    gap: 1rem;
-    padding: 0.45rem 0;
-  }
-}
-
-.q-card.q-dialog-plugin.confirm-dialog {
-  .q-card__actions {
-    padding: 20px !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-
-    @media (min-width: 600px) {
-      flex-direction: row !important;
-      justify-content: flex-end !important;
-    }
-
-    .q-btn {
-      margin: 0 !important;
-      width: 100% !important;
-
-      @media (min-width: 600px) {
-        width: auto !important;
-        min-width: 120px;
-      }
-    }
-  }
 }

@@ -11,5 +11,5 @@ import { QVueGlobals } from 'quasar/dist/types/globals';
 const $q = useQuasar() as QVueGlobals;
 const userStore = useUserStore();
 
-userStore.initApp($q);
+userStore.setUserStore($q);
 </script>

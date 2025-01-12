@@ -1,24 +1,13 @@
 import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
-import { setLanguage, type MessageLanguages } from '@/boot/i18n';
+import { computed, ref, watch } from 'vue';
+import { setLanguage } from '@/boot/i18n';
 import type { QVueGlobals } from 'quasar/dist/types';
-
-interface UserSettings {
-  language: MessageLanguages;
-  theme: 'light' | 'dark';
-  useSystemPreference: boolean;
-  currency: 'USD' | 'EUR' | 'RSD';
-}
+import { Currency, CurrencyOption, LanguageOption, ThemeOption, UserSettings } from '@/types';
 
 export const useUserStore = defineStore('user', () => {
   const $q = ref<QVueGlobals | null>(null);
 
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  const languageOptions = [
-    { value: 'en-US', label: 'English' },
-    { value: 'sr-RS', label: 'Srpski' },
-    { value: 'fr-FR', label: 'Français' },
-  ];
 
   const settings = ref<UserSettings>({
     language: 'en-US',
@@ -26,6 +15,23 @@ export const useUserStore = defineStore('user', () => {
     useSystemPreference: false,
     currency: 'EUR',
   });
+
+  const languageOptions = computed<LanguageOption[]>(() => [
+    { value: 'en-US', label: 'English' },
+    { value: 'sr-RS', label: 'Serbian' },
+    { value: 'fr-FR', label: 'French' },
+  ]);
+
+  const themeOptions = computed<ThemeOption[]>(() => [
+    { value: 'light', label: 'Light' },
+    { value: 'dark', label: 'Dark' },
+  ]);
+
+  const currencyOptions = computed<CurrencyOption[]>(() => [
+    { value: 'USD', label: 'US Dollar' },
+    { value: 'EUR', label: 'Euro' },
+    { value: 'RSD', label: 'Serbian Dinar' },
+  ]);
 
   const loadSettings = () => {
     const stored = localStorage.getItem('user_settings');
@@ -40,7 +46,7 @@ export const useUserStore = defineStore('user', () => {
     localStorage.setItem('user_settings', JSON.stringify(settings.value));
   };
 
-  const setCurrency = (currency: 'USD' | 'EUR' | 'RSD') => {
+  const setCurrency = (currency: Currency) => {
     settings.value.currency = currency;
     saveSettings();
   };
@@ -75,7 +81,7 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  const initApp = (quasar: QVueGlobals) => {
+  const setUserStore = (quasar: QVueGlobals) => {
     $q.value = quasar;
     loadSettings();
     updateTheme();
@@ -83,11 +89,17 @@ export const useUserStore = defineStore('user', () => {
   };
 
   watch(
+    () => settings.value.language,
+    () => {
+      updateI18n();
+    },
+  );
+
+  watch(
     () => settings.value,
     () => {
       saveSettings();
       updateTheme();
-      updateI18n();
     },
     { deep: true },
   );
@@ -96,10 +108,12 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     languageOptions,
+    themeOptions,
     settings,
     initTheme,
     updateTheme,
-    initApp,
+    setUserStore,
     setCurrency,
+    currencyOptions,
   };
 });

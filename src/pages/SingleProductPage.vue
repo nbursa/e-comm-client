@@ -82,7 +82,7 @@
 
     <!-- Image Overlay -->
     <q-dialog v-model="showImageOverlay" maximized>
-      <q-card class="q-pa-md" style="max-width: 90vw; max-height: 90vh; overflow: hidden">
+      <q-card class="q-pa-md overlay" style="width: 100vw; height: 100vh; overflow: hidden">
         <div class="row justify-between items-center q-mb-md">
           <div class="text-caption tw-font-black">{{ product.name }}</div>
           <q-btn flat dense round icon="close" @click="showImageOverlay = false" />

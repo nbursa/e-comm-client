@@ -1,0 +1,14 @@
+.q-item {
+  background-color: var(--q-white) !important;
+}
+
+.dark--page .q-item {
+  box-shadow: none !important;
+  background-color: var(--q-dark) !important;
+}
+
+.q-item.q-router-link--active,
+.q-item--active,
+.q-field__control {
+  color: var(--q-item-active) !important;
+}

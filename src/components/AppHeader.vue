@@ -1,55 +1,36 @@
 <template>
-  <q-header elevated bordered :class="themeStyle">
+  <q-header :class="[headerClasses, 'tw-overflow-hidden']" :style="headerStyle">
+    <div
+      class="lights tw-absolute tw-w-full tw-h-full tw-opacity-5"
+      :style="{ '--lightsOffset': scrollPosition + 'px' }"
+    ></div>
     <q-toolbar>
-      <q-toolbar-title class="">{{ $t('main.ecomm') }}</q-toolbar-title>
+      <q-toolbar-title
+        ><RouterLink to="/" class="tw-text-2xl tw-align-middle tw-font-serif">{{
+          $t('main.ecomm')
+        }}</RouterLink></q-toolbar-title
+      >
       <div class="gt-md tw-text-lg">
-        <q-btn
+        <AppButton
           v-for="item in menuItems"
           :key="item.label"
-          flat
           :to="item.path"
           :label="item.label"
+          :flat="true"
         />
       </div>
 
-      <q-btn flat round dense to="/cart" icon="shopping_cart" size=".8rem" class="cart-btn !tw-p-2">
-        <q-badge class="cart-badge" :class="{ 'blink-animation': isAnimating }">
-          {{ totalItems }}
-        </q-badge>
-      </q-btn>
+      <CartButton
+        v-if="!!totalItems"
+        :button-size="buttonSize"
+        :is-animating="isAnimating"
+        :total-items="totalItems"
+      />
 
-      <q-select
-        v-model="currentLanguage"
-        :options="languageOptions"
-        option-value="value"
-        option-label="label"
-        dense
-        options-dense
-        borderless
-        emit-value
-        map-options
-        hide-dropdown-icon
-        class="lang-select q-p-none"
-        style="min-width: 60px"
-        @update:model-value="setLanguage"
-      >
-        <template #selected>
-          <q-btn
-            flat
-            dense
-            :label="displayLanguage"
-            class="text-no-wrap !tw-w-full !tw-h-full !tw-p-0"
-          />
-        </template>
-      </q-select>
-
-      <q-btn
-        flat
-        round
-        dense
-        icon="menu"
-        class="lt-lg !tw-p-2"
-        @click="$emit('update:drawerOpen')"
+      <MenuButton
+        :button-size="buttonSize"
+        class="lt-lg"
+        @update:drawer-open="$emit('update:drawerOpen')"
       />
     </q-toolbar>
   </q-header>
@@ -58,37 +39,80 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, watch } from 'vue';
 import { useCartStore } from '@/stores/cart';
-import { useUserStore } from '@/stores/user';
 import { useQuasar } from 'quasar';
-import { MessageLanguages, setLanguage } from '@/boot/i18n';
 import { QVueGlobals } from 'quasar/dist/types/globals';
+import AppButton from './base/AppButton.vue';
+import { MenuItem } from '@/types';
+import MenuButton from './base/MenuButton.vue';
+import CartButton from './base/CartButton.vue';
+// import { useUserStore } from '@/stores/user';
 
-const cartStore = useCartStore();
-const userStore = useUserStore();
-const $q = useQuasar() as QVueGlobals;
-
-const languageOptions = computed(() => userStore.languageOptions);
-
-const currentLanguage = computed<string>({
-  get: () => userStore.settings.language,
-  set: (value: string) => {
-    userStore.settings.language = value as MessageLanguages;
+defineProps({
+  menuItems: {
+    type: Array as PropType<MenuItem[]>,
+    required: true,
+  },
+  drawerOpen: {
+    type: Boolean as PropType<boolean>,
+    required: true,
+  },
+  scrollPosition: {
+    type: Number as PropType<number>,
+    required: true,
+  },
+  headerStyle: {
+    type: Object as PropType<Record<string, string>>,
+    default: () => {},
+  },
+  headerClasses: {
+    type: Array as PropType<string[]>,
+    required: true,
   },
 });
+defineEmits<{
+  'update:drawerOpen': [];
+}>();
 
-const displayLanguage = computed(() => {
-  const lang = currentLanguage.value;
-  const option = languageOptions.value.find((opt) => opt.value === lang);
-  return option?.value.split('-')[0] || 'EN';
-});
-
-const totalItems = computed(() => cartStore.totalItems);
-
-const themeStyle = computed(() =>
-  $q.dark.isActive ? 'bg-dark text-light shadow-dark' : 'bg-light text-dark shadow-light',
-);
+const cartStore = useCartStore();
+// const userStore = useUserStore();
+const $q = useQuasar() as QVueGlobals;
 
 const isAnimating = ref(false);
+// const isDark = computed(() => userStore.settings.theme === 'dark');
+// const isScrolledHeader = computed(() => props.scrollPosition > 40);
+
+const totalItems = computed(() => cartStore.totalItems);
+const buttonSize = computed(() => {
+  if ($q.screen.lt.sm) return 'xl';
+  if ($q.screen.lt.md) return 'md';
+  return 'md';
+});
+
+// const headerStyle = computed(() => {
+//   const spread = Math.min(props.scrollPosition / 9, 100);
+//   const firstColorStop = spread.toFixed();
+//   const secondColorStop = (100 - spread / 2).toFixed();
+//   console.log('firstColorStop', firstColorStop, secondColorStop);
+
+//   return {
+//     background: `linear-gradient(
+//       to right,
+//       rgba(26, 32, 44, 0.9) ${firstColorStop}%,
+//       rgba(119, 49, 43, 0.9) ${secondColorStop}%
+//     )`,
+//     color: isDark.value ? 'var(--tw-dark)' : 'inherit',
+//   };
+// });
+
+// const headerClasses = computed(() => {
+//   return [
+//     'tw-px-2 md:tw-px-4',
+//     isDark.value && isScrolledHeader.value ? 'dark-header' : 'bg-transparent text-light',
+//     !isDark.value && isScrolledHeader.value
+//       ? 'tw-bg-transparent tw-text-dark'
+//       : 'tw-bg-light tw-text-dark',
+//   ];
+// });
 
 watch(
   () => totalItems.value,
@@ -101,21 +125,6 @@ watch(
     }
   },
 );
-
-defineProps({
-  menuItems: {
-    type: Array as PropType<{ label: string; path: string }[]>,
-    required: true,
-  },
-  drawerOpen: {
-    type: Boolean as PropType<boolean>,
-    required: true,
-  },
-});
-
-defineEmits<{
-  'update:drawerOpen': [];
-}>();
 </script>
 
 <style lang="scss" scoped>
@@ -124,8 +133,8 @@ defineEmits<{
 
   :deep(.cart-badge) {
     position: absolute;
-    top: 0px;
-    right: -3px;
+    top: 5px;
+    right: 3px;
     min-width: 18px;
     min-height: 18px;
     aspect-ratio: 1;
@@ -173,7 +182,6 @@ defineEmits<{
     min-width: 150px !important;
     padding: 8px 0;
     border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
     transform-origin: top;
     animation: menuIn 0.2s ease-out;
 
