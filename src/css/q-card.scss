@@ -1,0 +1,114 @@
+$shadow-black: 0px 4px 10px rgba(0, 0, 0, 0.1);
+$shadow-white: 10px 14px 10px rgba(255, 255, 255, 0.05);
+
+.q-card__actions button.q-btn--rectangle {
+  padding: 1rem 2rem;
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.03);
+  }
+}
+
+.q-card {
+  background-color: var(--q-transparent) !important;
+  border: 1px solid var(--q-border-color) !important;
+  box-shadow: var($shadow-black) !important;
+  &.q-card--dark {
+    box-shadow: var($shadow-white) !important;
+    background-color: var(--q-transparent) !important;
+    &.overlay {
+      background-color: rgba(0, 0, 0, 0.5) !important;
+      backdrop-filter: blur(10px);
+    }
+  }
+}
+
+.q-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: auto;
+
+  .q-img {
+    max-height: 500px;
+  }
+
+  .q-card__section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    .text-caption {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+    }
+  }
+
+  &.cart-summary {
+    z-index: 1000;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    width: 100%;
+
+    &.collapsed {
+      position: fixed;
+      top: 50px;
+      left: 0;
+      right: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      padding: 0;
+      h5 {
+        font-size: 1rem;
+        margin: 0;
+      }
+      &:first-child {
+        width: 100%;
+      }
+    }
+
+    &.expanded {
+      height: auto;
+    }
+
+    &.bg-light {
+      background-color: var(--q-light) !important;
+      color: var(--q-dark) !important;
+    }
+
+    &.bg-dark {
+      background-color: var(--q-dark) !important;
+      color: var(--q-light) !important;
+    }
+  }
+}
+
+.q-card.q-dialog-plugin.confirm-dialog {
+  .q-card__actions {
+    padding: 20px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+
+    @media (min-width: 600px) {
+      flex-direction: row !important;
+      justify-content: flex-end !important;
+    }
+
+    .q-btn {
+      margin: 0 !important;
+      width: 100% !important;
+
+      @media (min-width: 600px) {
+        width: auto !important;
+        min-width: 120px;
+      }
+    }
+  }
+}

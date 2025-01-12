@@ -8,5 +8,5 @@ export default boot(({ app }) => {
   const userStore = useUserStore();
   const $q = app.config.globalProperties.$q;
   ratesStore.loadExchangeRates();
-  userStore.initApp($q);
+  userStore.setUserStore($q);
 });

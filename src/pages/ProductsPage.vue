@@ -1,15 +1,6 @@
 <template>
-  <q-page padding>
-    <CartPreview
-      v-if="false"
-      :total-items="totalItems"
-      :total-price="totalPrice"
-      :is-collapsed="isCollapsed"
-      class="q-ml-auto q-mb-md"
-    />
-
-    <h5 class="q-my-md">{{ $t('products.title') }}</h5>
-
+  <q-page padding class="tw-relative">
+    <h5 class="q-my-md tw-font-serif">{{ $t('products.title') }}</h5>
     <q-tabs
       v-model="selectedCategory"
       class="q-mb-md gt-sm"
@@ -28,65 +19,29 @@
       />
     </q-tabs>
 
-    <q-select
-      v-model="selectedCategory"
-      :options="['all', ...categories]"
-      class="q-my-md lt-md"
+    <CategorySelect
+      v-model:selected-category="selectedCategory"
+      :categories="categories"
       :color="color"
-      :text-color="text"
-      :label="$t('products.selectCategory')"
-      outlined
-      :option-label="
-        (opt: string) =>
-          opt === 'all' ? $t('products.categories.allProducts') : formatCategoryLabel(opt)
-      "
+      :text="text"
+      class="q-my-md lt-md"
     />
 
     <q-separator class="q-my-md" />
 
-    <div class="tw-container tw-mx-auto tw-max-w-screen-xl tw-mb-8">
+    <div class="tw-container tw-mx-auto tw-mb-8 grid justify-center">
       <div
-        class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 tw-gap-4"
+        class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 tw-gap-4"
       >
-        <q-card
+        <ProductCard
           v-for="product in paginatedProducts"
           :key="product.id"
-          class="tw-w-full tw-transition tw-duration-200 tw-ease-in-out hover:tw-cursor-pointer hover:tw-scale-105"
-          bordered
-          @click="viewProduct(product)"
-        >
-          <q-img
-            :src="imageUrl(product.image)"
-            :alt="product.name"
-            fit="contain"
-            class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"
-          />
-          <q-card-section class="tw-flex-grow q-pa-sm !tw-pb-0">
-            <div class="text-bold product-name">{{ product.name || product.title }}</div>
-            <div class="text-caption">{{ getFirstSentence(product.description) }}</div>
-          </q-card-section>
-
-          <q-card-actions class="row justify-between items-center !tw-pt-0">
-            <div class="q-mt-sm text-bold price-text">
-              <template v-if="product.discount">
-                <s class="text-grey">{{ formatPrice(product.price) }}</s>
-                <span class="text-positive q-ml-sm">
-                  {{ formatPrice(product.discountedPrice || product.price) }}</span
-                >
-              </template>
-              <template v-else>
-                {{ formatPrice(product.price) }}
-              </template>
-            </div>
-            <q-btn
-              :color="color"
-              :text-color="text"
-              :label="$t('products.addToCart')"
-              class="full-width q-mt-md"
-              @click.stop="addToCart(product)"
-            />
-          </q-card-actions>
-        </q-card>
+          :product="product"
+          :color="color"
+          :text="text"
+          @add-to-cart="addToCart"
+          @view-product="viewProduct"
+        />
       </div>
     </div>
 
@@ -102,23 +57,44 @@
       :active-text-color="$q.dark.isActive ? 'dark' : 'white'"
       @update:model-value="scrollToTop"
     />
+
+    <q-btn
+      v-if="isScrolledBtn"
+      class="!tw-fixed !tw-bottom-12 !tw-right-2 !tw-p-3 tw-z-40"
+      round
+      color="white"
+      text-color="primary"
+      icon="arrow_upward"
+      @click="scrollToTop"
+    />
+
+    <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
+      <q-btn fab icon="keyboard_arrow_up" label="totop" color="accent" />
+    </q-page-scroller>
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
+import { computed, ref, onMounted, watch, PropType } from 'vue';
 import { useCartStore } from '../stores/cart';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
-import { scroll } from 'quasar';
-import CartPreview from '@/components/CartPreview.vue';
+// import { scroll } from 'quasar';
 import { useProductCacheStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import { Product } from '@/types';
-import { formatPrice } from '@/utils';
+import ProductCard from '@/components/ProductCard.vue';
+import CategorySelect from '@/components/CategorySelect.vue';
 
-const { getVerticalScrollPosition } = scroll;
+const props = defineProps({
+  scrollPosition: {
+    type: Number as PropType<number>,
+    required: true,
+  },
+});
+
+// const { getVerticalScrollPosition } = scroll;
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
@@ -126,10 +102,11 @@ const productCache = useProductCacheStore();
 const { t } = useI18n();
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
+
 const products = ref<Product[]>([]);
 const currentPage = ref(1);
 const itemsPerPage = 10;
-const isCollapsed = ref(false);
+// const isCollapsed = ref(false);
 const selectedCategory = ref('all');
 const isLoadingCategories = ref(true);
 const categories = ref<string[]>([]);
@@ -150,8 +127,7 @@ const paginatedProducts = computed(() => {
   );
 });
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
-const totalItems = computed(() => cartStore.totalItems);
-const totalPrice = computed(() => cartStore.totalPrice);
+const isScrolledBtn = computed(() => props.scrollPosition > 300);
 
 const formatCategoryLabel = (category: string) => {
   if (!category) return '';
@@ -161,17 +137,10 @@ const formatCategoryLabel = (category: string) => {
     .join(' ');
 };
 
-const getFirstSentence = (text: string): string => {
-  const match = text.match(/[^.!?]*[.!?]/);
-  return match ? match[0] : text;
-};
-
-const imageUrl = (imagePath: string) => {
-  return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
-};
-
 const scrollToTop = () => {
-  const target = document.querySelector('body') as HTMLElement;
+  // const target = document.querySelector('.q-page') as HTMLElement;
+  const target = document.documentElement || document.body;
+  console.log('target', target);
   if (target) {
     target.scrollTo({
       top: 0,
@@ -195,10 +164,10 @@ const viewProduct = (product: Product) => {
   router.push(`/products/${product.id}`);
 };
 
-const handleScroll = () => {
-  const scrollTop = getVerticalScrollPosition(window);
-  isCollapsed.value = scrollTop > 0;
-};
+// const handleScroll = () => {
+//   const scrollTop = getVerticalScrollPosition(window);
+//   isCollapsed.value = scrollTop > 0;
+// };
 
 watch(selectedCategory, async (newCategory) => {
   currentPage.value = 1;
@@ -270,10 +239,10 @@ const fetchProducts = async (category?: string) => {
 
 onMounted(async () => {
   await Promise.all([fetchCategories(), fetchProducts()]);
-  window.addEventListener('scroll', handleScroll);
+  // window.addEventListener('scroll', handleScroll);
 });
 
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
+// onUnmounted(() => {
+//   window.removeEventListener('scroll', handleScroll);
+// });
 </script>

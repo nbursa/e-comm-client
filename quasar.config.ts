@@ -93,12 +93,16 @@ export default defineConfig((ctx: { modeName: string }) => {
     framework: {
       config: {
         brand: {
-          primary: '#1a1a2e',
-          'primary-light': '#c4c4c4',
-          secondary: '#3c3c69',
-          accent: '#00ffcc',
-          dark: '#0D0A0B',
-          light: '#F3EFF5',
+          primary: '#1A202C',
+          'primary-light': '#E2E8F0',
+          secondary: '#FF6F61',
+          accent: '#FFD700',
+          dark: '#1A202C',
+          light: '#F2EFE9',
+          black: '#121212',
+          white: '#FFFFFF',
+          'light-page': 'linear-gradient(135deg, #BFB48F 0%, #FFFFFF 50%, #BFB48F 80%)',
+          'dark-page': 'linear-gradient(135deg, #1A202C 30%, #77312B 50%, #1A202C 70%)',
         },
         dark: true,
       },
@@ -112,7 +116,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       pwa: false,
     },
     pwa: {
-      workboxMode: 'GenerateSW',
+      workboxMode: 'InjectManifest',
     },
     capacitor: {
       hideSplashscreen: true,

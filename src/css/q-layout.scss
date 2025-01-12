@@ -1,0 +1,26 @@
+.q-layout__section--marginal {
+  background-color: unset !important;
+}
+
+.q-layout-padding {
+  @media screen and (min-width: 0px) and (max-width: 599px) {
+    // xs
+    padding: 1rem !important;
+  }
+  @media screen and (min-width: 600px) and (max-width: 1023px) {
+    // sm
+    padding: 16px;
+  }
+  @media screen and (min-width: 1024px) and (max-width: 1439px) {
+    // md
+    padding: 24px;
+  }
+  @media screen and (min-width: 1440px) and (max-width: 1919px) {
+    // lg
+    padding: 32px;
+  }
+  @media screen and (min-width: 1920px) {
+    // xl
+    padding: 40px;
+  }
+}

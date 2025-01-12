@@ -1,5 +1,19 @@
 export default {
   currency: 'RSD',
+  language: {
+    'en-US': 'Engleski',
+    'sr-RS': 'Srpski',
+    'fr-FR': 'Francuski',
+  },
+  theme: {
+    dark: 'Tamna',
+    light: 'Svetla',
+  },
+  currencyLabel: {
+    USD: 'Američki Dolar',
+    EUR: 'Evro',
+    RSD: 'Srpski Dinar',
+  },
   main: {
     home: 'Početna',
     products: 'Proizvodi',
@@ -93,8 +107,13 @@ export default {
     button: 'Nastavi kupovinu',
   },
   404: {
+    errorTitle: 'Greška',
     error: 'Greška',
+    errorCode: 'Kod greške',
     notExist: 'Stranica koju tražite ne postoji.',
+    suggestion: 'Možda ste pogrešno uneli adresu ili je stranica premeštena.',
     goHome: 'Idi na početnu',
+    contactSupport: 'Kontaktirajte podršku',
+    additionalInfo: 'Dodatne informacije',
   },
 };

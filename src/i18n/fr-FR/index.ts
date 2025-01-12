@@ -1,5 +1,19 @@
 export default {
   currency: 'EUR',
+  language: {
+    'en-US': 'Anglais',
+    'sr-RS': 'Serbe',
+    'fr-FR': 'Francese',
+  },
+  theme: {
+    dark: 'Sombre',
+    light: 'Clair',
+  },
+  currencyLabel: {
+    USD: 'Dollar américain',
+    EUR: 'Euro',
+    RSD: 'Dinar serbe',
+  },
   main: {
     home: 'Accueil',
     products: 'Produits',
@@ -93,8 +107,13 @@ export default {
     button: 'Continuer vos achats',
   },
   404: {
+    errorTitle: 'Erreur',
     error: 'Erreur',
     notExist: "La page que vous recherchez n'existe pas.",
+    errorCode: "Code d'erreur",
     goHome: "Retour à l'accueil",
+    suggestion: "Essayez de revenir à la page précédente ou de revenir à notre page d'accueil.",
+    contactSupport: 'Contacter le support',
+    additionalInfo: 'Informations supplémentaires',
   },
 };

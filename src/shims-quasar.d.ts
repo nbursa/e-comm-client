@@ -15,3 +15,9 @@ declare module 'quasar' {
     ): void;
   }
 }
+
+declare module 'quasar/src/components/form/QForm' {
+  import { Component } from 'vue';
+  const QForm: Component;
+  export default QForm;
+}

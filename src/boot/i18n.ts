@@ -2,6 +2,7 @@ import messages from '../i18n';
 import type { App } from 'vue';
 import { boot } from 'quasar/wrappers';
 import { type Composer, createI18n } from 'vue-i18n';
+import { CurrencyOption, LanguageOption } from '@/types';
 
 export type MessageLanguages = keyof typeof messages;
 export type MessageSchema = (typeof messages)['en-US'];
@@ -14,6 +15,18 @@ declare module 'vue-i18n' {
 }
 
 export const STORAGE_LANGUAGE_KEY = 'language';
+
+export const languageOptions = [
+  { value: 'en-US', label: 'English' },
+  { value: 'sr-RS', label: 'Srpski' },
+  { value: 'fr-FR', label: 'Français' },
+] as LanguageOption[];
+
+export const currencyOptions = [
+  { value: 'USD', label: 'US Dollar' },
+  { value: 'EUR', label: 'Euro' },
+  { value: 'RSD', label: 'Serbian Dinar' },
+] as CurrencyOption[];
 
 const i18n = createI18n<{ message: MessageSchema }, MessageLanguages>({
   locale: getStoredLanguage(),

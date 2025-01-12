@@ -1,3 +1,5 @@
+import { MessageLanguages } from '@/boot/i18n';
+
 export type ProductRating = {
   rate: number;
   count: number;
@@ -45,4 +47,37 @@ export interface EssentialLinkProps {
   caption?: string;
   link?: string;
   icon?: string;
+}
+
+export type { MessageLanguages } from '@/boot/i18n';
+
+export interface LanguageOption {
+  value: MessageLanguages;
+  label: string;
+}
+
+export type Currency = 'USD' | 'EUR' | 'RSD';
+
+export type Theme = 'light' | 'dark';
+
+export interface ThemeOption {
+  value: Theme;
+  label: string;
+}
+
+export interface UserSettings {
+  language: MessageLanguages;
+  theme: Theme;
+  useSystemPreference: boolean;
+  currency: Currency;
+}
+
+export interface CurrencyOption {
+  value: Currency;
+  label: string;
+}
+
+export interface MenuItem {
+  label: string;
+  path: string;
 }

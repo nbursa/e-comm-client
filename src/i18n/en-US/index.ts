@@ -1,5 +1,19 @@
 export default {
   currency: 'USD',
+  language: {
+    'en-US': 'English',
+    'sr-RS': 'Serbian',
+    'fr-FR': 'French',
+  },
+  theme: {
+    dark: 'Dark',
+    light: 'Light',
+  },
+  currencyLabel: {
+    USD: 'US Dollar',
+    EUR: 'Euro',
+    RSD: 'Serbian Dinar',
+  },
   main: {
     home: 'Home',
     products: 'Products',
@@ -96,5 +110,10 @@ export default {
     error: 'Error',
     notExist: 'The page you are looking for does not exist.',
     goHome: 'Go Back Home',
+    errorTitle: 'Error',
+    errorCode: 'Error Code',
+    suggestion: 'Try checking your URL for typos or visit our homepage.',
+    contactSupport: 'Contact Support',
+    additionalInfo: 'Additional Information',
   },
 };

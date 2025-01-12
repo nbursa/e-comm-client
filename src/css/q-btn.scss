@@ -1,0 +1,13 @@
+a.q-btn {
+  padding: 0.5rem 2rem;
+}
+
+button.q-btn {
+  padding: 0.5rem 2rem;
+  &.q-btn--round {
+    padding: 0.5rem;
+  }
+  &.q-btn--rectangle {
+    padding: 0.5rem 1rem;
+  }
+}

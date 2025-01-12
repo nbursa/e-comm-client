@@ -22,7 +22,7 @@
             >
               <q-card flat bordered>
                 <q-card-section>
-                  <q-form class="row q-col-gutter-md" @submit.prevent="validateShipping">
+                  <q-form ref="formRef" class="row q-col-gutter-md" @submit="validateShipping">
                     <div class="col-12 col-sm-6">
                       <q-input
                         v-model="form.firstName"
@@ -83,7 +83,11 @@
 
               <q-card v-if="paymentMethod === 'card'" flat bordered>
                 <q-card-section>
-                  <q-form class="row q-col-gutter-md" @submit.prevent="validatePayment">
+                  <q-form
+                    ref="paymentRef"
+                    class="row q-col-gutter-md"
+                    @submit.prevent="validatePayment"
+                  >
                     <div class="col-12">
                       <q-input
                         v-model="payment.cardNumber"
@@ -152,6 +156,7 @@
                 :color="color"
                 :text-color="text"
                 :label="step === 2 ? $t('checkout.placeOrder') : $t('checkout.continue')"
+                type="submit"
                 class="full-width tw-mb-2"
                 @click="step === 2 ? showOrderConfirmation() : nextStep()"
               />
@@ -180,6 +185,9 @@ import { useI18n } from 'vue-i18n';
 import { OrderDetails } from '@/types';
 import QRCode from 'qrcode';
 import { formatPrice } from '@/utils';
+import type { ComponentPublicInstance } from 'vue';
+
+type QFormInstance = ComponentPublicInstance<{ validate: () => boolean }>;
 
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
@@ -188,6 +196,8 @@ const { t } = useI18n();
 
 const step = ref(1);
 const paymentMethod = ref('card');
+const formRef = ref<QFormInstance | null>(null);
+const paymentRef = ref<QFormInstance | null>(null);
 const form = ref({
   firstName: '',
   lastName: '',
@@ -251,11 +261,24 @@ const emailRules = (val: string) =>
   /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val) || 'Invalid email';
 
 const validateShipping = () => {
-  step.value++;
+  const shippingForm = formRef.value;
+  console.log(shippingForm);
+  if (shippingForm && shippingForm.validate()) {
+    step.value = 2;
+  } else {
+    $q.notify({ type: 'negative', message: 'Please fix errors in the form.' });
+  }
 };
 
 const validatePayment = () => {
-  step.value++;
+  const paymentForm = paymentRef.value;
+  console.log(paymentForm);
+  if (paymentForm && paymentForm.validate()) {
+    $q.notify({ type: 'positive', message: 'Order placed successfully!' });
+    step.value = 3;
+  } else {
+    $q.notify({ type: 'negative', message: 'Please fix errors in the form.' });
+  }
 };
 
 const goBack = () => {

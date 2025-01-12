@@ -55,8 +55,8 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: loadPage('ErrorNotFound'),
-    meta: { title: 'Not Found' },
+    component: MainLayout,
+    children: [{ path: '', component: loadPage('ErrorPage'), meta: { title: 'Not Found' } }],
   },
 ];
 

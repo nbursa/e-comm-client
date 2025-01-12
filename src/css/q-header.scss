@@ -1,0 +1,20 @@
+.q-header {
+  .q-btn.q-btn--dense.q-btn--round {
+    padding: 15px;
+    font-size: 16px;
+  }
+  .q-toolbar {
+    padding: 0;
+    .q-toolbar__title.header-title {
+      font-size: 34px;
+    }
+    @media screen and (min-width: 0px) and (max-width: 599px) {
+      padding-left: 0.5rem;
+    }
+  }
+}
+
+.q-header.q-layout__section--marginal.bg-light {
+  background-color: var(--q-light) !important;
+  color: var(--q-dark) !important;
+}
