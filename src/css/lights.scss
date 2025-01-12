@@ -22,20 +22,15 @@ body {
       $r: random(6);
       @if $r == 1 {
         $colors: $purple, $blue, $green;
-      }
-      @elseif $r == 2 {
+      } @else if $r == 2 {
         $colors: $purple, $green, $blue;
-      }
-      @elseif $r == 3 {
+      } @else if $r == 3 {
         $colors: $green, $purple, $blue;
-      }
-      @elseif $r == 4 {
+      } @else if $r == 4 {
         $colors: $green, $blue, $purple;
-      }
-      @elseif $r == 5 {
+      } @else if $r == 5 {
         $colors: $blue, $green, $purple;
-      }
-      @elseif $r == 6 {
+      } @else if $r == 6 {
         $colors: $blue, $purple, $green;
       }
       box-shadow:
