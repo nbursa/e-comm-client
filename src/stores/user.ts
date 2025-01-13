@@ -1,14 +1,10 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { setLanguage } from '@/boot/i18n';
-import type { QVueGlobals } from 'quasar/dist/types';
 import { Currency, CurrencyOption, LanguageOption, ThemeOption, UserSettings } from '@/types';
+import { themeManager } from '@/boot/theme';
 
 export const useUserStore = defineStore('user', () => {
-  const $q = ref<QVueGlobals | null>(null);
-
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
   const settings = ref<UserSettings>({
     language: 'en-US',
     theme: 'light',
@@ -51,20 +47,8 @@ export const useUserStore = defineStore('user', () => {
     saveSettings();
   };
 
-  const initTheme = (quasar: QVueGlobals) => {
-    $q.value = quasar;
-    loadSettings();
-    updateTheme();
-  };
-
   const updateTheme = () => {
-    if (!$q.value) return;
-
-    const isDark = settings.value.useSystemPreference
-      ? mediaQuery.matches
-      : settings.value.theme === 'dark';
-
-    $q.value.dark.set(isDark);
+    themeManager.applyTheme();
   };
 
   const updateI18n = () => {
@@ -75,14 +59,7 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  const handleSystemChange = () => {
-    if (settings.value.useSystemPreference) {
-      updateTheme();
-    }
-  };
-
-  const setUserStore = (quasar: QVueGlobals) => {
-    $q.value = quasar;
+  const setUserStore = () => {
     loadSettings();
     updateTheme();
     updateI18n();
@@ -104,13 +81,10 @@ export const useUserStore = defineStore('user', () => {
     { deep: true },
   );
 
-  mediaQuery.addEventListener('change', handleSystemChange);
-
   return {
     languageOptions,
     themeOptions,
     settings,
-    initTheme,
     updateTheme,
     setUserStore,
     setCurrency,

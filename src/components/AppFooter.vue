@@ -1,13 +1,16 @@
 <template>
   <q-footer
-    class="tw-text-center tw-py-0 tw-overflow-hidden tw-relative"
-    :class="footerClasses"
+    :class="[
+      'tw-text-center tw-py-0 tw-overflow-hidden tw-relative tw-px-2 md:tw-px-4',
+      themeClasses,
+    ]"
     :style="footerStyle"
   >
-    <AnimatedLights :scroll-position="position" direction="toRight" />
-    <div class="tw-flex tw-justify-center tw-items-center tw-gap-4">
+    <AnimatedLights :scroll-position="scrollPosition" direction="toRight" />
+    <div class="!tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
       <span
-        ><PageInfoText class="!tw-m-0 !tw-text-sm" :description="$t('home.description')"
+        >{{ themeClasses }}
+        <PageInfoText class="!tw-m-0 !tw-text-sm" :description="$t('home.description')"
       /></span>
     </div>
   </q-footer>
@@ -16,13 +19,10 @@
 <script setup lang="ts">
 import PageInfoText from '@/components/base/PageInfoText.vue';
 import AnimatedLights from './base/AnimatedLights.vue';
+import { useUserStore } from '@/stores/user';
 import { computed } from 'vue';
 
-const props = defineProps({
-  footerClasses: {
-    type: Array,
-    required: true,
-  },
+defineProps({
   footerStyle: {
     type: Object,
     default: () => {},
@@ -33,5 +33,11 @@ const props = defineProps({
   },
 });
 
-const position = computed(() => props.scrollPosition);
+const userStore = useUserStore();
+
+const isDark = computed(() => userStore.settings.theme === 'dark');
+
+const themeClasses = computed(() => {
+  return isDark.value ? 'bg-dark text-dark' : 'bg-dark text-light';
+});
 </script>

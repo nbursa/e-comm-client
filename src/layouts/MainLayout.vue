@@ -1,22 +1,21 @@
 <template>
   <q-layout view="hHh lpR fFf" class="tw-w-screen tw-h-screen text-body1 scroll">
-    <q-scroll-area ref="scrollContainer" class="tw-w-full tw-h-full">
-      <q-scroll-observer @scroll="scrollHandler" />
-      <AppHeader
-        :menu-items="menuItems"
-        :drawer-open="drawerOpen"
-        :scroll-position="position"
-        :header-classes="headerClasses"
-        @update:drawer-open="toggleDrawer"
-      />
-      <MobileDrawer :menu-items="mobileMenuItems" :drawer-open="drawerOpen" @navigate="navigate" />
+    <AppHeader
+      :menu-items="menuItems"
+      :drawer-open="drawerOpen"
+      :scroll-position="position"
+      @update:drawer-open="toggleDrawer"
+    />
 
+    <MobileDrawer :menu-items="mobileMenuItems" :drawer-open="drawerOpen" @navigate="navigate" />
+    <q-scroll-area ref="scrollContainer" class="tw-w-full tw-h-full">
       <q-page-container style="max-width: 1200px !important; margin: 0 auto !important">
         <router-view :scroll-position="position" :scroll-offset="scrollPosition" />
       </q-page-container>
 
-      <AppFooter :footer-classes="footerClasses" :scroll-position="position" />
+      <q-scroll-observer @scroll="scrollHandler" />
     </q-scroll-area>
+    <AppFooter :scroll-position="position" />
   </q-layout>
 </template>
 
@@ -47,19 +46,6 @@ const mobileMenuItems = computed(() => [
   { label: t('main.home'), path: '/' },
   { label: t('main.products'), path: '/products' },
 ]);
-const isDark = computed(() => userStore.settings.theme === 'dark');
-const isScrolledHeader = computed(() => scrollPosition.value > 40);
-const themeClasses = computed(() => {
-  if (isDark.value) {
-    return isScrolledHeader.value ? 'bg-dark text-light' : 'bg-transparent text-light';
-  } else {
-    return isScrolledHeader.value ? 'bg-light text-dark' : 'bg-transparent text-dark';
-  }
-});
-const headerClasses = computed(() => ['tw-px-2 md:tw-px-4', themeClasses.value]);
-const footerClasses = computed(() => {
-  return ['tw-px-2 md:tw-px-4', isDark.value ? 'bg-dark  text-dark' : 'bg-dark text-light'];
-});
 
 watch(
   () => userStore.settings.theme === 'dark',

@@ -1,6 +1,6 @@
 <template>
-  <q-header :class="[headerClasses, 'tw-overflow-hidden']" :style="headerStyle">
-    <AnimatedLights :scroll-position="position" :opacity="50" direction="toLeft" />
+  <q-header :class="['tw-overflow-hidden tw-px-2 md:tw-px-4', themeClasses]" :style="headerStyle">
+    <AnimatedLights :scroll-position="scrollPosition" :opacity="50" direction="toLeft" />
     <q-toolbar>
       <q-toolbar-title
         ><RouterLink to="/" class="tw-text-2xl tw-align-middle tw-font-serif tw-font-extrabold">{{
@@ -43,6 +43,7 @@ import { MenuItem } from '@/types';
 import MenuButton from './base/MenuButton.vue';
 import CartButton from './base/CartButton.vue';
 import AnimatedLights from './base/AnimatedLights.vue';
+import { useUserStore } from '@/stores/user';
 
 const props = defineProps({
   menuItems: {
@@ -61,10 +62,6 @@ const props = defineProps({
     type: Object as PropType<Record<string, string>>,
     default: () => {},
   },
-  headerClasses: {
-    type: Array as PropType<string[]>,
-    required: true,
-  },
 });
 defineEmits<{
   'update:drawerOpen': [];
@@ -72,7 +69,9 @@ defineEmits<{
 
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
+const userStore = useUserStore();
 
+const isDark = computed(() => userStore.settings.theme === 'dark');
 const isAnimating = ref(false);
 
 const totalItems = computed(() => cartStore.totalItems);
@@ -81,7 +80,14 @@ const buttonSize = computed(() => {
   if ($q.screen.lt.md) return 'md';
   return 'md';
 });
-const position = computed(() => props.scrollPosition);
+const isScrolledHeader = computed(() => props.scrollPosition > 40);
+const themeClasses = computed(() => {
+  if (isDark.value) {
+    return isScrolledHeader.value ? 'bg-dark text-light' : 'bg-transparent text-light';
+  } else {
+    return isScrolledHeader.value ? 'bg-light text-dark' : 'bg-transparent text-dark';
+  }
+});
 
 watch(
   () => totalItems.value,
@@ -120,29 +126,10 @@ watch(
     transform: translate(0, 0);
     line-height: 0;
     text-align: center;
-  }
-}
-
-:deep(.cart-badge) {
-  background-color: white;
-  &.blink-animation {
-    animation: blink 0.5s ease-in-out;
-  }
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    transform: scale(1);
-    color: white;
-    border-color: white;
-    background-color: red;
-  }
-  50% {
-    transform: scale(1.5);
-    color: white;
-    border-color: white;
-    background-color: red;
+    background-color: white;
+    &.blink-animation {
+      animation: blink 0.5s ease-in-out;
+    }
   }
 }
 
@@ -172,9 +159,6 @@ watch(
       }
     }
   }
-}
-
-:deep(.lang-select) {
   .q-field__native {
     display: block;
     padding: 0;
@@ -196,6 +180,22 @@ watch(
   .q-btn {
     min-height: 36px;
     padding: 0 8px;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    transform: scale(1);
+    color: white;
+    border-color: white;
+    background-color: red;
+  }
+  50% {
+    transform: scale(1.5);
+    color: white;
+    border-color: white;
+    background-color: red;
   }
 }
 </style>
