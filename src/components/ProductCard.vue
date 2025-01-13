@@ -1,6 +1,6 @@
 <template>
   <q-card
-    class="tw-w-full tw-max-w-72 tw-mx-auto sm:tw-mx-none tw-transition tw-duration-200 tw-ease-in-out hover:tw-cursor-pointer hover:tw-scale-105"
+    class="product tw-w-full tw-max-w-72 tw-mx-auto !tw-bg-primary sm:tw-mx-none tw-transition tw-duration-200 tw-ease-in-out hover:tw-cursor-pointer hover:tw-scale-105"
     @click="viewProduct(product)"
   >
     <q-img
@@ -9,7 +9,7 @@
       fit="contain"
       class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"
     />
-    <q-card-section class="tw-flex-grow q-pa-sm !tw-pb-0">
+    <q-card-section class="tw-flex-grow q-px-sm !tw-pb-0">
       <div class="text-bold">{{ product.name || product.title }}</div>
       <div class="text-caption">{{ getFirstSentence(product.description) }}</div>
     </q-card-section>
@@ -17,7 +17,7 @@
     <q-card-actions class="row justify-between items-center !tw-pt-0">
       <div class="q-mt-sm text-bold price-text">
         <template v-if="product.discount">
-          <s class="text-grey">{{ formatPrice(product.price) }}</s>
+          <span class="text-grey">{{ formatPrice(product.price) }}</span>
           <span class="text-positive q-ml-sm">
             {{ formatPrice(product.discountedPrice || product.price) }}
           </span>
@@ -68,13 +68,3 @@ const getFirstSentence = (description: string) => {
   return match ? match[0] : description;
 };
 </script>
-
-<style scoped>
-.product-name {
-  font-size: 1.2rem;
-}
-
-.price-text {
-  font-size: 1.2rem;
-}
-</style>

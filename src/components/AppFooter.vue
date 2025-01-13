@@ -1,15 +1,11 @@
 <template>
   <q-footer
-    class="tw-text-center tw-py-0 tw-overflow-hidden"
+    class="tw-text-center tw-py-0 tw-overflow-hidden tw-relative"
     :class="footerClasses"
     :style="footerStyle"
   >
-    <div
-      class="lights tw-absolute tw-w-full tw-h-full tw-opacity-25"
-      :style="{ '--lightsOffset': scrollPosition + 'px' }"
-    ></div>
+    <AnimatedLights :scroll-position="position" direction="toRight" />
     <div class="tw-flex tw-justify-center tw-items-center tw-gap-4">
-      <span>&copy; 2025</span>
       <span
         ><PageInfoText class="!tw-m-0 !tw-text-sm" :description="$t('home.description')"
       /></span>
@@ -19,8 +15,10 @@
 
 <script setup lang="ts">
 import PageInfoText from '@/components/base/PageInfoText.vue';
+import AnimatedLights from './base/AnimatedLights.vue';
+import { computed } from 'vue';
 
-defineProps({
+const props = defineProps({
   footerClasses: {
     type: Array,
     required: true,
@@ -34,4 +32,6 @@ defineProps({
     required: true,
   },
 });
+
+const position = computed(() => props.scrollPosition);
 </script>

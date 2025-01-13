@@ -5,6 +5,12 @@
     :width="drawerWidth"
     :overlay="true"
     behavior="desktop"
+    class="!tw-bg-transparent"
+    :style="{
+      background: !isDark
+        ? 'linear-gradient(135deg, #FFFFFF 50%, #BFB48F 80%)'
+        : 'linear-gradient(135deg,  #77312B 50%, #1A202C 70%)',
+    }"
     @update:model-value="$emit('update:drawerOpen', $event)"
   >
     <q-scroll-area class="tw-h-full">
@@ -19,10 +25,12 @@
           >
             <AppButton
               :key="item.label"
+              outline
               :to="item.path"
               :label="item.label"
               :flat="false"
-              :outline="false"
+              :color="color"
+              :text-color="text"
               class-name="!tw-w-full"
             />
           </q-item>
@@ -116,6 +124,9 @@ defineEmits<{
 
 const isDark = computed(() => $q.dark.isActive);
 
+const color = computed(() => (isDark.value ? 'q-light' : 'q-dark'));
+const text = computed(() => (isDark.value ? 'q-light' : 'q-dark'));
+
 const languageOptions = computed(() =>
   userStore.languageOptions.map((option) => ({
     ...option,
@@ -183,38 +194,35 @@ const onSystemPreferenceChange = (value: boolean) => {
   useSystemPreference.value = value;
 };
 
-const drawerWidth = computed(() => ($q.screen.lt.sm ? $q.screen.width : 300));
+const drawerWidth = computed(() => ($q.screen.lt.sm ? $q.screen.width : 380));
 </script>
 
-<!-- <script setup lang="ts">
-import { useQuasar } from 'quasar';
-import { QVueGlobals } from 'quasar/dist/types/globals';
-import { computed, PropType } from 'vue';
+<style lang="scss" scoped>
+// aside.q-drawer.sidebar.q-drawer--standard.q-drawer--on-top {
+//   position: relative !important;
+//   overflow: hidden !important;
 
-interface MenuItem {
-  label: string;
-  path: string;
-}
+//   -webkit-mask-image: radial-gradient(
+//     circle at top left,
+//     rgba(0, 0, 0, 1) 0%,
+//     rgba(0, 0, 0, 0.7) 40%,
+//     rgba(0, 0, 0, 0.2) 70%,
+//     rgba(0, 0, 0, 0) 100%
+//   );
+//   mask-image: radial-gradient(
+//     circle at top left,
+//     rgba(0, 0, 0, 1) 0%,
+//     rgba(0, 0, 0, 0.7) 40%,
+//     rgba(0, 0, 0, 0.2) 70%,
+//     rgba(0, 0, 0, 0) 100%
+//   );
 
-defineProps({
-  drawerOpen: {
-    type: Boolean as PropType<boolean>,
-    required: true,
-  },
-  menuItems: {
-    type: Array as PropType<{ label: string; path: string }[]>,
-    required: true,
-  },
-});
+//   -webkit-mask-repeat: no-repeat;
+//   mask-repeat: no-repeat;
+//   -webkit-mask-size: cover;
+//   mask-size: cover;
 
-defineEmits<{
-  'update:drawerOpen': [value: boolean];
-  navigate: [item: MenuItem];
-}>();
-
-const $q = useQuasar() as QVueGlobals;
-
-const drawerWidth = computed<number>(() => {
-  return $q.screen.lt.sm ? $q.screen.width : 300;
-});
-</script> -->
+//   background-color: inherit;
+//   z-index: 1000;
+// }
+</style>

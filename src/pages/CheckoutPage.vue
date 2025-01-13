@@ -123,10 +123,14 @@
             </q-step>
           </q-stepper>
         </div>
+
         <!-- Order Summary -->
         <div class="col-12 col-md-4">
-          <q-card class="tw-flex tw-justify-between">
-            <q-card-section class="tw-w-full">
+          <q-item
+            class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 tw-rounded-md"
+            :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'"
+          >
+            <q-item-section class="tw-w-full">
               <div class="tw-text-xl tw-mb-4">{{ $t('checkout.orderSummary') }}</div>
               <q-list dense class="tw-w-full tw-flex tw-flex-col tw-justify-between">
                 <q-item v-for="item in cartStore.items" :key="item.id" class="tw-justify-between">
@@ -136,7 +140,7 @@
                       >{{ $t('checkout.qty') }}: {{ item.quantity }}</q-item-label
                     >
                   </q-item-section>
-                  <q-item-section side>
+                  <q-item-section side :class="isDark ? 'text-light' : 'text-dark'">
                     {{ formatPrice(item.price * item.quantity) }}
                   </q-item-section>
                 </q-item>
@@ -145,30 +149,33 @@
                   <q-item-section class="text-subtitle1 text-weight-bold">{{
                     $t('checkout.total')
                   }}</q-item-section>
-                  <q-item-section side class="text-subtitle1 text-weight-bold tw-text-">{{
-                    formatPrice(totalPrice)
-                  }}</q-item-section>
+                  <q-item-section
+                    side
+                    class="text-subtitle1 text-weight-bold"
+                    :class="isDark ? 'text-light' : 'text-dark'"
+                    >{{ formatPrice(totalPrice) }}</q-item-section
+                  >
                 </q-item>
               </q-list>
-            </q-card-section>
+            </q-item-section>
             <q-card-actions align="center">
               <q-btn
                 :color="color"
                 :text-color="text"
                 :label="step === 2 ? $t('checkout.placeOrder') : $t('checkout.continue')"
                 type="submit"
-                class="full-width tw-mb-2"
+                class="full-width tw-mb-2 !tw-py-4"
                 @click="step === 2 ? showOrderConfirmation() : nextStep()"
               />
               <q-btn
                 :color="text"
                 :text-color="color"
                 :label="$t('checkout.cart')"
-                class="full-width"
+                class="full-width !tw-py-4"
                 @click="goBack()"
               />
             </q-card-actions>
-          </q-card>
+          </q-item>
         </div>
       </div>
     </div>
@@ -213,6 +220,8 @@ const qrCodeDataUrl = ref<string | null>(null);
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
+
+const isDark = $q.dark.isActive;
 const isIpsEnabled = false;
 const totalPrice = computed(() =>
   cartStore.items.reduce((total, item) => total + item.price * item.quantity, 0),
@@ -262,7 +271,6 @@ const emailRules = (val: string) =>
 
 const validateShipping = () => {
   const shippingForm = formRef.value;
-  console.log(shippingForm);
   if (shippingForm && shippingForm.validate()) {
     step.value = 2;
   } else {
@@ -272,7 +280,6 @@ const validateShipping = () => {
 
 const validatePayment = () => {
   const paymentForm = paymentRef.value;
-  console.log(paymentForm);
   if (paymentForm && paymentForm.validate()) {
     $q.notify({ type: 'positive', message: 'Order placed successfully!' });
     step.value = 3;
