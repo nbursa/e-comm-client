@@ -90,7 +90,7 @@ defineEmits<{
 const theme = computed(() => ({
   drawerBackground: $q.dark.isActive
     ? 'linear-gradient(135deg,  #77312B 0%, #1A202C 50%)'
-    : 'linear-gradient(135deg, #FFFFFF 50%, #BFB48F 80%)',
+    : 'linear-gradient(135deg, #FFFFFF 10%, #BFB48F 70%)',
   buttonBackgroundColor: $q.dark.isActive ? 'white' : 'black',
   buttonTextColor: $q.dark.isActive ? 'black' : 'white',
   separatorColor: $q.dark.isActive ? 'white' : 'black',
