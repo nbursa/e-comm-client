@@ -3,51 +3,35 @@ import type { App } from 'vue';
 import type { QVueGlobals } from 'quasar/dist/types';
 import { useUserStore } from '@/stores/user';
 
-class ThemeManager {
-  private static instance: ThemeManager;
-  private $q: QVueGlobals | null = null;
-  private mediaQuery: MediaQueryList;
+let $q: QVueGlobals | null = null;
 
-  private constructor() {
-    this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    this.handleSystemChange = this.handleSystemChange.bind(this);
-  }
+const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-  static getInstance(): ThemeManager {
-    if (!ThemeManager.instance) {
-      ThemeManager.instance = new ThemeManager();
-    }
-    return ThemeManager.instance;
-  }
+export function applyTheme() {
+  const userStore = useUserStore();
+  const isDark = userStore.settings.useSystemPreference
+    ? mediaQuery.matches
+    : userStore.settings.theme === 'dark';
 
-  init($q: QVueGlobals): void {
-    this.$q = $q;
-    this.applyTheme();
-    this.mediaQuery.addEventListener('change', this.handleSystemChange);
-  }
-
-  applyTheme(): void {
-    const userStore = useUserStore();
-    const isDark = userStore.settings.useSystemPreference
-      ? this.mediaQuery.matches
-      : userStore.settings.theme === 'dark';
-
-    if (this.$q) {
-      this.$q.dark.set(isDark);
-    }
-  }
-
-  private handleSystemChange(): void {
-    const userStore = useUserStore();
-    if (userStore.settings.useSystemPreference) {
-      this.applyTheme();
-    }
+  if ($q) {
+    $q.dark.set(isDark);
   }
 }
 
-export default boot(({ app }: { app: App }) => {
-  const $q = app.config.globalProperties.$q as QVueGlobals;
-  ThemeManager.getInstance().init($q);
-});
+function handleSystemChange() {
+  const userStore = useUserStore();
+  if (userStore.settings.useSystemPreference) {
+    applyTheme();
+  }
+}
 
-export const themeManager = ThemeManager.getInstance();
+export function initThemeManager(quasar: QVueGlobals) {
+  $q = quasar;
+  applyTheme();
+  mediaQuery.addEventListener('change', handleSystemChange);
+}
+
+export default boot(({ app }: { app: App }) => {
+  const quasar = app.config.globalProperties.$q as QVueGlobals;
+  initThemeManager(quasar);
+});

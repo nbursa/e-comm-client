@@ -7,5 +7,5 @@ export default boot(() => {
   const userStore = useUserStore();
 
   ratesStore.loadExchangeRates();
-  userStore.setUserStore();
+  userStore.loadSettings();
 });

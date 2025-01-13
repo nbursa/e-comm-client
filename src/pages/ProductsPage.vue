@@ -3,6 +3,7 @@
     <h5 class="q-my-md tw-font-serif">{{ $t('products.title') }}</h5>
     <q-tabs
       v-model="selectedCategory"
+      indicator-color="transparent"
       class="q-mb-md gt-sm"
       :active-color="theme.textColor"
       :active-bg-color="theme.backgroundColor"
@@ -74,7 +75,7 @@
 import { computed, ref, onMounted, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/user';
+// import { useUserStore } from '@/stores/user';
 import { useProductCacheStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/ProductCard.vue';
@@ -84,7 +85,7 @@ import { Product } from '@/types';
 import { QVueGlobals } from 'quasar/dist/types/globals';
 
 const cartStore = useCartStore();
-const userStore = useUserStore();
+// const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const productCache = useProductCacheStore();
@@ -202,7 +203,6 @@ const fetchProducts = async (category = 'all') => {
 };
 
 onMounted(() => {
-  userStore.updateTheme(); // Ensure theme settings are applied on mount
   fetchCategories();
   fetchProducts();
 });

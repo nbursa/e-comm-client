@@ -7,6 +7,9 @@
           $t('main.ecomm')
         }}</RouterLink></q-toolbar-title
       >
+      <div>
+        {{ userStore.settings.theme }}
+      </div>
       <div class="gt-md tw-text-lg">
         <AppButton
           v-for="item in menuItems"
@@ -63,30 +66,35 @@ const props = defineProps({
     default: () => {},
   },
 });
+
 defineEmits<{
   'update:drawerOpen': [];
 }>();
 
-const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
+const cartStore = useCartStore();
 const userStore = useUserStore();
 
-const isDark = computed(() => userStore.settings.theme === 'dark');
 const isAnimating = ref(false);
-
 const totalItems = computed(() => cartStore.totalItems);
+
 const buttonSize = computed(() => {
   if ($q.screen.lt.sm) return 'xl';
   if ($q.screen.lt.md) return 'md';
   return 'md';
 });
+
 const isScrolledHeader = computed(() => props.scrollPosition > 40);
+
 const themeClasses = computed(() => {
-  if (isDark.value) {
-    return isScrolledHeader.value ? 'bg-dark text-light' : 'bg-transparent text-light';
-  } else {
-    return isScrolledHeader.value ? 'bg-light text-dark' : 'bg-transparent text-dark';
-  }
+  const darkMode = userStore.settings.theme === 'dark';
+  const scrolled = isScrolledHeader.value;
+  return {
+    'bg-dark text-white': darkMode && scrolled,
+    'bg-transparent text-white': darkMode && !scrolled,
+    'bg-light text-dark': !darkMode && scrolled,
+    'bg-transparent text-dark': !darkMode && !scrolled,
+  };
 });
 
 watch(
@@ -94,9 +102,7 @@ watch(
   (newVal, oldVal) => {
     if (newVal !== oldVal) {
       isAnimating.value = true;
-      setTimeout(() => {
-        isAnimating.value = false;
-      }, 1000);
+      setTimeout(() => (isAnimating.value = false), 1000);
     }
   },
 );
