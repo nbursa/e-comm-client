@@ -28,8 +28,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useUserStore } from '@/stores/user';
-import { useQuasar } from 'quasar';
-import { setLanguage } from '@/boot/i18n';
 import LanguageSelector from '@/components/base/LanguageSelector.vue';
 import { CurrencyOption, LanguageOption, ThemeOption } from '@/types';
 import CurrencySelector from '@/components/base/CurrencySelector.vue';
@@ -37,9 +35,11 @@ import ThemeSelector from '@/components/base/ThemeSelector.vue';
 import { useI18n } from 'vue-i18n';
 
 const userStore = useUserStore();
-const $q = useQuasar();
 const { t } = useI18n();
 
+// const languageOptions = computed<LanguageOption[]>(() => userStore.languageOptions);
+// const currencyOptions = computed<CurrencyOption[]>(() => userStore.currencyOptions);
+// const themeOptions = computed<ThemeOption[]>(() => userStore.themeOptions);
 const languageOptions = computed(() =>
   userStore.languageOptions.map((option) => ({
     ...option,
@@ -61,38 +61,25 @@ const currencyOptions = computed(() =>
   })),
 );
 
-const currentLanguage = computed<LanguageOption>({
-  get: () => {
-    const currentLang = userStore.settings.language;
-    return (languageOptions.value.find((opt) => opt.value === currentLang) ||
-      languageOptions.value[0])!;
-  },
-  set: (option: LanguageOption) => {
-    userStore.settings.language = option.value;
-    setLanguage(option.value);
-  },
+const currentLanguage = computed({
+  get: () =>
+    (languageOptions.value.find((opt) => opt.value === userStore.settings.language) ||
+      languageOptions.value[0])!,
+  set: (option: LanguageOption) => userStore.setLanguage(option.value),
 });
 
-const currentCurrency = computed<CurrencyOption>({
-  get: () => {
-    const currentCur = userStore.settings.currency;
-    return (currencyOptions.value.find((opt) => opt.value === currentCur) ||
-      currencyOptions.value[0])!;
-  },
-  set: (option: CurrencyOption) => {
-    userStore.settings.currency = option.value;
-  },
+const currentCurrency = computed({
+  get: () =>
+    (currencyOptions.value.find((opt) => opt.value === userStore.settings.currency) ||
+      currencyOptions.value[0])!,
+  set: (option: CurrencyOption) => userStore.setCurrency(option.value),
 });
 
-const theme = computed<ThemeOption>({
-  get: () => {
-    const currentTheme = userStore.settings.theme;
-    return (themeOptions.value.find((opt) => opt.value === currentTheme) || themeOptions.value[0])!;
-  },
-  set: (option: ThemeOption) => {
-    userStore.settings.theme = option.value;
-    $q.dark.set(option.value === 'dark');
-  },
+const theme = computed({
+  get: () =>
+    (themeOptions.value.find((opt) => opt.value === userStore.settings.theme) ||
+      themeOptions.value[0])!,
+  set: (option: ThemeOption) => userStore.setTheme(option.value),
 });
 
 const useSystemPreference = computed({

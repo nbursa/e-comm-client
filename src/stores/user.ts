@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { setLanguage } from '@/boot/i18n';
 import { Currency, CurrencyOption, LanguageOption, ThemeOption, UserSettings } from '@/types';
-import { applyTheme } from '@/boot/theme';
 
 export const useUserStore = defineStore('user', () => {
   const settings = ref<UserSettings>({
@@ -43,15 +42,14 @@ export const useUserStore = defineStore('user', () => {
   };
 
   const setTheme = (theme: ThemeOption['value']) => {
+    settings.value.useSystemPreference = false;
     settings.value.theme = theme;
     saveSettings();
-    applyTheme();
   };
 
   const setSystemPreference = (value: boolean) => {
     settings.value.useSystemPreference = value;
     saveSettings();
-    applyTheme();
   };
 
   const setCurrency = (currency: Currency) => {
@@ -67,23 +65,7 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  // const setUserStore = () => {
-  //   loadSettings();
-  //   updateTheme();
-  //   updateI18n();
-  // };
-
   watch(() => settings.value.language, updateI18n);
-  // watch(() => settings.value.theme, applyTheme);
-
-  // watch(
-  //   () => settings.value,
-  //   () => {
-  //     saveSettings();
-  //     console.log('Settings updated:', settings.value.theme);
-  //   },
-  //   { deep: true },
-  // );
 
   return {
     settings,
