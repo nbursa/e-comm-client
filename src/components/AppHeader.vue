@@ -1,5 +1,5 @@
 <template>
-  <q-header :class="['tw-overflow-hidden tw-px-2 md:tw-px-4', themeClasses]">
+  <q-header class="tw-overflow-hidden tw-px-2 md:tw-px-4" :style="themeStyles">
     <AnimatedLights :scroll-position="scrollOffset" :opacity="50" direction="toLeft" />
     <q-toolbar>
       <q-toolbar-title
@@ -81,15 +81,32 @@ const buttonSize = computed(() => {
 const darkMode = computed(() => userStore.settings.theme === 'dark');
 const scrolled = computed(() => props.scrollOffset > 40);
 
-const themeClasses = computed(() => {
-  // const isDark = $q.dark.isActive;
-  // const scrolled = props.scrollOffset > 40;
-  return {
-    'bg-dark text-white': darkMode.value && scrolled.value,
-    'bg-transparent text-white': darkMode.value && !scrolled.value,
-    'bg-light text-dark': !darkMode.value && scrolled.value,
-    'bg-transparent text-dark': !darkMode.value && !scrolled.value,
-  };
+const themeStyles = computed(() => {
+  if (darkMode.value) {
+    if (scrolled.value) {
+      return {
+        background: 'linear-gradient(135deg, #77312B 0%, #1A202C 50%)',
+        color: 'white',
+      };
+    } else {
+      return {
+        background: 'transparent',
+        color: 'white',
+      };
+    }
+  } else {
+    if (scrolled.value) {
+      return {
+        background: 'linear-gradient(135deg, #FFFFFF 10%, #BFB48F 70%)',
+        color: 'black',
+      };
+    } else {
+      return {
+        background: 'transparent',
+        color: 'black',
+      };
+    }
+  }
 });
 
 watch(

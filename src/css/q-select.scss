@@ -1,0 +1,15 @@
+.q-field--dark .q-field__control:before,
+.q-field--dark .q-field__control:after {
+  border-color: var(--q-white) !important;
+}
+.q-field.q-field--focused.q-field--dark.q-field--highlighted .q-field__control {
+  .q-field__label {
+    color: var(--q-white) !important;
+  }
+}
+.q-menu.q-menu--dark .q-item--dark {
+  color: var(--q-light) !important;
+  &.q-item--active {
+    color: var(--q-white) !important;
+  }
+}
