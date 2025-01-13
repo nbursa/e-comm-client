@@ -3,7 +3,7 @@
     <AppHeader
       :menu-items="menuItems"
       :drawer-open="drawerOpen"
-      :scroll-position="position"
+      :scroll-offset="scrollPosition"
       @update:drawer-open="toggleDrawer"
     />
 

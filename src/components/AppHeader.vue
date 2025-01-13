@@ -1,6 +1,6 @@
 <template>
-  <q-header :class="['tw-overflow-hidden tw-px-2 md:tw-px-4', themeClasses]" :style="headerStyle">
-    <AnimatedLights :scroll-position="scrollPosition" :opacity="50" direction="toLeft" />
+  <q-header :class="['tw-overflow-hidden tw-px-2 md:tw-px-4', themeClasses]">
+    <AnimatedLights :scroll-position="scrollOffset" :opacity="50" direction="toLeft" />
     <q-toolbar>
       <q-toolbar-title
         ><RouterLink to="/" class="tw-text-2xl tw-align-middle tw-font-serif tw-font-extrabold">{{
@@ -8,7 +8,10 @@
         }}</RouterLink></q-toolbar-title
       >
       <div>
-        {{ userStore.settings.theme }}
+        <div class="tw-text-xs tw-mb-2 tw-text-green-500">
+          Store: {{ userStore.settings.theme }} / QisDark: {{ $q.dark.isActive }} / darkMode:
+          {{ darkMode }} / scrolled: {{ scrolled }} / scrollPosition: {{ props.scrollOffset }}
+        </div>
       </div>
       <div class="gt-md tw-text-lg">
         <AppButton
@@ -57,13 +60,9 @@ const props = defineProps({
     type: Boolean as PropType<boolean>,
     required: true,
   },
-  scrollPosition: {
+  scrollOffset: {
     type: Number as PropType<number>,
     required: true,
-  },
-  headerStyle: {
-    type: Object as PropType<Record<string, string>>,
-    default: () => {},
   },
 });
 
@@ -84,16 +83,15 @@ const buttonSize = computed(() => {
   return 'md';
 });
 
-const isScrolledHeader = computed(() => props.scrollPosition > 40);
+const darkMode = computed(() => userStore.settings.theme === 'dark');
+const scrolled = computed(() => props.scrollOffset > 40);
 
 const themeClasses = computed(() => {
-  const darkMode = userStore.settings.theme === 'dark';
-  const scrolled = isScrolledHeader.value;
   return {
-    'bg-dark text-white': darkMode && scrolled,
-    'bg-transparent text-white': darkMode && !scrolled,
-    'bg-light text-dark': !darkMode && scrolled,
-    'bg-transparent text-dark': !darkMode && !scrolled,
+    'bg-dark text-white': darkMode.value && scrolled.value,
+    'bg-transparent text-white': darkMode.value && !scrolled.value,
+    'bg-light text-dark': !darkMode.value && scrolled.value,
+    'bg-transparent text-dark': !darkMode.value && !scrolled.value,
   };
 });
 
