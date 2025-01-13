@@ -6,12 +6,14 @@
     ]"
     :style="footerStyle"
   >
-    <AnimatedLights :scroll-position="scrollPosition" direction="toRight" />
+    <AnimatedLights :scroll-position="scrollOffset" direction="toRight" />
+
     <div class="!tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
-      <span
-        >{{ themeClasses }}
-        <PageInfoText class="!tw-m-0 !tw-text-sm" :description="$t('home.description')"
-      /></span>
+      <PageInfoText
+        class="!tw-m-0 tw-p-1 !tw-text-xs"
+        color="red"
+        :description="$t('home.description')"
+      />
     </div>
   </q-footer>
 </template>
@@ -20,16 +22,12 @@
 import PageInfoText from '@/components/base/PageInfoText.vue';
 import AnimatedLights from './base/AnimatedLights.vue';
 import { useUserStore } from '@/stores/user';
-import { computed } from 'vue';
+import { computed, PropType } from 'vue';
 
 defineProps({
-  footerStyle: {
-    type: Object,
-    default: () => {},
-  },
-  scrollPosition: {
-    type: Number,
-    required: true,
+  scrollOffset: {
+    type: Number as PropType<number>,
+    default: 0,
   },
 });
 
@@ -37,7 +35,15 @@ const userStore = useUserStore();
 
 const isDark = computed(() => userStore.settings.theme === 'dark');
 
+const footerStyle = computed(() => {
+  return {
+    background: isDark.value
+      ? '#1A202C'
+      : 'linear-gradient(135deg, rgb(255, 255, 255) 10%, rgb(191, 180, 143) 70%)',
+  };
+});
+
 const themeClasses = computed(() => {
-  return isDark.value ? 'bg-dark text-dark' : 'bg-dark text-light';
+  return isDark.value ? 'bg-dark text-light' : 'bg-light text-dark';
 });
 </script>

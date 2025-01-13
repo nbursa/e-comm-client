@@ -10,14 +10,14 @@
     <MobileDrawer :menu-items="mobileMenuItems" :drawer-open="drawerOpen" @navigate="navigate" />
 
     <q-scroll-area ref="scrollContainer" class="tw-w-full tw-h-full">
-      <q-page-container style="max-width: 1200px !important; margin: 0 auto !important">
+      <q-page-container class="tw-mx-auto tw-max-w-screen-xl">
         <router-view :scroll-position="position" :scroll-offset="scrollPosition" />
       </q-page-container>
 
       <q-scroll-observer @scroll="scrollHandler" />
     </q-scroll-area>
 
-    <AppFooter :scroll-position="position" />
+    <AppFooter />
   </q-layout>
 </template>
 

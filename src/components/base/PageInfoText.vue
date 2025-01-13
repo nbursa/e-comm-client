@@ -1,9 +1,18 @@
 <template>
-  <p class="tw-text-base tw-font-serif tw-text-yellow-500 tw-leading-relaxed q-mb-md sm:tw-text-lg">
+  <p class="tw-text-base tw-font-serif tw-leading-relaxed q-mb-md sm:tw-text-lg" :style="{ color }">
     {{ description }}
   </p>
 </template>
 
 <script lang="ts" setup>
-defineProps<{ description: string }>();
+defineProps({
+  description: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+    default: 'black',
+  },
+});
 </script>

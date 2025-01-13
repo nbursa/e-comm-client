@@ -7,6 +7,7 @@
     :label="label"
     :color="outline ? '' : flat ? '' : color"
     :text-color="outline ? '' : flat ? '' : text"
+    :border-color="outline ? color : ''"
     :class="[
       'tw-rounded-lg tw-font-medium tw-text-center tw-transition !tw-py-3 tw-px-4',
       'hover:tw-opacity-90 focus:tw-ring focus:tw-ring-offset-2 focus:tw-ring-opacity-50',

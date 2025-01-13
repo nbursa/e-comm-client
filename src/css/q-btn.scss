@@ -1,5 +1,8 @@
 a.q-btn {
   padding: 0.5rem 2rem;
+  &:focus {
+    box-shadow: none !important;
+  }
 }
 
 button.q-btn {
