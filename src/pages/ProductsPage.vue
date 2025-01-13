@@ -60,17 +60,13 @@
 
     <q-btn
       v-if="isScrolledBtn"
-      class="!tw-fixed !tw-bottom-12 !tw-right-2 !tw-p-3 tw-z-40"
+      class="!tw-fixed !tw-bottom-12 !tw-right-4 !tw-p-3 tw-z-40"
       round
       color="white"
       text-color="primary"
       icon="arrow_upward"
       @click="scrollToTop"
     />
-
-    <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
-      <q-btn fab icon="keyboard_arrow_up" label="totop" color="accent" />
-    </q-page-scroller>
   </q-page>
 </template>
 
@@ -80,7 +76,6 @@ import { useCartStore } from '../stores/cart';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
-// import { scroll } from 'quasar';
 import { useProductCacheStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import { Product } from '@/types';
@@ -88,13 +83,12 @@ import ProductCard from '@/components/ProductCard.vue';
 import CategorySelect from '@/components/CategorySelect.vue';
 
 const props = defineProps({
-  scrollPosition: {
+  scrollOffset: {
     type: Number as PropType<number>,
     required: true,
   },
 });
 
-// const { getVerticalScrollPosition } = scroll;
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
@@ -106,7 +100,6 @@ const apiUrl = import.meta.env.VITE_API_URL || '';
 const products = ref<Product[]>([]);
 const currentPage = ref(1);
 const itemsPerPage = 10;
-// const isCollapsed = ref(false);
 const selectedCategory = ref('all');
 const isLoadingCategories = ref(true);
 const categories = ref<string[]>([]);
@@ -127,7 +120,7 @@ const paginatedProducts = computed(() => {
   );
 });
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
-const isScrolledBtn = computed(() => props.scrollPosition > 300);
+const isScrolledBtn = computed(() => props.scrollOffset > 300);
 
 const formatCategoryLabel = (category: string) => {
   if (!category) return '';
@@ -138,8 +131,7 @@ const formatCategoryLabel = (category: string) => {
 };
 
 const scrollToTop = () => {
-  // const target = document.querySelector('.q-page') as HTMLElement;
-  const target = document.documentElement || document.body;
+  const target = document.querySelector('.q-scrollarea__container') as HTMLElement;
   console.log('target', target);
   if (target) {
     target.scrollTo({
@@ -163,11 +155,6 @@ const addToCart = (product: Product) => {
 const viewProduct = (product: Product) => {
   router.push(`/products/${product.id}`);
 };
-
-// const handleScroll = () => {
-//   const scrollTop = getVerticalScrollPosition(window);
-//   isCollapsed.value = scrollTop > 0;
-// };
 
 watch(selectedCategory, async (newCategory) => {
   currentPage.value = 1;
@@ -239,10 +226,5 @@ const fetchProducts = async (category?: string) => {
 
 onMounted(async () => {
   await Promise.all([fetchCategories(), fetchProducts()]);
-  // window.addEventListener('scroll', handleScroll);
 });
-
-// onUnmounted(() => {
-//   window.removeEventListener('scroll', handleScroll);
-// });
 </script>

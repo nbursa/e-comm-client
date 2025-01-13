@@ -1,13 +1,5 @@
 <template>
   <q-page padding>
-    <CartPreview
-      v-if="false"
-      :total-items="totalItems"
-      :total-price="totalPrice"
-      :is-collapsed="isCollapsed"
-      class="q-ml-auto q-mb-md"
-    />
-
     <div class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1200px">
       <div class="row items-stretch full-height" :class="{ 'col-reverse-md': $q.screen.md }">
         <div
@@ -63,7 +55,7 @@
               :color="color"
               :text-color="text"
               :label="$t('singleProduct.addToCart')"
-              class="q-px-md full-width"
+              class="!tw-p-4 full-width"
               @click.stop="addToCart(product)"
             />
           </q-card-actions>
@@ -115,7 +107,6 @@ import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { scroll } from 'quasar';
-import CartPreview from '@/components/CartPreview.vue';
 import { useI18n } from 'vue-i18n';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils';
@@ -156,8 +147,6 @@ const translateY = ref(0);
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
-const totalItems = computed(() => cartStore.totalItems);
-const totalPrice = computed(() => cartStore.totalPrice);
 
 const imageLocalUrl = (imagePath: string) => {
   return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
@@ -191,7 +180,6 @@ const openImageOverlay = (image: string) => {
 };
 
 const toggleZoom = () => {
-  console.log('toggleZoom');
   if (isZoomed.value) {
     resetZoom();
   } else {
@@ -214,14 +202,6 @@ const startHoverPanning = (event: MouseEvent) => {
   startX.value = event.clientX - translateX.value;
   startY.value = event.clientY - translateY.value;
 };
-
-// const handleTouchStart = (event: TouchEvent) => {
-//   if (!isZoomed.value) {
-//     toggleZoom();
-//   } else {
-//     startTouchPanning(event);
-//   }
-// };
 
 const startTouchPanning = (event: TouchEvent) => {
   isPanning.value = true;

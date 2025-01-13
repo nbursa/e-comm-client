@@ -1,22 +1,21 @@
 <template>
   <q-layout view="hHh lpR fFf" class="tw-w-screen tw-h-screen text-body1 scroll">
-    <q-scroll-area class="tw-w-full tw-h-full">
+    <q-scroll-area ref="scrollContainer" class="tw-w-full tw-h-full">
       <q-scroll-observer @scroll="scrollHandler" />
       <AppHeader
         :menu-items="menuItems"
         :drawer-open="drawerOpen"
-        :scroll-position="scrollPosition"
+        :scroll-position="position"
         :header-classes="headerClasses"
         @update:drawer-open="toggleDrawer"
       />
-
       <MobileDrawer :menu-items="mobileMenuItems" :drawer-open="drawerOpen" @navigate="navigate" />
 
-      <q-page-container>
-        <router-view :scroll-position="scrollPosition" />
+      <q-page-container style="max-width: 1200px !important; margin: 0 auto !important">
+        <router-view :scroll-position="position" :scroll-offset="scrollPosition" />
       </q-page-container>
 
-      <AppFooter :footer-classes="footerClasses" :scroll-position="scrollPosition" />
+      <AppFooter :footer-classes="footerClasses" :scroll-position="position" />
     </q-scroll-area>
   </q-layout>
 </template>
@@ -36,6 +35,8 @@ const userStore = useUserStore();
 
 const drawerOpen = ref(false);
 const scrollPosition = ref(0);
+const scrollContainer = ref<HTMLElement | null>(null);
+const position = ref(0);
 
 const menuItems = computed(() => [
   { label: t('main.home'), path: '/' },
@@ -48,50 +49,17 @@ const mobileMenuItems = computed(() => [
 ]);
 const isDark = computed(() => userStore.settings.theme === 'dark');
 const isScrolledHeader = computed(() => scrollPosition.value > 40);
-const headerClasses = computed(() => [
-  'tw-px-2 md:tw-px-4',
-  isDark.value
-    ? isScrolledHeader.value
-      ? 'bg-dark !tw-text-light  !tw-backdrop-filter !tw-backdrop-grayscale !tw-backdrop-blur-md !tw-backdrop-contrast-200'
-      : 'bg-transparent !tw-text-light'
-    : isScrolledHeader.value
-      ? '!tw-bg-white !tw-backdrop-filter !tw-backdrop-blur-lg tw-text-dark'
-      : 'bg-transparent tw-text-light',
-]);
-const footerClasses = computed(() => {
-  return ['tw-px-2 md:tw-px-4', isDark.value ? 'tw-bg-white  text-dark' : 'bg-dark text-light'];
+const themeClasses = computed(() => {
+  if (isDark.value) {
+    return isScrolledHeader.value ? 'bg-dark text-light' : 'bg-transparent text-light';
+  } else {
+    return isScrolledHeader.value ? 'bg-light text-dark' : 'bg-transparent text-dark';
+  }
 });
-// const headerStyle = computed(() => {
-//   const spread = Math.min(scrollPosition.value / 9, 100);
-//   const firstColorStop = spread.toFixed();
-//   const secondColorStop = (100 - spread / 2).toFixed();
-//   console.log('headerStyle colors', firstColorStop, secondColorStop);
-
-//   return {
-//     background: `linear-gradient(
-//       to right,
-//       rgba(26, 32, 44, 0.9) ${firstColorStop}%,
-//       rgba(119, 49, 43, 0.9) ${secondColorStop}%
-//     )`,
-//     color: isDark.value ? 'var(--tw-dark)' : 'inherit',
-//   };
-// });
-
-// const footerStyle = computed(() => {
-//   const spread = Math.min(scrollPosition.value / 9, 100);
-//   const firstColorStop = spread.toFixed();
-//   const secondColorStop = (100 - spread).toFixed();
-//   console.log('headerStyle colors', firstColorStop, secondColorStop);
-
-//   return {
-//     background: `linear-gradient(
-//       to left,
-//       rgba(26, 32, 44, 0.9) ${firstColorStop}%,
-//       rgba(119, 49, 43, 0.9) ${secondColorStop}%
-//     )`,
-//     color: isDark.value ? 'var(--tw-dark)' : 'inherit',
-//   };
-// });
+const headerClasses = computed(() => ['tw-px-2 md:tw-px-4', themeClasses.value]);
+const footerClasses = computed(() => {
+  return ['tw-px-2 md:tw-px-4', isDark.value ? 'bg-dark  text-dark' : 'bg-dark text-light'];
+});
 
 watch(
   () => userStore.settings.theme === 'dark',
@@ -111,31 +79,15 @@ const toggleDrawer = () => {
   drawerOpen.value = !drawerOpen.value;
 };
 
-const scrollHandler = (details: { position: { top: number } }) => {
-  scrollPosition.value = details.position.top;
+const scrollHandler = (details: { position: { top: number; left: number } }) => {
+  const scrollTop = details.position.top;
+  scrollPosition.value = scrollTop;
+  const scrollArea = document.querySelector('.q-scrollarea__container') as HTMLElement;
+  if (scrollArea) {
+    const scrollHeight = scrollArea.scrollHeight - scrollArea.clientHeight;
+    position.value = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+  } else {
+    console.error('Scroll area container not found.');
+  }
 };
 </script>
-
-<style lang="scss" scoped>
-.bg-rays::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.1) 25%,
-    rgba(255, 255, 255, 0) 25%,
-    rgba(255, 255, 255, 0) 50%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0.1) 75%,
-    rgba(255, 255, 255, 0) 75%,
-    rgba(255, 255, 255, 0)
-  );
-  background-size: 50px 50px;
-  opacity: 0.5;
-  pointer-events: none;
-}
-</style>

@@ -12,11 +12,17 @@
           <q-item
             v-for="item in cartStore.items"
             :key="item.id"
-            class="tw-flex tw-flex-col md:tw-flex-row md:!tw-justify-end !tw-gap-3 tw-p-3 !tw-bg-grey-1 tw-rounded-lg tw-shadow-md"
+            class="tw-flex tw-flex-col md:tw-flex-row md:!tw-justify-between !tw-gap-3 tw-p-3 tw-rounded-md"
+            :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'"
           >
             <!-- Image section -->
-            <q-item-section class="tw-w-full md:tw-w-32 !tw-flex-shrink-0">
-              <q-img :src="`${item.image}`" :ratio="1" class="tw-w-full" fit="contain" />
+            <q-item-section class="tw-w-full md:!tw-max-w-44 !tw-flex-shrink-1 md:tw-min-w-[50px]">
+              <q-img
+                :src="`${imageUrl(item.image)}`"
+                :ratio="1"
+                class="tw-w-full tw-h-44"
+                fit="contain"
+              />
             </q-item-section>
 
             <!-- Content section -->
@@ -74,45 +80,49 @@
 
         <!-- Order Summary -->
         <div class="col-12 col-md-4">
-          <q-card class="tw-flex tw-justify-between">
-            <q-card-section class="tw-w-full">
+          <q-item
+            class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 tw-rounded-md"
+            :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'"
+          >
+            <q-item-section class="tw-w-full">
               <div class="tw-text-xl tw-mb-4">{{ $t('cart.orderSummary') }}</div>
               <q-list dense class="tw-w-full tw-flex tw-flex-col tw-justify-between">
                 <q-item class="tw-justify-between">
                   <q-item-section
                     >{{ $t('cart.items') }} ({{ cartStore.totalItems }})</q-item-section
                   >
-                  <q-item-section side>
+                  <q-item-section side :class="isDark ? 'text-light' : 'text-dark'">
                     {{ formatPrice(cartStore.totalPrice) }}
                   </q-item-section>
                 </q-item>
                 <q-item class="tw-justify-between">
                   <q-item-section>{{ $t('cart.shipping') }}</q-item-section>
-                  <q-item-section side>{{ $t('cart.free') }}</q-item-section>
+                  <q-item-section side :class="isDark ? 'text-light' : 'text-dark'">{{
+                    $t('cart.free')
+                  }}</q-item-section>
                 </q-item>
                 <q-separator class="q-my-md" />
                 <q-item class="tw-justify-between">
                   <q-item-section>
                     <span class="text-subtitle1 text-weight-bold">{{ $t('cart.total') }}</span>
                   </q-item-section>
-                  <q-item-section side>
+                  <q-item-section side :class="isDark ? 'text-light' : 'text-dark'">
                     <span class="text-subtitle1 text-weight-bold">
                       {{ formatPrice(cartStore.totalPrice) }}
                     </span>
                   </q-item-section>
                 </q-item>
               </q-list>
-            </q-card-section>
+            </q-item-section>
             <q-card-actions align="center">
               <q-btn
-                :color="color"
-                :text-color="text"
                 :label="$t('cart.checkout')"
-                class="full-width"
+                class="full-width !tw-p-4"
+                :class="isDark ? 'bg-white text-dark' : 'bg-dark text-white'"
                 @click="checkout"
               />
             </q-card-actions>
-          </q-card>
+          </q-item>
         </div>
       </div>
     </div>
@@ -128,13 +138,20 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { formatPrice } from '@/utils';
 
+const apiUrl = import.meta.env.VITE_API_URL || '';
+
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const { t } = useI18n();
 
-const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
-const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
+const isDark = computed(() => $q.dark.isActive);
+const color = computed(() => (isDark.value ? 'light' : 'dark'));
+const text = computed(() => (isDark.value ? 'dark' : 'light'));
+
+const imageUrl = (imagePath: string) => {
+  return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
+};
 
 const updateQuantity = (id: number, quantity: number) => {
   if (quantity < 1) return;
@@ -175,7 +192,7 @@ const removeItem = (id: number) => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .custom-dialog {
   border-radius: 8px;
 

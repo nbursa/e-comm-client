@@ -1,10 +1,11 @@
 .q-item {
-  background-color: var(--q-white) !important;
+  background-color: rgba(var(--q-light-rgb), 0.75) !important;
 }
 
-.dark--page .q-item {
+.body--dark .q-item {
   box-shadow: none !important;
-  background-color: var(--q-dark) !important;
+  // background: var(--q-dark-rgb) !important;
+  backdrop-filter: blur(35px);
 }
 
 .q-item.q-router-link--active,

@@ -1,12 +1,9 @@
 <template>
   <q-header :class="[headerClasses, 'tw-overflow-hidden']" :style="headerStyle">
-    <div
-      class="lights tw-absolute tw-w-full tw-h-full tw-opacity-5"
-      :style="{ '--lightsOffset': scrollPosition + 'px' }"
-    ></div>
+    <AnimatedLights :scroll-position="position" :opacity="50" direction="toLeft" />
     <q-toolbar>
       <q-toolbar-title
-        ><RouterLink to="/" class="tw-text-2xl tw-align-middle tw-font-serif">{{
+        ><RouterLink to="/" class="tw-text-2xl tw-align-middle tw-font-serif tw-font-extrabold">{{
           $t('main.ecomm')
         }}</RouterLink></q-toolbar-title
       >
@@ -45,9 +42,9 @@ import AppButton from './base/AppButton.vue';
 import { MenuItem } from '@/types';
 import MenuButton from './base/MenuButton.vue';
 import CartButton from './base/CartButton.vue';
-// import { useUserStore } from '@/stores/user';
+import AnimatedLights from './base/AnimatedLights.vue';
 
-defineProps({
+const props = defineProps({
   menuItems: {
     type: Array as PropType<MenuItem[]>,
     required: true,
@@ -74,12 +71,9 @@ defineEmits<{
 }>();
 
 const cartStore = useCartStore();
-// const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
 
 const isAnimating = ref(false);
-// const isDark = computed(() => userStore.settings.theme === 'dark');
-// const isScrolledHeader = computed(() => props.scrollPosition > 40);
 
 const totalItems = computed(() => cartStore.totalItems);
 const buttonSize = computed(() => {
@@ -87,32 +81,7 @@ const buttonSize = computed(() => {
   if ($q.screen.lt.md) return 'md';
   return 'md';
 });
-
-// const headerStyle = computed(() => {
-//   const spread = Math.min(props.scrollPosition / 9, 100);
-//   const firstColorStop = spread.toFixed();
-//   const secondColorStop = (100 - spread / 2).toFixed();
-//   console.log('firstColorStop', firstColorStop, secondColorStop);
-
-//   return {
-//     background: `linear-gradient(
-//       to right,
-//       rgba(26, 32, 44, 0.9) ${firstColorStop}%,
-//       rgba(119, 49, 43, 0.9) ${secondColorStop}%
-//     )`,
-//     color: isDark.value ? 'var(--tw-dark)' : 'inherit',
-//   };
-// });
-
-// const headerClasses = computed(() => {
-//   return [
-//     'tw-px-2 md:tw-px-4',
-//     isDark.value && isScrolledHeader.value ? 'dark-header' : 'bg-transparent text-light',
-//     !isDark.value && isScrolledHeader.value
-//       ? 'tw-bg-transparent tw-text-dark'
-//       : 'tw-bg-light tw-text-dark',
-//   ];
-// });
+const position = computed(() => props.scrollPosition);
 
 watch(
   () => totalItems.value,
