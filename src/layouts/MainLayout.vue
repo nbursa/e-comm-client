@@ -8,6 +8,7 @@
     />
 
     <MobileDrawer :menu-items="mobileMenuItems" :drawer-open="drawerOpen" @navigate="navigate" />
+
     <q-scroll-area ref="scrollContainer" class="tw-w-full tw-h-full">
       <q-page-container style="max-width: 1200px !important; margin: 0 auto !important">
         <router-view :scroll-position="position" :scroll-offset="scrollPosition" />
@@ -15,22 +16,21 @@
 
       <q-scroll-observer @scroll="scrollHandler" />
     </q-scroll-area>
+
     <AppFooter :scroll-position="position" />
   </q-layout>
 </template>
 
 <script setup lang="ts">
 import MobileDrawer from '@/components/MobileDrawer.vue';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
-import { useUserStore } from '@/stores/user';
 import AppFooter from '@/components/AppFooter.vue';
 
 const router = useRouter();
 const { t } = useI18n();
-const userStore = useUserStore();
 
 const drawerOpen = ref(false);
 const scrollPosition = ref(0);
@@ -46,15 +46,6 @@ const mobileMenuItems = computed(() => [
   { label: t('main.home'), path: '/' },
   { label: t('main.products'), path: '/products' },
 ]);
-
-watch(
-  () => userStore.settings.theme === 'dark',
-  (isDark) => {
-    document.body.classList.toggle('dark--page', isDark);
-    document.body.classList.toggle('--q-light--page', !isDark);
-  },
-  { immediate: true },
-);
 
 const navigate = (item: { label: string; path: string }) => {
   drawerOpen.value = false;

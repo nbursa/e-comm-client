@@ -94,63 +94,45 @@ const theme = computed(() => ({
   separatorColor: $q.dark.isActive ? 'white' : 'black',
 }));
 
-const languageOptions = computed(() => userStore.languageOptions);
+const languageOptions = computed<LanguageOption[]>(() => userStore.languageOptions);
+const currencyOptions = computed<CurrencyOption[]>(() => userStore.currencyOptions);
+const themeOptions = computed<ThemeOption[]>(() => userStore.themeOptions);
 
-const currencyOptions = computed(() => userStore.currencyOptions);
-
-const themeOptions = computed(() => userStore.themeOptions);
-
-const currentLanguage = computed<LanguageOption>({
+const currentLanguage = computed({
   get: () => {
-    const currentLang = userStore.settings.language;
-    return (
-      languageOptions.value.find((option) => option.value === currentLang) ||
-      languageOptions.value[0] || { label: 'English', value: 'en-US' }
-    );
+    const { language } = userStore.settings;
+    return (languageOptions.value.find((opt) => opt.value === language) ||
+      languageOptions.value[0])!;
   },
-  set: (value: LanguageOption) => {
-    if (value) {
-      userStore.settings.language = value.value;
-    }
+  set: (option: LanguageOption) => {
+    if (option) userStore.setLanguage(option.value);
   },
 });
 
-const currentCurrency = computed<CurrencyOption>({
+const currentCurrency = computed({
   get: () => {
-    const currentCur = userStore.settings.currency;
-    return (
-      currencyOptions.value.find((option) => option.value === currentCur) ||
-      currencyOptions.value[0] || { label: 'USD', value: 'USD' }
-    );
+    const { currency } = userStore.settings;
+    return (currencyOptions.value.find((opt) => opt.value === currency) ||
+      currencyOptions.value[0])!;
   },
-  set: (value: CurrencyOption) => {
-    if (value) {
-      userStore.setCurrency(value.value);
-    }
+  set: (option: CurrencyOption) => {
+    if (option) userStore.setCurrency(option.value);
   },
 });
 
-const themeSetting = computed<ThemeOption>({
+const themeSetting = computed({
   get: () => {
-    const currentTheme = userStore.settings.theme;
-    return (
-      themeOptions.value.find((option) => option.value === currentTheme) ||
-      themeOptions.value[0] || { label: 'Dark', value: 'dark' }
-    );
+    const { theme } = userStore.settings;
+    return (themeOptions.value.find((opt) => opt.value === theme) || themeOptions.value[0])!;
   },
-  set: (value: ThemeOption) => {
-    if (value) {
-      userStore.settings.theme = value.value;
-    }
+  set: (option: ThemeOption) => {
+    if (option) userStore.setTheme(option.value);
   },
 });
 
 const useSystemPreference = computed({
   get: () => userStore.settings.useSystemPreference,
-  set: (value: boolean) => {
-    userStore.settings.useSystemPreference = value;
-    userStore.updateTheme();
-  },
+  set: (value: boolean) => userStore.setSystemPreference(value),
 });
 
 const onSystemPreferenceChange = (value: boolean) => {

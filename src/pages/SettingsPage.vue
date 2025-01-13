@@ -97,10 +97,7 @@ const theme = computed<ThemeOption>({
 
 const useSystemPreference = computed({
   get: () => userStore.settings.useSystemPreference,
-  set: (value: boolean) => {
-    userStore.settings.useSystemPreference = value;
-    userStore.updateTheme();
-  },
+  set: (value: boolean) => userStore.setSystemPreference(value),
 });
 
 const onSystemPreferenceChange = (value: boolean) => {

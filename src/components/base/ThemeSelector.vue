@@ -1,6 +1,4 @@
 <template>
-  <!-- <q-card>
-    <q-card-section> -->
   <div>
     <q-select
       v-model="localSelectedTheme"
@@ -17,8 +15,6 @@
       class="q-mt-md tw-text-xs"
     />
   </div>
-  <!-- </q-card-section>
-  </q-card> -->
 </template>
 
 <script lang="ts" setup>

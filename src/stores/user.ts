@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { setLanguage } from '@/boot/i18n';
 import { Currency, CurrencyOption, LanguageOption, ThemeOption, UserSettings } from '@/types';
-import { themeManager } from '@/boot/theme';
+import { applyTheme } from '@/boot/theme';
 
 export const useUserStore = defineStore('user', () => {
   const settings = ref<UserSettings>({
@@ -42,13 +42,21 @@ export const useUserStore = defineStore('user', () => {
     localStorage.setItem('user_settings', JSON.stringify(settings.value));
   };
 
+  const setTheme = (theme: ThemeOption['value']) => {
+    settings.value.theme = theme;
+    saveSettings();
+    applyTheme();
+  };
+
+  const setSystemPreference = (value: boolean) => {
+    settings.value.useSystemPreference = value;
+    saveSettings();
+    applyTheme();
+  };
+
   const setCurrency = (currency: Currency) => {
     settings.value.currency = currency;
     saveSettings();
-  };
-
-  const updateTheme = () => {
-    themeManager.applyTheme();
   };
 
   const updateI18n = () => {
@@ -59,35 +67,33 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  const setUserStore = () => {
-    loadSettings();
-    updateTheme();
-    updateI18n();
-  };
+  // const setUserStore = () => {
+  //   loadSettings();
+  //   updateTheme();
+  //   updateI18n();
+  // };
 
-  watch(
-    () => settings.value.language,
-    () => {
-      updateI18n();
-    },
-  );
+  watch(() => settings.value.language, updateI18n);
+  // watch(() => settings.value.theme, applyTheme);
 
-  watch(
-    () => settings.value,
-    () => {
-      saveSettings();
-      updateTheme();
-    },
-    { deep: true },
-  );
+  // watch(
+  //   () => settings.value,
+  //   () => {
+  //     saveSettings();
+  //     console.log('Settings updated:', settings.value.theme);
+  //   },
+  //   { deep: true },
+  // );
 
   return {
+    settings,
     languageOptions,
     themeOptions,
-    settings,
-    updateTheme,
-    setUserStore,
+    setTheme,
+    setLanguage,
+    setSystemPreference,
     setCurrency,
     currencyOptions,
+    loadSettings,
   };
 });
