@@ -20,5 +20,6 @@ export default {
       colors: {},
     },
   },
+  safelist: ['tw-bg-[var(--q-bg-light)]', 'tw-bg-[var(--q-bg-dark)]'],
   plugins: [],
 } satisfies Config;

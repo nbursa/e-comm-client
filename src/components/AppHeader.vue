@@ -1,6 +1,7 @@
 <template>
   <q-header class="tw-overflow-hidden tw-px-2 md:tw-px-4" :style="themeStyles">
     <AnimatedLights :scroll-position="scrollOffset" :opacity="50" direction="toLeft" />
+
     <q-toolbar>
       <q-toolbar-title
         ><RouterLink to="/" class="tw-text-2xl tw-align-middle tw-font-serif tw-font-extrabold">{{
@@ -57,7 +58,7 @@ const props = defineProps({
   },
   scrollOffset: {
     type: Number as PropType<number>,
-    required: true,
+    default: 0,
   },
 });
 

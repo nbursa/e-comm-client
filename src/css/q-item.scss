@@ -13,3 +13,7 @@
 .q-field__control {
   color: var(--q-item-active) !important;
 }
+
+.q-item.q-item--dark.q-item--active .q-item__label {
+  color: white !important;
+}

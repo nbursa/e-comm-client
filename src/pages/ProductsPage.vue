@@ -1,31 +1,11 @@
 <template>
   <q-page padding class="tw-relative">
     <h5 class="q-my-md tw-font-serif">{{ $t('products.title') }}</h5>
-    <q-tabs
-      v-model="selectedCategory"
-      indicator-color="transparent"
-      class="q-mb-md gt-sm"
-      :active-color="theme.textColor"
-      :active-bg-color="theme.backgroundColor"
-      :text-color="theme.backgroundColor"
-      :inactive-color="theme.textColor"
-      align="justify"
-    >
-      <q-tab name="all" :label="$t('products.categories.allProducts')" />
-      <q-tab
-        v-for="category in categories"
-        :key="category"
-        :name="category"
-        :label="formatCategoryLabel(category)"
-      />
-    </q-tabs>
-
-    <CategorySelect
-      v-model:selected-category="selectedCategory"
+    <ProductTabs
+      :selected-category="selectedCategory"
       :categories="categories"
-      :color="theme.backgroundColor"
-      :text="theme.textColor"
-      class="q-my-md lt-md"
+      :scroll-offset="scrollOffset"
+      @update:selected-category="onCategoryChange"
     />
 
     <q-separator class="q-my-md" />
@@ -61,10 +41,10 @@
 
     <q-btn
       v-if="isScrolledBtn"
-      class="!tw-fixed !tw-bottom-12 !tw-right-4 !tw-p-3 tw-z-40"
+      class="!tw-fixed !tw-bottom-12 !tw-right-4 !tw-p-2 tw-z-40"
       round
-      :color="theme.buttonBackgroundColor"
-      :text-color="theme.buttonTextColor"
+      color="white"
+      text-color="black"
       icon="arrow_upward"
       @click="scrollToTop"
     />
@@ -72,20 +52,25 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, watch } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-// import { useUserStore } from '@/stores/user';
 import { useProductCacheStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/ProductCard.vue';
-import CategorySelect from '@/components/CategorySelect.vue';
 import { useCartStore } from '@/stores/cart';
 import { Product } from '@/types';
 import { QVueGlobals } from 'quasar/dist/types/globals';
+import ProductTabs from '@/components/ProductTabs.vue';
+
+const props = defineProps({
+  scrollOffset: {
+    type: Number,
+    required: true,
+  },
+});
 
 const cartStore = useCartStore();
-// const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const productCache = useProductCacheStore();
@@ -101,10 +86,9 @@ const categories = ref<string[]>([]);
 const isLoadingCategories = ref(true);
 
 const theme = computed(() => ({
-  backgroundColor: $q.dark.isActive ? 'white' : 'dark',
+  activeTextColor: $q.dark.isActive ? 'dark' : 'black',
+  backgroundColor: $q.dark.isActive ? 'white' : 'black',
   textColor: $q.dark.isActive ? 'black' : 'white',
-  buttonBackgroundColor: $q.dark.isActive ? 'dark' : 'light',
-  buttonTextColor: $q.dark.isActive ? 'black' : 'white',
   paginationColor: $q.dark.isActive ? 'light' : 'dark',
   paginationTextColor: $q.dark.isActive ? 'white' : 'black',
   paginationActiveColor: $q.dark.isActive ? 'white' : 'dark',
@@ -125,17 +109,16 @@ const paginatedProducts = computed(() => {
 });
 
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
-const isScrolledBtn = computed(() => window.scrollY > 300);
-
-const formatCategoryLabel = (category: string) => {
-  return category
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
+const isScrolledBtn = computed(() => props.scrollOffset > 300);
 
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const scrollArea = document.querySelector('.q-page-container') as HTMLElement;
+  console.log('scrollArea', scrollArea.offsetHeight);
+  if (scrollArea) {
+    scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 };
 
 const addToCart = (product: Product) => {
@@ -151,10 +134,11 @@ const viewProduct = (product: Product) => {
   router.push(`/products/${product.id}`);
 };
 
-watch(selectedCategory, async (newCategory) => {
+const onCategoryChange = async (newCategory: string) => {
+  selectedCategory.value = newCategory;
   currentPage.value = 1;
   await fetchProducts(newCategory);
-});
+};
 
 const fetchCategories = async () => {
   try {
