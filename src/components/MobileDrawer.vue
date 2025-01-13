@@ -5,12 +5,8 @@
     :width="drawerWidth"
     :overlay="true"
     behavior="desktop"
-    class="!tw-bg-transparent"
-    :style="{
-      background: !isDark
-        ? 'linear-gradient(135deg, #FFFFFF 50%, #BFB48F 80%)'
-        : 'linear-gradient(135deg,  #77312B 50%, #1A202C 70%)',
-    }"
+    class="drawer"
+    :style="{ background: theme.drawerBackground }"
     @update:model-value="$emit('update:drawerOpen', $event)"
   >
     <q-scroll-area class="tw-h-full">
@@ -24,19 +20,16 @@
             @click="$emit('navigate', item)"
           >
             <AppButton
-              :key="item.label"
-              outline
               :to="item.path"
               :label="item.label"
-              :flat="false"
-              :color="color"
-              :text-color="text"
+              :color="theme.buttonBackgroundColor"
+              :text-color="theme.buttonTextColor"
               class-name="!tw-w-full"
             />
           </q-item>
         </q-list>
 
-        <q-separator :color="isDark ? 'white' : 'black'" class="tw-w-10/12 !tw-mt-4 !tw-mb-6" />
+        <q-separator :color="theme.separatorColor" class="tw-w-10/12 !tw-mt-4 !tw-mb-6" />
 
         <h2 class="text-h6 tw-mb-4">{{ $t('settings.title') }}</h2>
 
@@ -51,7 +44,7 @@
           class="tw-w-full !tw-px-4 tw-mb-4"
         />
         <ThemeSelector
-          v-model="theme"
+          v-model="themeSetting"
           :theme-options="themeOptions"
           :use-system-preference="useSystemPreference"
           class="tw-w-full !tw-px-4 tw-mb-4"
@@ -62,49 +55,19 @@
   </q-drawer>
 </template>
 
-<!-- <template>
-  <q-drawer
-    :model-value="drawerOpen"
-    side="right"
-    :width="drawerWidth"
-    :overlay="true"
-    behavior="desktop"
-    @update:model-value="$emit('update:drawerOpen', $event)"
-  >
-    <q-scroll-area class="tw-h-full">
-      <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-py-8">
-        <q-list class="tw-w-full tw-text-center">
-          <q-item
-            v-for="item in menuItems"
-            :key="item.label"
-            clickable
-            class="!tw-p-3 tw-justify-center"
-            @click="$emit('navigate', item)"
-          >
-            <q-item-section avatar>{{ item.label }}</q-item-section>
-          </q-item>
-        </q-list>
-      </div>
-    </q-scroll-area>
-  </q-drawer>
-</template> -->
-
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
 import { useQuasar } from 'quasar';
-import { QVueGlobals } from 'quasar/dist/types/globals';
 import { useUserStore } from '@/stores/user';
-import { setLanguage } from '@/boot/i18n';
 import LanguageSelector from '@/components/base/LanguageSelector.vue';
 import CurrencySelector from '@/components/base/CurrencySelector.vue';
 import ThemeSelector from '@/components/base/ThemeSelector.vue';
-import { useI18n } from 'vue-i18n';
-import { CurrencyOption, LanguageOption, MenuItem, ThemeOption } from '@/types';
 import AppButton from './base/AppButton.vue';
+import { CurrencyOption, LanguageOption, MenuItem, ThemeOption } from '@/types';
+import { QVueGlobals } from 'quasar/dist/types/globals';
 
 const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
-const { t } = useI18n();
 
 defineProps({
   drawerOpen: {
@@ -122,63 +85,63 @@ defineEmits<{
   navigate: [MenuItem];
 }>();
 
-const isDark = computed(() => $q.dark.isActive);
+const theme = computed(() => ({
+  drawerBackground: $q.dark.isActive
+    ? 'linear-gradient(135deg,  #77312B 0%, #1A202C 50%)'
+    : 'linear-gradient(135deg, #FFFFFF 50%, #BFB48F 80%)',
+  buttonBackgroundColor: $q.dark.isActive ? 'white' : 'black',
+  buttonTextColor: $q.dark.isActive ? 'black' : 'white',
+  separatorColor: $q.dark.isActive ? 'white' : 'black',
+}));
 
-const color = computed(() => (isDark.value ? 'q-light' : 'q-dark'));
-const text = computed(() => (isDark.value ? 'q-light' : 'q-dark'));
+const languageOptions = computed(() => userStore.languageOptions);
 
-const languageOptions = computed(() =>
-  userStore.languageOptions.map((option) => ({
-    ...option,
-    label: t(`language.${option.value}`),
-  })),
-);
+const currencyOptions = computed(() => userStore.currencyOptions);
 
-const themeOptions = computed(() =>
-  userStore.themeOptions.map((option) => ({
-    ...option,
-    label: t(`theme.${option.value}`),
-  })),
-);
-
-const currencyOptions = computed(() =>
-  userStore.currencyOptions.map((option) => ({
-    ...option,
-    label: t(`currencyLabel.${option.value}`),
-  })),
-);
+const themeOptions = computed(() => userStore.themeOptions);
 
 const currentLanguage = computed<LanguageOption>({
   get: () => {
     const currentLang = userStore.settings.language;
-    return (languageOptions.value.find((opt) => opt.value === currentLang) ||
-      languageOptions.value[0])!;
+    return (
+      languageOptions.value.find((option) => option.value === currentLang) ||
+      languageOptions.value[0] || { label: 'English', value: 'en-US' }
+    );
   },
-  set: (option: LanguageOption) => {
-    userStore.settings.language = option.value;
-    setLanguage(option.value);
+  set: (value: LanguageOption) => {
+    if (value) {
+      userStore.settings.language = value.value;
+    }
   },
 });
 
 const currentCurrency = computed<CurrencyOption>({
   get: () => {
     const currentCur = userStore.settings.currency;
-    return (currencyOptions.value.find((opt) => opt.value === currentCur) ||
-      currencyOptions.value[0])!;
+    return (
+      currencyOptions.value.find((option) => option.value === currentCur) ||
+      currencyOptions.value[0] || { label: 'USD', value: 'USD' }
+    );
   },
-  set: (option: CurrencyOption) => {
-    userStore.settings.currency = option.value;
+  set: (value: CurrencyOption) => {
+    if (value) {
+      userStore.setCurrency(value.value);
+    }
   },
 });
 
-const theme = computed<ThemeOption>({
+const themeSetting = computed<ThemeOption>({
   get: () => {
     const currentTheme = userStore.settings.theme;
-    return (themeOptions.value.find((opt) => opt.value === currentTheme) || themeOptions.value[0])!;
+    return (
+      themeOptions.value.find((option) => option.value === currentTheme) ||
+      themeOptions.value[0] || { label: 'Dark', value: 'dark' }
+    );
   },
-  set: (option: ThemeOption) => {
-    userStore.settings.theme = option.value;
-    $q.dark.set(option.value === 'dark');
+  set: (value: ThemeOption) => {
+    if (value) {
+      userStore.settings.theme = value.value;
+    }
   },
 });
 
@@ -196,33 +159,3 @@ const onSystemPreferenceChange = (value: boolean) => {
 
 const drawerWidth = computed(() => ($q.screen.lt.sm ? $q.screen.width : 380));
 </script>
-
-<style lang="scss" scoped>
-// aside.q-drawer.sidebar.q-drawer--standard.q-drawer--on-top {
-//   position: relative !important;
-//   overflow: hidden !important;
-
-//   -webkit-mask-image: radial-gradient(
-//     circle at top left,
-//     rgba(0, 0, 0, 1) 0%,
-//     rgba(0, 0, 0, 0.7) 40%,
-//     rgba(0, 0, 0, 0.2) 70%,
-//     rgba(0, 0, 0, 0) 100%
-//   );
-//   mask-image: radial-gradient(
-//     circle at top left,
-//     rgba(0, 0, 0, 1) 0%,
-//     rgba(0, 0, 0, 0.7) 40%,
-//     rgba(0, 0, 0, 0.2) 70%,
-//     rgba(0, 0, 0, 0) 100%
-//   );
-
-//   -webkit-mask-repeat: no-repeat;
-//   mask-repeat: no-repeat;
-//   -webkit-mask-size: cover;
-//   mask-size: cover;
-
-//   background-color: inherit;
-//   z-index: 1000;
-// }
-</style>

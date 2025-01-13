@@ -106,15 +106,15 @@ $shadow-white: 10px 14px 10px rgba(255, 255, 255, 0.05);
       height: auto;
     }
 
-    &.bg-light {
-      background-color: var(--q-light) !important;
-      color: var(--q-dark) !important;
-    }
+    // &.bg-light {
+    //   background-color: var(--q-light) !important;
+    //   color: var(--q-dark) !important;
+    // }
 
-    &.bg-dark {
-      background-color: var(--q-dark) !important;
-      color: var(--q-light) !important;
-    }
+    // &.bg-dark {
+    //   background-color: var(--q-dark) !important;
+    //   color: var(--q-light) !important;
+    // }
   }
 }
 

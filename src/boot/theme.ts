@@ -22,14 +22,25 @@ class ThemeManager {
 
   init($q: QVueGlobals): void {
     this.$q = $q;
+    this.applyTheme();
+    this.mediaQuery.addEventListener('change', this.handleSystemChange);
+  }
+
+  applyTheme(): void {
     const userStore = useUserStore();
-    userStore.initTheme($q);
+    const isDark = userStore.settings.useSystemPreference
+      ? this.mediaQuery.matches
+      : userStore.settings.theme === 'dark';
+
+    if (this.$q) {
+      this.$q.dark.set(isDark);
+    }
   }
 
   private handleSystemChange(): void {
     const userStore = useUserStore();
     if (userStore.settings.useSystemPreference) {
-      userStore.updateTheme();
+      this.applyTheme();
     }
   }
 }

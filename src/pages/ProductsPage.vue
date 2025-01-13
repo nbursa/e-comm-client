@@ -4,10 +4,10 @@
     <q-tabs
       v-model="selectedCategory"
       class="q-mb-md gt-sm"
-      :active-color="text"
-      :active-bg-color="color"
-      :text-color="color"
-      :inactive-color="color"
+      :active-color="theme.textColor"
+      :active-bg-color="theme.backgroundColor"
+      :text-color="theme.backgroundColor"
+      :inactive-color="theme.textColor"
       align="justify"
     >
       <q-tab name="all" :label="$t('products.categories.allProducts')" />
@@ -22,8 +22,8 @@
     <CategorySelect
       v-model:selected-category="selectedCategory"
       :categories="categories"
-      :color="color"
-      :text="text"
+      :color="theme.backgroundColor"
+      :text="theme.textColor"
       class="q-my-md lt-md"
     />
 
@@ -37,8 +37,8 @@
           v-for="product in paginatedProducts"
           :key="product.id"
           :product="product"
-          :color="color"
-          :text="text"
+          :color="theme.backgroundColor"
+          :text="theme.textColor"
           @add-to-cart="addToCart"
           @view-product="viewProduct"
         />
@@ -50,11 +50,11 @@
       v-model="currentPage"
       :max="totalPages"
       boundary-numbers
-      class="q-my-md text-center justify-center"
-      :color="$q.dark.isActive ? 'white' : 'dark'"
-      :text-color="$q.dark.isActive ? 'white' : 'dark'"
-      :active-color="$q.dark.isActive ? 'white' : 'dark'"
-      :active-text-color="$q.dark.isActive ? 'dark' : 'white'"
+      class="tw-py-8 tw-flex tw-justify-center tw-items-center !tw-gap-8"
+      :color="theme.paginationColor"
+      :text-color="theme.paginationTextColor"
+      :active-color="theme.paginationActiveColor"
+      :active-text-color="theme.paginationActiveTextColor"
       @update:model-value="scrollToTop"
     />
 
@@ -62,8 +62,8 @@
       v-if="isScrolledBtn"
       class="!tw-fixed !tw-bottom-12 !tw-right-4 !tw-p-3 tw-z-40"
       round
-      color="white"
-      text-color="primary"
+      :color="theme.buttonBackgroundColor"
+      :text-color="theme.buttonTextColor"
       icon="arrow_upward"
       @click="scrollToTop"
     />
@@ -71,25 +71,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, watch, PropType } from 'vue';
-import { useCartStore } from '../stores/cart';
+import { computed, ref, onMounted, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-import type { QVueGlobals } from 'quasar/dist/types/globals';
+import { useUserStore } from '@/stores/user';
 import { useProductCacheStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
-import { Product } from '@/types';
 import ProductCard from '@/components/ProductCard.vue';
 import CategorySelect from '@/components/CategorySelect.vue';
-
-const props = defineProps({
-  scrollOffset: {
-    type: Number as PropType<number>,
-    required: true,
-  },
-});
+import { useCartStore } from '@/stores/cart';
+import { Product } from '@/types';
+import { QVueGlobals } from 'quasar/dist/types/globals';
 
 const cartStore = useCartStore();
+const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const productCache = useProductCacheStore();
@@ -101,29 +96,37 @@ const products = ref<Product[]>([]);
 const currentPage = ref(1);
 const itemsPerPage = 10;
 const selectedCategory = ref('all');
-const isLoadingCategories = ref(true);
 const categories = ref<string[]>([]);
+const isLoadingCategories = ref(true);
 
-const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
-const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
+const theme = computed(() => ({
+  backgroundColor: $q.dark.isActive ? 'white' : 'dark',
+  textColor: $q.dark.isActive ? 'black' : 'white',
+  buttonBackgroundColor: $q.dark.isActive ? 'dark' : 'light',
+  buttonTextColor: $q.dark.isActive ? 'black' : 'white',
+  paginationColor: $q.dark.isActive ? 'light' : 'dark',
+  paginationTextColor: $q.dark.isActive ? 'white' : 'black',
+  paginationActiveColor: $q.dark.isActive ? 'white' : 'dark',
+  paginationActiveTextColor: $q.dark.isActive ? 'black' : 'white',
+}));
+
 const filteredProducts = computed(() => {
-  if (!products.value) return [];
-  if (selectedCategory.value === 'all') {
-    return products.value;
-  }
-  return products.value.filter((p) => p.category === selectedCategory.value);
+  if (!products.value.length) return [];
+  if (selectedCategory.value === 'all') return products.value;
+  return products.value.filter((product) => product.category === selectedCategory.value);
 });
+
 const paginatedProducts = computed(() => {
   return filteredProducts.value.slice(
     (currentPage.value - 1) * itemsPerPage,
     currentPage.value * itemsPerPage,
   );
 });
+
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
-const isScrolledBtn = computed(() => props.scrollOffset > 300);
+const isScrolledBtn = computed(() => window.scrollY > 300);
 
 const formatCategoryLabel = (category: string) => {
-  if (!category) return '';
   return category
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -131,16 +134,7 @@ const formatCategoryLabel = (category: string) => {
 };
 
 const scrollToTop = () => {
-  const target = document.querySelector('.q-scrollarea__container') as HTMLElement;
-  console.log('target', target);
-  if (target) {
-    target.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  } else {
-    console.warn('Element body not found');
-  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const addToCart = (product: Product) => {
@@ -174,57 +168,42 @@ const fetchCategories = async () => {
     }
 
     const response = await fetch(`${apiUrl}/products/categories`);
-    const data = await response.json();
-    categories.value = data;
-    productCache.setCategoryCache(data);
+    categories.value = await response.json();
+    productCache.setCategoryCache(categories.value);
   } catch (error) {
     console.error('Error fetching categories:', error);
-    categories.value = [];
   } finally {
     isLoadingCategories.value = false;
   }
 };
 
-const fetchProducts = async (category?: string) => {
+const fetchProducts = async (category = 'all') => {
   $q.loading.show();
   try {
-    const cacheCategory = category || 'all';
-
-    if (productCache.isCacheValid(cacheCategory)) {
-      const cached = productCache.getCache(cacheCategory);
+    if (productCache.isCacheValid(category)) {
+      const cached = productCache.getCache(category);
       if (cached) {
         products.value = cached.products;
-        $q.loading.hide();
         return;
       }
     }
 
-    const url =
-      category && category !== 'all'
-        ? `${apiUrl}/products/category/${category}`
-        : `${apiUrl}/products`;
-
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    products.value = data;
-    productCache.setCache(data, cacheCategory);
-  } catch {
-    $q.notify({
-      color: 'negative',
-      position: 'top',
-      message: 'Failed to fetch products. Please try again later.',
-      icon: 'error',
-    });
+    const response = await fetch(
+      `${apiUrl}/products${category !== 'all' ? `/category/${category}` : ''}`,
+    );
+    products.value = await response.json();
+    productCache.setCache(products.value, category);
+  } catch (error) {
+    console.error('Error fetching products:', error);
     products.value = [];
   } finally {
     $q.loading.hide();
   }
 };
 
-onMounted(async () => {
-  await Promise.all([fetchCategories(), fetchProducts()]);
+onMounted(() => {
+  userStore.updateTheme(); // Ensure theme settings are applied on mount
+  fetchCategories();
+  fetchProducts();
 });
 </script>

@@ -2,11 +2,10 @@ import { boot } from 'quasar/wrappers';
 import { useUserStore } from '@/stores/user';
 import { useRatesStore } from '@/stores/rates';
 
-const ratesStore = useRatesStore();
-
-export default boot(({ app }) => {
+export default boot(() => {
+  const ratesStore = useRatesStore();
   const userStore = useUserStore();
-  const $q = app.config.globalProperties.$q;
+
   ratesStore.loadExchangeRates();
-  userStore.setUserStore($q);
+  userStore.setUserStore();
 });
