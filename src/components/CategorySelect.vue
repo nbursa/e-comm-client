@@ -35,14 +35,26 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps, defineEmits } from 'vue';
+import { computed, PropType } from 'vue';
 
-const props = defineProps<{
-  selectedCategory: string;
-  categories: string[];
-  color: string;
-  text: string;
-}>();
+const props = defineProps({
+  selectedCategory: {
+    type: String as PropType<string>,
+    required: true,
+  },
+  categories: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
+  color: {
+    type: String as PropType<string>,
+    required: true,
+  },
+  text: {
+    type: String as PropType<string>,
+    required: true,
+  },
+});
 
 const emit = defineEmits(['update:selectedCategory']);
 

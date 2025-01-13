@@ -13,7 +13,7 @@
             v-for="item in cartStore.items"
             :key="item.id"
             class="tw-flex tw-flex-col md:tw-flex-row md:!tw-justify-between !tw-gap-3 tw-p-3 tw-rounded-md"
-            :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'"
+            :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
           >
             <!-- Image section -->
             <q-item-section class="tw-w-full md:!tw-max-w-44 !tw-flex-shrink-1 md:tw-min-w-[50px]">
@@ -82,7 +82,7 @@
         <div class="col-12 col-md-4">
           <q-item
             class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 tw-rounded-md"
-            :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'"
+            :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
           >
             <q-item-section class="tw-w-full">
               <div class="tw-text-xl tw-mb-4">{{ $t('cart.orderSummary') }}</div>
