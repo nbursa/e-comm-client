@@ -1,6 +1,4 @@
 <template>
-  <!-- <q-card>
-    <q-card-section> -->
   <q-select
     v-model="localCurrency"
     :options="currencyOptions"
@@ -8,12 +6,10 @@
     outlined
     class="full-width"
   />
-  <!-- </q-card-section>
-  </q-card> -->
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps, defineEmits } from 'vue';
+import { computed } from 'vue';
 import type { CurrencyOption } from '@/types';
 
 const props = defineProps<{

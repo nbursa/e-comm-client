@@ -6,8 +6,8 @@
           <q-stepper
             v-model="step"
             vertical
-            class="checkout-stepper"
-            :color="color"
+            class="checkout-stepper !tw-bg-transparent"
+            color="none"
             :text-color="text"
             header-nav
           >
@@ -128,7 +128,7 @@
         <div class="col-12 col-md-4">
           <q-item
             class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 tw-rounded-md"
-            :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'"
+            :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
           >
             <q-item-section class="tw-w-full">
               <div class="tw-text-xl tw-mb-4">{{ $t('checkout.orderSummary') }}</div>
@@ -179,6 +179,14 @@
         </div>
       </div>
     </div>
+    <OrderConfirmationDialog
+      v-model="showDialog"
+      :order-details="orderDetails"
+      :color="color"
+      :text="text"
+      @confirm="handleOrderConfirmation"
+      @cancel="handleOrderCancellation"
+    />
   </q-page>
 </template>
 
@@ -193,6 +201,7 @@ import { OrderDetails } from '@/types';
 import QRCode from 'qrcode';
 import { formatPrice } from '@/utils';
 import type { ComponentPublicInstance } from 'vue';
+import OrderConfirmationDialog from '@/components/OrderConfirmationDialog.vue';
 
 type QFormInstance = ComponentPublicInstance<{ validate: () => boolean }>;
 
@@ -217,6 +226,7 @@ const payment = ref({
   cvv: '',
 });
 const qrCodeDataUrl = ref<string | null>(null);
+const showDialog = ref(false);
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
@@ -259,7 +269,7 @@ const generateQrCode = async () => {
     `K:PR|V:01|C:1|P:${totalPrice.value.toFixed(2)}|S:${paymentPurpose}|N:E-comm-platform|I:${ttl.value}|R:${rn}|RO:00${orderNr}|SF:289`.trim();
 
   try {
-    qrCodeDataUrl.value = await QRCode.toDataURL(qrCodeInfo);
+    qrCodeDataUrl.value = await QRCode.toDataURL(qrCodeInfo, { width: 300, margin: 2 });
   } catch (error) {
     console.error('Error generating QR code:', error);
   }
@@ -293,71 +303,21 @@ const goBack = () => {
 };
 
 const showOrderConfirmation = () => {
-  $q.dialog({
-    title: t('checkout.title'),
-    message: `
-      <div class="tw-flex tw-flex-col tw-items-start full-width">
-        <h6 class="q-my-none">${t('checkout.summary')}</h6>
-        <p class="text-h6 q-mb-md">${t('checkout.total')}: ${formatPrice(orderDetails.total)}</p>
+  showDialog.value = true;
+  console.log('showDialog', showDialog.value);
+};
 
-        <div class="q-mb-md">
-          <strong>${t('checkout.shippingDetails')}:</strong>
-          <p class="q-mb-none">${orderDetails.firstName} ${orderDetails.lastName}</p>
-          <p class="q-mb-none">${orderDetails.email}</p>
-          <p class="q-mb-none">${orderDetails.address}</p>
-        </div>
+const handleOrderConfirmation = () => {
+  if (process.env.NODE_ENV === 'production') {
+    cartStore.clearCart();
+    router.push('/thankyou');
+  } else {
+    emailOrder();
+  }
+};
 
-        <div class="q-mb-md">
-          <strong>${t('checkout.paymentInfo')}:</strong>
-          <p class="q-mb-none">${t('checkout.card')}: **** **** **** ${orderDetails.cardNumber.slice(-4)}</p>
-          <p class="q-mb-none">${t('checkout.expiry')}: ${orderDetails.expiry}</p>
-        </div>
-
-        <div class="q-mt-sm full-width">
-          <strong>${t('checkout.items')}:</strong>
-          ${orderDetails.items
-            .map(
-              (item) => `
-            <div class="q-py-sm full-width tw-flex tw-justify-between tw-items-center">
-              <div class="tw-flex-shrink-0 tw-mr-32">${item.name || item.title}</div>
-              <div class="tw-flex-grow tw-flex tw-justify-between tw-items-center tw-gap-2">
-                <div>${item.quantity}</div> <div>${formatPrice(item.price)}</div>
-              </div>
-            </div>
-          `,
-            )
-            .join('')}
-        </div>
-      </div>
-    `,
-    html: true,
-    persistent: true,
-    class: 'confirm-dialog',
-    ok: {
-      label: t('checkout.confirmButton'),
-      flat: true,
-      style: `opacity: 1 !important; box-shadow: inset 0 0 0 2px ${color.value}; color: ${text.value} !important;`,
-      class: `bg-${color.value} lt-sm:full-width`,
-    },
-    cancel: {
-      label: t('checkout.cancelButton'),
-      flat: true,
-      style: `opacity: 1 !important; box-shadow: inset 0 0 0 2px ${color.value}; color: ${color.value} !important;`,
-      class: `lt-sm:full-width lt-sm:q-mt-sm tw-border-${color.value}`,
-    },
-    style: {
-      maxWidth: '600px',
-      width: '95vw',
-      margin: '0 auto',
-    },
-  }).onOk(() => {
-    if (process.env.NODE_ENV === 'production') {
-      cartStore.clearCart();
-      router.push('/thankyou');
-    } else {
-      emailOrder();
-    }
-  });
+const handleOrderCancellation = () => {
+  showDialog.value = false;
 };
 
 const emailOrder = async () => {
@@ -398,6 +358,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .checkout-stepper {
+  box-shadow: none;
   :deep(.q-stepper__tab--active),
   :deep(.q-stepper__tab--done) {
     color: v-bind(color);

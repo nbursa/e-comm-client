@@ -20,16 +20,35 @@
 
 <script lang="ts" setup>
 import { useUserStore } from '@/stores/user';
-import { computed } from 'vue';
+import { computed, PropType } from 'vue';
 
-const props = defineProps<{
-  to?: string | Record<string, unknown>;
-  label: string;
-  className?: string;
-  flat?: boolean;
-  outline?: boolean;
-  action?: () => void;
-}>();
+const props = defineProps({
+  to: {
+    type: String as PropType<string | Record<string, unknown>>,
+    default: '',
+  },
+  label: {
+    type: String as PropType<string>,
+    default: '',
+  },
+  className: {
+    type: String as PropType<string>,
+    default: '',
+  },
+  flat: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
+  outline: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
+  action: {
+    type: Function as PropType<() => void>,
+    default: null,
+  },
+});
+
 const emit = defineEmits(['click']);
 
 const userStore = useUserStore();

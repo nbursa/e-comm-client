@@ -43,11 +43,20 @@ import { formatPrice } from '@/utils';
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
 
-defineProps<{
-  product: Product;
-  color?: string;
-  text?: string;
-}>();
+defineProps({
+  product: {
+    type: Object as () => Product,
+    required: true,
+  },
+  color: {
+    type: String,
+    default: 'primary',
+  },
+  text: {
+    type: String,
+    default: 'white',
+  },
+});
 
 const emit = defineEmits(['add-to-cart', 'view-product']);
 
