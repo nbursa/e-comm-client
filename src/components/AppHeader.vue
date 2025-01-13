@@ -7,12 +7,7 @@
           $t('main.ecomm')
         }}</RouterLink></q-toolbar-title
       >
-      <div>
-        <div class="tw-text-xs tw-mb-2 tw-text-green-500">
-          Store: {{ userStore.settings.theme }} / QisDark: {{ $q.dark.isActive }} / darkMode:
-          {{ darkMode }} / scrolled: {{ scrolled }} / scrollPosition: {{ props.scrollOffset }}
-        </div>
-      </div>
+
       <div class="gt-md tw-text-lg">
         <AppButton
           v-for="item in menuItems"
@@ -87,6 +82,8 @@ const darkMode = computed(() => userStore.settings.theme === 'dark');
 const scrolled = computed(() => props.scrollOffset > 40);
 
 const themeClasses = computed(() => {
+  // const isDark = $q.dark.isActive;
+  // const scrolled = props.scrollOffset > 40;
   return {
     'bg-dark text-white': darkMode.value && scrolled.value,
     'bg-transparent text-white': darkMode.value && !scrolled.value,
@@ -107,6 +104,10 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.light--page .q-layout__section--marginal {
+  background-color: var(--q-bg-light);
+}
+
 .cart-btn {
   position: relative;
 
