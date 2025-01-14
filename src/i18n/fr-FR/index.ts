@@ -1,5 +1,10 @@
 export default {
   currency: 'EUR',
+  common: {
+    welcome: 'Bienvenue',
+    yes: 'Oui',
+    no: 'Non',
+  },
   language: {
     'en-US': 'Anglais',
     'sr-RS': 'Serbe',
@@ -23,11 +28,15 @@ export default {
   settings: {
     title: 'Paramètres',
     themeSettings: 'Thème',
+    otherSettings: 'Autres paramètres',
     themeLabel: 'Thème',
     followSystemTheme: 'Suivre le thème du système',
     languageSettings: 'Langue',
     languageLabel: 'Langue',
     currencyLabel: 'Devise',
+    resetTitle: 'Réinitialiser le cache',
+    resetConfirm: 'Cela effacera toutes les données stockées. Êtes-vous sûr?',
+    resetSuccess: "Données de l'application effacées avec succès",
   },
   home: {
     title: 'Bienvenue sur notre Plateforme E-Comm',

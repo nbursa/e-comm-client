@@ -284,17 +284,17 @@ const validateShipping = () => {
   if (shippingForm && shippingForm.validate()) {
     step.value = 2;
   } else {
-    $q.notify({ type: 'negative', message: 'Please fix errors in the form.' });
+    $q.notify({ type: 'negative', position: 'top', message: 'Please fix errors in the form.' });
   }
 };
 
 const validatePayment = () => {
   const paymentForm = paymentRef.value;
   if (paymentForm && paymentForm.validate()) {
-    $q.notify({ type: 'positive', message: 'Order placed successfully!' });
+    $q.notify({ type: 'positive', position: 'top', message: 'Order placed successfully!' });
     step.value = 3;
   } else {
-    $q.notify({ type: 'negative', message: 'Please fix errors in the form.' });
+    $q.notify({ type: 'negative', position: 'top', message: 'Please fix errors in the form.' });
   }
 };
 
@@ -338,6 +338,7 @@ const emailOrder = async () => {
   } catch {
     $q.notify({
       color: 'negative',
+      position: 'top',
       message: t('checkout.orderFailed'),
       icon: 'error',
     });

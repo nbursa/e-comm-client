@@ -1,5 +1,10 @@
 export default {
   currency: 'RSD',
+  common: {
+    welcome: 'Dobrodošli',
+    yes: 'Da',
+    no: 'Ne',
+  },
   language: {
     'en-US': 'Engleski',
     'sr-RS': 'Srpski',
@@ -23,11 +28,15 @@ export default {
   settings: {
     title: 'Podešavanja',
     themeSettings: 'Tema',
+    otherSettings: 'Ostala podešavanja',
     themeLabel: 'Tema',
     followSystemTheme: 'Pratite sistemsku temu',
     languageSettings: 'Jezik',
     languageLabel: 'Jezik',
     currencyLabel: 'Valuta',
+    resetTitle: 'Resetuj keš',
+    resetConfirm: 'Ovo će obrisati sva sačuvana podešenja. Da li ste sigurni?',
+    resetSuccess: 'Podešavanja aplikacije uspešno obrisana.',
   },
   home: {
     title: 'Dobrodošli na E-Kom platformu',

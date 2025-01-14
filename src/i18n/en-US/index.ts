@@ -1,5 +1,10 @@
 export default {
   currency: 'USD',
+  common: {
+    welcome: 'Welcome',
+    yes: 'Yes',
+    no: 'No',
+  },
   language: {
     'en-US': 'English',
     'sr-RS': 'Serbian',
@@ -23,11 +28,15 @@ export default {
   settings: {
     title: 'Settings',
     themeSettings: 'Theme',
+    otherSettings: 'Other Settings',
     themeLabel: 'Theme',
     followSystemTheme: 'Follow System Theme',
     languageSettings: 'Language',
     languageLabel: 'Language',
     currencyLabel: 'Currency',
+    resetTitle: 'Reset Cache',
+    resetConfirm: 'This will clear all stored data. Are you sure?',
+    resetSuccess: 'App data cleared successfully',
   },
   home: {
     title: 'Welcome to E-Comm Platform',

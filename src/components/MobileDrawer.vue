@@ -33,6 +33,10 @@
 
         <h2 class="text-h6 tw-mb-4">{{ $t('settings.title') }}</h2>
 
+        <h4 class="text-subtitle1 tw-mb-4 tw-mr-auto tw-px-4">
+          {{ $t('settings.themeSettings') }}
+        </h4>
+
         <LanguageSelector
           v-model="currentLanguage"
           :language-options="languageOptions"
@@ -50,6 +54,22 @@
           class="tw-w-full !tw-px-4 tw-mb-4"
           @update:use-system-preference="onSystemPreferenceChange"
         />
+
+        <h4 class="text-subtitle1 tw-my-4 tw-mr-auto tw-px-4">
+          {{ $t('settings.otherSettings') }}
+        </h4>
+
+        <div
+          class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-full tw-px-4 tw-mb-4"
+        >
+          <AppButton
+            :label="t('settings.resetTitle')"
+            :color="$q.dark.isActive ? 'white' : 'black'"
+            :text-color="$q.dark.isActive ? 'black' : 'white'"
+            class="full-width"
+            @click="resetStorage"
+          />
+        </div>
       </div>
     </q-scroll-area>
   </q-drawer>
@@ -66,6 +86,7 @@ import AppButton from './base/AppButton.vue';
 import { CurrencyOption, LanguageOption, MenuItem, ThemeOption } from '@/types';
 import { QVueGlobals } from 'quasar/dist/types/globals';
 import { useI18n } from 'vue-i18n';
+import { storage } from '@/utils/storage';
 
 const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
@@ -82,7 +103,7 @@ defineProps({
   },
 });
 
-defineEmits<{
+const emit = defineEmits<{
   'update:drawerOpen': [value: boolean];
   navigate: [MenuItem];
 }>();
@@ -148,4 +169,36 @@ const onSystemPreferenceChange = (value: boolean) => {
 };
 
 const drawerWidth = computed(() => ($q.screen.lt.sm ? $q.screen.width : 380));
+
+const resetStorage = () => {
+  $q.dialog({
+    title: t('settings.resetTitle'),
+    message: t('settings.resetConfirm'),
+    class: $q.dark.isActive ? 'bg-dark text-white' : 'bg-light text-black',
+    ok: {
+      label: t('common.yes'),
+      textColor: $q.dark.isActive ? 'black' : 'white',
+      color: $q.dark.isActive ? 'white' : 'black',
+    },
+    cancel: {
+      label: t('common.no'),
+      textColor: $q.dark.isActive ? 'white' : 'black',
+      color: 'transparent',
+    },
+    persistent: true,
+  }).onOk(() => {
+    storage.clear();
+    $q.notify({
+      type: 'positive',
+      message: t('settings.resetSuccess'),
+      position: 'top',
+      timeout: 1000,
+      classes: 'notification-center',
+    });
+    setTimeout(() => {
+      emit('update:drawerOpen', false);
+      window.location.reload();
+    }, 1200);
+  });
+};
 </script>

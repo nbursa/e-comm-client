@@ -171,6 +171,7 @@ const addToCart = (product: Product) => {
   scrollToTop();
   $q.notify({
     color: 'positive',
+    position: 'top',
     message: t('singleProduct.itemAdded'),
     icon: 'check_circle',
   });
@@ -291,6 +292,7 @@ const fetchProductDetails = async () => {
     console.warn('Error fetching product:', error);
     $q.notify({
       color: 'negative',
+      position: 'top',
       message: 'Failed to fetch product details.',
       icon: 'error',
     });

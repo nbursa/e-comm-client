@@ -125,6 +125,7 @@ const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
   $q.notify({
     color: 'positive',
+    position: 'top',
     message: t('products.itemAdded'),
     icon: 'check_circle',
   });
