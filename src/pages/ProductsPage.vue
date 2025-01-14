@@ -153,6 +153,16 @@ const fetchCategories = async () => {
     }
 
     const response = await fetch(`${apiUrl}/products/categories`);
+
+    if (!response.ok) {
+      console.warn(`API returned ${response.status} for categories`);
+      if (categories.value.length) {
+        return;
+      }
+      categories.value = ['all'];
+      return;
+    }
+
     categories.value = await response.json();
     productCache.setCategoryCache(categories.value);
   } catch (error) {
@@ -165,8 +175,10 @@ const fetchCategories = async () => {
 const fetchProducts = async (category = 'all') => {
   $q.loading.show();
   try {
-    if (productCache.isCacheValid(category)) {
-      const cached = productCache.getCache(category);
+    const cacheKey = category !== 'all' ? `product_${category}` : category;
+
+    if (productCache.isCacheValid(cacheKey)) {
+      const cached = productCache.getCache(cacheKey);
       if (cached) {
         products.value = cached.products;
         return;
@@ -176,11 +188,16 @@ const fetchProducts = async (category = 'all') => {
     const response = await fetch(
       `${apiUrl}/products${category !== 'all' ? `/category/${category}` : ''}`,
     );
-    products.value = await response.json();
-    productCache.setCache(products.value, category);
+
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+
+    const data = await response.json();
+    products.value = data;
+    productCache.setCache(data, cacheKey);
   } catch (error) {
     console.error('Error fetching products:', error);
-    products.value = [];
   } finally {
     $q.loading.hide();
   }

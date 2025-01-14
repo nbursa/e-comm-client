@@ -110,15 +110,18 @@ import { scroll } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils';
+import { useProductStore } from '@/stores/products';
 
 const { getVerticalScrollPosition } = scroll;
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
+
 const route = useRoute();
 const router = useRouter();
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
 const { t } = useI18n();
+const productCache = useProductStore();
 
 const product = ref<Product>({
   id: 0,
@@ -251,8 +254,23 @@ const goBack = () => {
 const fetchProductDetails = async () => {
   const { slug } = route.params;
   $q.loading.show();
+
   try {
+    const viewedCache = productCache.getCache('viewed');
+    if (viewedCache) {
+      const found = viewedCache.products.find((p) => p.id === Number(slug));
+      if (found) {
+        product.value = found;
+        return;
+      }
+    }
+
     const response = await fetch(`${apiUrl}/products/${slug}`);
+
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+
     const data = await response.json();
     product.value = {
       id: data.id,
@@ -267,12 +285,18 @@ const fetchProductDetails = async () => {
       quantity: data.quantity,
       rating: data.rating,
     };
-  } catch {
+
+    productCache.setCache([product.value], 'viewed');
+  } catch (error) {
+    console.warn('Error fetching product:', error);
     $q.notify({
       color: 'negative',
       message: 'Failed to fetch product details.',
       icon: 'error',
     });
+    if (!product.value.id) {
+      router.push('/products');
+    }
   } finally {
     $q.loading.hide();
   }

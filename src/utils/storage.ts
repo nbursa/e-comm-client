@@ -6,6 +6,13 @@ interface StorageOptions {
   version?: string;
 }
 
+interface StorageValue {
+  timestamp: number;
+  version: string;
+  expiration: number | null;
+  [key: string]: unknown;
+}
+
 export const storage = {
   get: (key: string) => {
     try {
@@ -27,7 +34,7 @@ export const storage = {
         return parsed;
       }
 
-      return data[key]?.value || data[key] || null;
+      return data[key] || null;
     } catch (error) {
       console.error('Storage read error:', error);
       return null;
@@ -38,12 +45,21 @@ export const storage = {
     try {
       const wrapper = localStorage.getItem(STORAGE_KEY) || '{}';
       const data = JSON.parse(wrapper);
-      data[key] = {
-        value,
+
+      const entry: StorageValue = {
         timestamp: Date.now(),
         version: options?.version || '1.0',
         expiration: options?.expiration || null,
       };
+
+      if (typeof value === 'object' && value !== null) {
+        Object.assign(entry, value);
+      } else {
+        entry.data = value;
+      }
+
+      data[key] = entry;
+
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       if (DEBUG) {
         console.info(`Storage: saved ${key}`);
