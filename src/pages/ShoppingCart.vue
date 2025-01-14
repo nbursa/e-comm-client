@@ -184,6 +184,7 @@ const removeItem = (id: number) => {
     cartStore.removeItem(id);
     $q.notify({
       color: 'positive',
+      timeout: 1000,
       message: t('cart.itemRemoved'),
       icon: 'delete',
       position: 'top',

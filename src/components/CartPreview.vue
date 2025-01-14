@@ -66,6 +66,7 @@ const openCart = () => {
     $q.notify({
       color: 'negative',
       position: 'top',
+      timeout: 1000,
       message: 'Cart is empty, add some products to cart first.',
       icon: 'error',
     });

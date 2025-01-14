@@ -126,6 +126,7 @@ const addToCart = (product: Product) => {
   $q.notify({
     color: 'positive',
     position: 'top',
+    timeout: 1000,
     message: t('products.itemAdded'),
     icon: 'check_circle',
   });

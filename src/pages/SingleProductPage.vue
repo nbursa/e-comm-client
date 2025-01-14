@@ -172,6 +172,7 @@ const addToCart = (product: Product) => {
   $q.notify({
     color: 'positive',
     position: 'top',
+    timeout: 1000,
     message: t('singleProduct.itemAdded'),
     icon: 'check_circle',
   });
@@ -293,6 +294,7 @@ const fetchProductDetails = async () => {
     $q.notify({
       color: 'negative',
       position: 'top',
+      timeout: 1000,
       message: 'Failed to fetch product details.',
       icon: 'error',
     });
