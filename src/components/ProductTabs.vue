@@ -83,7 +83,7 @@ const theme = computed(() => ({
 }));
 
 const stickyTopValue = computed(() => {
-  return $q.screen.gt.xs ? '54px' : '70px';
+  return $q.screen.gt.xs ? '50px' : '70px';
 });
 
 watch(
