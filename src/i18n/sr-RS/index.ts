@@ -50,6 +50,7 @@ export default {
     clearCacheSuccess: 'Keš uspešno očišćen.',
     resetDescription: 'Resetuj sva podešenja na podrazumevane vrednosti',
     resetButton: 'Resetuj sva podešenja',
+    saveSettings: 'Sačuvaj podešavanja',
   },
   home: {
     title: 'Dobrodošli na E-Kom platformu',

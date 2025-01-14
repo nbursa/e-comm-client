@@ -132,7 +132,7 @@ const emit = defineEmits<{
 
 const theme = computed(() => ({
   drawerBackground: $q.dark.isActive
-    ? 'linear-gradient(135deg,  #77312B 0%, #1A202C 50%)'
+    ? 'linear-gradient(135deg,  #0D1117 0%, #1A202C 50%)'
     : 'linear-gradient(135deg, #FFFFFF 10%, #BFB48F 70%)',
   buttonBackgroundColor: $q.dark.isActive ? 'white' : 'black',
   buttonTextColor: $q.dark.isActive ? 'black' : 'white',

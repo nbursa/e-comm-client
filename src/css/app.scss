@@ -7,12 +7,10 @@
 @import 'q-pagination.scss';
 // @import 'q-notify.scss';
 // @import 'q-dialog.scss';
-// @import 'q-item.scss';
+@import 'q-item.scss';
 @import 'q-card.scss';
 @import 'q-btn.scss';
 @import 'q-select.scss';
-
-$grey: #77312b;
 
 html {
   background-color: black;

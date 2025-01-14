@@ -1,5 +1,4 @@
 const STORAGE_KEY = 'e-comm-shop';
-const DEBUG = import.meta.env.DEV;
 const CACHE_KEYS = ['cart', 'exchange_rates', 'products'] as const;
 const SETTINGS_KEYS = ['user_settings'] as const;
 
@@ -27,9 +26,7 @@ export const storage = {
         try {
           parsed = JSON.parse(oldData);
         } catch {
-          if (DEBUG) {
-            console.info(`Migration: ${key} contains non-JSON data:`, oldData);
-          }
+          console.info(`Migration: ${key} contains non-JSON data:`, oldData);
         }
         storage.set(key, parsed);
         localStorage.removeItem(key);
@@ -63,9 +60,6 @@ export const storage = {
       data[key] = entry;
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      if (DEBUG) {
-        console.info(`Storage: saved ${key}`);
-      }
     } catch (error) {
       console.error('Storage write error:', error);
     }

@@ -107,7 +107,7 @@ export default defineConfig((ctx: { modeName: string }) => {
           black: '#121212',
           white: '#FFFFFF',
           'light-page': 'linear-gradient(135deg, #BFB48F 0%, #FFFFFF 50%, #BFB48F 80%)',
-          'dark-page': 'linear-gradient(135deg, #1A202C 30%, #77312B 50%, #1A202C 70%)',
+          'dark-page': 'linear-gradient(135deg, #1A202C 30%, #0D1117 50%, #1A202C 70%)',
         },
         dark: true,
       },

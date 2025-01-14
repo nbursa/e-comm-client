@@ -10,8 +10,8 @@
 
     <div class="!tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
       <PageInfoText
-        class="!tw-m-0 tw-p-1 !tw-text-[10px] sm:!tw-text-xs"
-        color="red"
+        class="!tw-m-0 tw-p-1 !tw-text-xs"
+        :color="isDark ? 'white' : 'black'"
         :description="$t('home.description')"
       />
     </div>
@@ -38,7 +38,7 @@ const isDark = computed(() => userStore.settings.theme === 'dark');
 const footerStyle = computed(() => {
   return {
     background: isDark.value
-      ? '#1A202C'
+      ? '#0D1117'
       : 'linear-gradient(135deg, rgb(255, 255, 255) 10%, rgb(191, 180, 143) 70%)',
   };
 });

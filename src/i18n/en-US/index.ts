@@ -50,6 +50,7 @@ export default {
     clearCacheSuccess: 'Cache cleared successfully',
     resetDescription: 'Reset all settings to default values',
     resetButton: 'Reset All Settings',
+    saveSettings: 'Save Settings',
   },
   home: {
     title: 'Welcome to E-Comm Platform',

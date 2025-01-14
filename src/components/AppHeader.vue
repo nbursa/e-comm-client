@@ -74,7 +74,7 @@ const isAnimating = ref(false);
 const totalItems = computed(() => cartStore.totalItems);
 
 const buttonSize = computed(() => {
-  if ($q.screen.lt.sm) return 'xl';
+  if ($q.screen.lt.sm) return 'lg';
   if ($q.screen.lt.md) return 'md';
   return 'md';
 });
@@ -86,7 +86,7 @@ const themeStyles = computed(() => {
   if (darkMode.value) {
     if (scrolled.value) {
       return {
-        background: 'linear-gradient(135deg, #77312B 0%, #1A202C 50%)',
+        background: 'linear-gradient(135deg, #0D1117 0%, #1A202C 50%)',
         color: 'white',
       };
     } else {

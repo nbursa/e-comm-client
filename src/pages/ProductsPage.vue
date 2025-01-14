@@ -113,7 +113,6 @@ const isScrolledBtn = computed(() => props.scrollOffset > 300);
 
 const scrollToTop = () => {
   const scrollArea = document.querySelector('.q-page-container') as HTMLElement;
-  console.log('scrollArea', scrollArea.offsetHeight);
   if (scrollArea) {
     scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
   } else {

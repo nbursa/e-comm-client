@@ -11,10 +11,7 @@ $shadow-white: 10px 14px 10px rgba(255, 255, 255, 0.05);
 
 .product.q-card {
   background: var(--q-white) !important;
-  backdrop-filter: blur(15px);
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
   transition:
     box-shadow 0.3s ease,
     transform 0.3s ease;
@@ -25,23 +22,17 @@ $shadow-white: 10px 14px 10px rgba(255, 255, 255, 0.05);
       0 4px 8px rgba(0, 0, 0, 0.1);
     transform: translateY(-4px);
   }
-  // &:hover {
-  //   background-color: rgba(var(--q-light-rgb), 0) !important;
-  // }
+
   &.q-card--dark {
     background: var(--q-dark) !important;
-    backdrop-filter: blur(15px);
-    box-shadow:
-      0 4px 8px rgba(255, 255, 255, 0.1),
-      0 2px 4px rgba(255, 255, 255, 0.1);
     transition:
       box-shadow 0.3s ease,
       transform 0.3s ease;
 
     &:hover {
       box-shadow:
-        0 8px 16px rgba(255, 255, 255, 0.1),
-        0 4px 8px rgba(255, 255, 255, 0.1);
+        0 2px 4px rgba(255, 255, 255, 0.1),
+        0 1px 2px rgba(255, 255, 255, 0.1);
       transform: translateY(-4px);
     }
     &.overlay {

@@ -7,7 +7,11 @@
       @update:drawer-open="toggleDrawer"
     />
 
-    <MobileDrawer :menu-items="mobileMenuItems" :drawer-open="drawerOpen" @navigate="navigate" />
+    <MobileDrawer
+      v-model:drawer-open="drawerOpen"
+      :menu-items="mobileMenuItems"
+      @navigate="navigate"
+    />
 
     <q-scroll-area ref="scrollContainer" class="tw-w-full tw-h-full">
       <q-page-container class="tw-mx-auto tw-max-w-screen-xl">

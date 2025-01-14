@@ -1,7 +1,10 @@
 <template>
   <q-page padding>
-    <div v-if="cartStore.items.length === 0" class="text-center q-pa-xl">
-      <q-icon name="shopping_cart" size="6rem" :color="color" />
+    <div
+      v-if="cartStore.items.length === 0"
+      class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-screen -tw-mt-32"
+    >
+      <q-icon name="shopping_cart" size="4rem" :color="color" />
       <h5 class="q-mb-md" :color="color">{{ $t('cart.emptyCart') }}</h5>
       <q-btn to="/products" :color="color" :text-color="text" :label="$t('cart.continue')" />
     </div>
@@ -9,9 +12,11 @@
     <div v-else class="tw-container tw-max-w-screen-xl tw-mx-auto">
       <div class="row q-col-gutter-lg">
         <div class="col-12 col-md-8 tw-space-y-4">
-          <q-item
+          <q-card
             v-for="item in cartStore.items"
             :key="item.id"
+            flat
+            bordered
             class="tw-flex tw-flex-col md:tw-flex-row md:!tw-justify-between !tw-gap-3 tw-p-3 tw-rounded-md"
             :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
           >
@@ -32,7 +37,7 @@
               <q-item-label class="text-subtitle2 text-weight-medium tw-truncate">
                 {{ item.name || item.title }}
               </q-item-label>
-              <q-item-label caption class="!tw-text-xs">
+              <q-item-label caption class="!tw-text-xs" :class="isDark && '!tw-text-white'">
                 {{ formatPrice(item.price) }} {{ $t('cart.each') }}
               </q-item-label>
 
@@ -75,7 +80,7 @@
                 @click="removeItem(item.id)"
               />
             </q-item-section>
-          </q-item>
+          </q-card>
         </div>
 
         <!-- Order Summary -->

@@ -50,6 +50,7 @@ export default {
     clearCacheSuccess: 'Cache vidé avec succès.',
     resetDescription: 'Réinitialiser tous les paramètres aux valeurs par défaut',
     resetButton: 'Réinitialiser tous les paramètres',
+    saveSettings: 'Enregistrer les paramètres',
   },
   home: {
     title: 'Bienvenue sur notre Plateforme E-Comm',
