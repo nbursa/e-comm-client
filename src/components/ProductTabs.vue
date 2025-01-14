@@ -74,12 +74,6 @@ const theme = computed(() => ({
   activeTextColor: $q.dark.isActive ? 'dark' : 'black',
   backgroundColor: $q.dark.isActive ? 'white' : 'black',
   textColor: $q.dark.isActive ? 'black' : 'white',
-  // buttonBackgroundColor: $q.dark.isActive ? 'dark' : 'light',
-  // buttonTextColor: $q.dark.isActive ? 'black' : 'white',
-  // paginationColor: $q.dark.isActive ? 'light' : 'dark',
-  // paginationTextColor: $q.dark.isActive ? 'white' : 'black',
-  // paginationActiveColor: $q.dark.isActive ? 'white' : 'dark',
-  // paginationActiveTextColor: $q.dark.isActive ? 'black' : 'white',
 }));
 
 const stickyTopValue = computed(() => {
