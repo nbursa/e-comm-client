@@ -146,8 +146,8 @@ const router = useRouter();
 const { t } = useI18n();
 
 const isDark = computed(() => $q.dark.isActive);
-const color = computed(() => (isDark.value ? 'light' : 'dark'));
-const text = computed(() => (isDark.value ? 'dark' : 'light'));
+const color = computed(() => (isDark.value ? 'white' : 'dark'));
+const text = computed(() => (isDark.value ? 'dark' : 'white'));
 
 const imageUrl = (imagePath: string) => {
   return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
@@ -171,11 +171,11 @@ const removeItem = (id: number) => {
     message: t('cart.deleteMessage'),
     cancel: {
       color: 'grey',
-      flat: true,
+      outline: true,
       label: t('cart.cancel'),
     },
     ok: {
-      color: 'negative',
+      color: color.value,
       flat: true,
       label: t('cart.delete'),
     },
@@ -195,6 +195,12 @@ const removeItem = (id: number) => {
 <style lang="scss" scoped>
 .custom-dialog {
   border-radius: 8px;
+  box-shadow: none !important;
+
+  &.q-card,
+  &.q-card--dark {
+    box-shadow: none !important;
+  }
 
   .q-dialog__title {
     font-size: 1rem;

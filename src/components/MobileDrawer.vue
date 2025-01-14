@@ -3,7 +3,7 @@
     :model-value="drawerOpen"
     side="right"
     :width="drawerWidth"
-    :overlay="true"
+    overlay
     behavior="desktop"
     class="drawer"
     :style="{ background: theme.drawerBackground }"
