@@ -6,7 +6,7 @@ import { storage } from '@/utils/storage';
 export const useCartStore = defineStore('cart', () => {
   const CART_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-  const items = ref<Product[]>(storage.get('cart') || []);
+  const items = ref<Product[]>(Array.isArray(storage.get('cart')) ? storage.get('cart') : []);
 
   const totalItems = computed(() => items.value.reduce((total, item) => total + item.quantity, 0));
 
