@@ -37,6 +37,18 @@ export default {
     resetTitle: 'Reset Cache',
     resetConfirm: 'This will clear all stored data. Are you sure?',
     resetSuccess: 'App data cleared successfully',
+    preferences: 'Preferences',
+    appearance: 'Appearance',
+    dataManagement: 'Data Management',
+    clearSettingsTitle: 'Clear Settings',
+    clearCache: 'Clear Cache',
+    clearCacheDescription: 'Clear product cache and reload latest data',
+    clearCacheButton: 'Clear Cache',
+    clearCacheTitle: 'Clear Cache',
+    clearCacheConfirm: 'Are you sure you want to clear the product cache?',
+    clearCacheSuccess: 'Cache cleared successfully',
+    resetDescription: 'Reset all settings to default values',
+    resetButton: 'Reset All Settings'
   },
   home: {
     title: 'Welcome to E-Comm Platform',

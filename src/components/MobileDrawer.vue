@@ -31,11 +31,11 @@
 
         <q-separator :color="theme.separatorColor" class="tw-w-10/12 !tw-mt-4 !tw-mb-6" />
 
-        <h2 class="text-h6 tw-mb-4">{{ $t('settings.title') }}</h2>
+        <h2 class="text-h6 tw-mb-2">{{ $t('settings.title') }}</h2>
 
-        <h4 class="text-subtitle1 tw-mb-4 tw-mr-auto tw-px-4">
+        <h6 class="text-subtitle2 text-weight-regular tw-mb-4 tw-mr-auto tw-px-4">
           {{ $t('settings.themeSettings') }}
-        </h4>
+        </h6>
 
         <LanguageSelector
           v-model="currentLanguage"
@@ -55,20 +55,42 @@
           @update:use-system-preference="onSystemPreferenceChange"
         />
 
-        <h4 class="text-subtitle1 tw-my-4 tw-mr-auto tw-px-4">
-          {{ $t('settings.otherSettings') }}
-        </h4>
+        <h6 class="text-subtitle2 text-weight-regular tw-mb-4 tw-mr-auto tw-px-4">
+          {{ $t('settings.dataManagement') }}
+        </h6>
 
-        <div
-          class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-full tw-px-4 tw-mb-4"
-        >
-          <AppButton
-            :label="t('settings.resetTitle')"
-            :color="$q.dark.isActive ? 'white' : 'black'"
-            :text-color="$q.dark.isActive ? 'black' : 'white'"
-            class="full-width"
-            @click="resetStorage"
-          />
+        <div class="tw-flex tw-flex-col tw-gap-4 tw-px-4">
+          <q-card flat class="!tw-bg-transparent">
+            <q-card-section>
+              <div class="text-body2">{{ $t('settings.clearCache') }}</div>
+              <div class="text-caption">{{ $t('settings.clearCacheDescription') }}</div>
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn
+                flat
+                :class="$q.dark.isActive ? 'bg-light text-black' : 'bg-dark text-white'"
+                @click="clearProducts"
+              >
+                {{ $t('settings.clearCacheButton') }}
+              </q-btn>
+            </q-card-actions>
+          </q-card>
+
+          <q-card flat class="!tw-bg-transparent">
+            <q-card-section>
+              <div class="text-body2">{{ $t('settings.clearSettingsTitle') }}</div>
+              <div class="text-caption">{{ $t('settings.resetDescription') }}</div>
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn
+                flat
+                :class="$q.dark.isActive ? 'bg-light text-black' : 'bg-dark text-white'"
+                @click="clearSettings"
+              >
+                {{ $t('settings.resetButton') }}
+              </q-btn>
+            </q-card-actions>
+          </q-card>
         </div>
       </div>
     </q-scroll-area>
@@ -170,7 +192,7 @@ const onSystemPreferenceChange = (value: boolean) => {
 
 const drawerWidth = computed(() => ($q.screen.lt.sm ? $q.screen.width : 380));
 
-const resetStorage = () => {
+const clearProducts = () => {
   $q.dialog({
     title: t('settings.resetTitle'),
     message: t('settings.resetConfirm'),
@@ -187,7 +209,7 @@ const resetStorage = () => {
     },
     persistent: true,
   }).onOk(() => {
-    storage.clear();
+    storage.clearProductsCache();
     $q.notify({
       type: 'positive',
       message: t('settings.resetSuccess'),
@@ -201,4 +223,53 @@ const resetStorage = () => {
     }, 1200);
   });
 };
+
+const clearSettings = () => {
+  $q.dialog({
+    title: t('settings.clearCacheTitle'),
+    message: t('settings.clearCacheConfirm'),
+    ok: {
+      label: t('common.yes'),
+      flat: true,
+      color: $q.dark.isActive ? 'grey-4' : 'grey-8',
+    },
+    cancel: {
+      label: t('common.no'),
+      flat: true,
+    },
+  }).onOk(() => {
+    storage.clearUserSettings();
+    $q.notify({
+      type: 'positive',
+      message: t('settings.clearCacheSuccess'),
+      position: 'top',
+      timeout: 1000,
+    });
+  });
+};
+
+// const resetStorage = () => {
+//   $q.dialog({
+//     title: t('settings.resetTitle'),
+//     message: t('settings.resetConfirm'),
+//     ok: {
+//       label: t('common.yes'),
+//       flat: true,
+//       color: 'negative',
+//     },
+//     cancel: {
+//       label: t('common.no'),
+//       flat: true,
+//     },
+//   }).onOk(() => {
+//     storage.clear();
+//     $q.notify({
+//       type: 'positive',
+//       message: t('settings.resetSuccess'),
+//       position: 'top',
+//       timeout: 1000,
+//     });
+//     window.location.reload();
+//   });
+// };
 </script>

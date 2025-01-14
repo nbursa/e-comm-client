@@ -1,5 +1,7 @@
 const STORAGE_KEY = 'e-comm-shop';
 const DEBUG = import.meta.env.DEV;
+const CACHE_KEYS = ['cart', 'exchange_rates', 'products'] as const;
+const SETTINGS_KEYS = ['user_settings'] as const;
 
 interface StorageOptions {
   expiration?: number;
@@ -82,6 +84,36 @@ export const storage = {
 
   clear: () => {
     localStorage.setItem(STORAGE_KEY, '{}');
+  },
+
+  clearProductsCache: () => {
+    try {
+      const wrapper = localStorage.getItem(STORAGE_KEY) || '{}';
+      const data = JSON.parse(wrapper);
+
+      CACHE_KEYS.forEach((key) => {
+        delete data[key];
+      });
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+      console.error('Storage clear cache error:', error);
+    }
+  },
+
+  clearUserSettings: () => {
+    try {
+      const wrapper = localStorage.getItem(STORAGE_KEY) || '{}';
+      const data = JSON.parse(wrapper);
+
+      SETTINGS_KEYS.forEach((key) => {
+        delete data[key];
+      });
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+      console.error('Storage clear settings error:', error);
+    }
   },
 
   getAll: () => {
