@@ -6,7 +6,7 @@
           <q-stepper
             v-model="step"
             vertical
-            class="checkout-stepper !tw-bg-transparent"
+            class="checkout-stepper !tw-bg-transparent full-width"
             color="none"
             :text-color="text"
             header-nav
@@ -20,7 +20,7 @@
               class="checkout-step"
               :header-nav="true"
             >
-              <q-card flat bordered>
+              <q-card flat bordered class="!tw-p-0">
                 <q-card-section>
                   <q-form ref="formRef" class="row q-col-gutter-md" @submit="validateShipping">
                     <div class="col-12 col-sm-6">
@@ -127,7 +127,7 @@
         <!-- Order Summary -->
         <div class="col-12 col-md-4">
           <q-item
-            class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 tw-rounded-md"
+            class="tw-flex tw-justify-between tw-flex-col tw-gap-4 sm:!tw-pt-4 sm:!tw-pb-3 tw-rounded-md"
             :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
           >
             <q-item-section class="tw-w-full">
@@ -392,6 +392,17 @@ onMounted(() => {
 
   :deep(.q-separator) {
     margin: 12px 0;
+  }
+}
+:deep(.q-stepper__step) {
+  .q-stepper__step-inner {
+    padding: 1rem 1.15rem;
+    .q-form {
+      padding-top: 1rem;
+    }
+    @media screen and (min-width: 600px) {
+      padding: 0 24px 32px 60px;
+    }
   }
 }
 </style>

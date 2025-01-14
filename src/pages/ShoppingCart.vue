@@ -20,7 +20,7 @@
               <q-img
                 :src="`${imageUrl(item.image)}`"
                 :ratio="1"
-                class="tw-w-full tw-h-44"
+                class="tw-w-full sm:tw-h-44"
                 fit="contain"
               />
             </q-item-section>
