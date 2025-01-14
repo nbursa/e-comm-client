@@ -3,12 +3,9 @@
     :class="[
       'sticky tw-transition-all tw-duration-300',
       isSticky
-        ? `tw-fixed tw-left-0 tw-w-screen tw-z-50 tw-px-3 tw-shadow-md !tw-py-0 !tw-text-xs tw-bg-[var(--q-bg-${theme.stickyBgColor})]`
+        ? `tw-fixed tw-left-0 tw-w-screen tw-z-50 tw-px-3 tw-shadow-md !tw-py-0 !tw-text-xs tw-bg-[var(--q-bg-${theme.stickyBgColor})] sticky-top`
         : '',
     ]"
-    :style="{
-      top: isSticky ? stickyTopValue : 'initial',
-    }"
   >
     <q-tabs
       v-model="localCategory"
@@ -76,9 +73,9 @@ const theme = computed(() => ({
   textColor: $q.dark.isActive ? 'black' : 'white',
 }));
 
-const stickyTopValue = computed(() => {
-  return $q.screen.gt.xs ? '50px' : '70px';
-});
+// const stickyTopValue = computed(() => {
+//   return $q.screen.gt.xs ? '61px !improtant' : '70px';
+// });
 
 watch(
   () => props.scrollOffset,
@@ -120,7 +117,15 @@ const formatCategoryLabel = (category: string) => {
 </script>
 
 <style lang="scss" scoped>
-.sticky label.q-field {
-  margin: 0 !important;
+.sticky {
+  label.q-field {
+    margin: 0 !important;
+  }
+}
+.sticky-top {
+  top: 54px !important;
+  @media (max-width: 600px) {
+    top: 71px !important;
+  }
 }
 </style>
