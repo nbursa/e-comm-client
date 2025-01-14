@@ -10,7 +10,7 @@
 
     <div class="!tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
       <PageInfoText
-        class="!tw-m-0 tw-p-1 !tw-text-xs"
+        class="!tw-m-0 tw-p-1 !tw-text-[10px] sm:!tw-text-xs"
         color="red"
         :description="$t('home.description')"
       />
