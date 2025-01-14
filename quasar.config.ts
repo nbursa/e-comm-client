@@ -17,6 +17,8 @@ export default defineConfig((ctx: { modeName: string }) => {
         VITE_RN: process.env.VITE_RN,
         VITE_RATES_API_URL: process.env.VITE_RATES_API_URL,
         VITE_EMAIL_ADMIN: process.env.VITE_EMAIL_ADMIN,
+        VITE_DEV: process.env.VITE_DEV,
+        VITE_STORAGE_KEY: process.env.VITE_STORAGE_KEY,
       },
       postcss: {
         plugins: ['tailwindcss', 'autoprefixer'],

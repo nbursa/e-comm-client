@@ -2,8 +2,11 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { setLanguage } from '@/boot/i18n';
 import { Currency, CurrencyOption, LanguageOption, ThemeOption, UserSettings } from '@/types';
+import { storage } from '@/utils/storage';
 
 export const useUserStore = defineStore('user', () => {
+  const USER_CACHE_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
+
   const settings = ref<UserSettings>({
     language: 'en-US',
     theme: 'light',
@@ -29,16 +32,19 @@ export const useUserStore = defineStore('user', () => {
   ]);
 
   const loadSettings = () => {
-    const stored = localStorage.getItem('user_settings');
-    if (stored) {
-      settings.value = JSON.parse(stored);
+    const stored = storage.get('user_settings');
+    if (stored && !storage.isExpired('user_settings')) {
+      settings.value = stored as UserSettings;
     } else {
       saveSettings();
     }
   };
 
   const saveSettings = () => {
-    localStorage.setItem('user_settings', JSON.stringify(settings.value));
+    storage.set('user_settings', settings.value, {
+      expiration: USER_CACHE_DURATION,
+      version: '1.0',
+    });
   };
 
   const setTheme = (theme: ThemeOption['value']) => {

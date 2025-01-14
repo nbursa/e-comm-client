@@ -1,5 +1,6 @@
-import { Product } from '@/types';
 import { defineStore } from 'pinia';
+import { Product } from '@/types';
+import { storage } from '@/utils/storage';
 
 export interface CacheEntry {
   products: Product[];
@@ -12,68 +13,58 @@ export interface CategoryCache {
   timestamp: number;
 }
 
-export const useProductCacheStore = defineStore('productCache', {
-  state: () => ({
-    cacheMap: new Map<string, CacheEntry>(),
-    categoryCache: null as CategoryCache | null,
-    cacheDuration: 5 * 60 * 1000,
-  }),
+export const useProductStore = defineStore('products', () => {
+  const PRODUCTS_EXPIRATION = 5 * 60 * 1000;
 
-  actions: {
-    getCacheKey(category: string = 'all'): string {
-      return `products_${category}`;
-    },
+  const getCacheKey = (category: string = 'all'): string => {
+    return `products_${category}`;
+  };
 
-    setCache(products: Product[], category: string = 'all'): void {
-      const entry: CacheEntry = {
-        products,
-        timestamp: Date.now(),
-        category,
-      };
-      this.cacheMap.set(this.getCacheKey(category), entry);
-      localStorage.setItem(this.getCacheKey(category), JSON.stringify(entry));
-    },
+  const setCache = (products: Product[], category: string = 'all'): void => {
+    const entry: CacheEntry = {
+      products,
+      timestamp: Date.now(),
+      category,
+    };
+    storage.set(getCacheKey(category), entry, {
+      expiration: PRODUCTS_EXPIRATION,
+      version: '1.0',
+    });
+  };
 
-    getCache(category: string = 'all'): CacheEntry | null {
-      const entry = this.cacheMap.get(this.getCacheKey(category));
-      if (entry) return entry;
+  const getCache = (category: string = 'all'): CacheEntry | null => {
+    return storage.get(getCacheKey(category));
+  };
 
-      const stored = localStorage.getItem(this.getCacheKey(category));
-      if (!stored) return null;
+  const isCacheValid = (category: string = 'all'): boolean => {
+    return !storage.isExpired(getCacheKey(category));
+  };
 
-      const parsedEntry = JSON.parse(stored) as CacheEntry;
-      this.cacheMap.set(this.getCacheKey(category), parsedEntry);
-      return parsedEntry;
-    },
+  const setCategoryCache = (categories: string[]): void => {
+    const cache: CategoryCache = {
+      categories,
+      timestamp: Date.now(),
+    };
+    storage.set('categories', cache, {
+      expiration: PRODUCTS_EXPIRATION,
+      version: '1.0',
+    });
+  };
 
-    isCacheValid(category: string = 'all'): boolean {
-      const entry = this.getCache(category);
-      if (!entry) return false;
-      return Date.now() - entry.timestamp < this.cacheDuration;
-    },
+  const getCategoryCache = (): CategoryCache | null => {
+    return storage.get('categories');
+  };
 
-    setCategoryCache(categories: string[]) {
-      this.categoryCache = {
-        categories,
-        timestamp: Date.now(),
-      };
-      localStorage.setItem('categories', JSON.stringify(this.categoryCache));
-    },
+  const isCategoryCacheValid = (): boolean => {
+    return !storage.isExpired('categories');
+  };
 
-    getCategoryCache(): CategoryCache | null {
-      if (this.categoryCache) return this.categoryCache;
-
-      const stored = localStorage.getItem('categories');
-      if (!stored) return null;
-
-      this.categoryCache = JSON.parse(stored);
-      return this.categoryCache;
-    },
-
-    isCategoryCacheValid(): boolean {
-      const cache = this.getCategoryCache();
-      if (!cache) return false;
-      return Date.now() - cache.timestamp < this.cacheDuration;
-    },
-  },
+  return {
+    setCache,
+    getCache,
+    isCacheValid,
+    setCategoryCache,
+    getCategoryCache,
+    isCategoryCacheValid,
+  };
 });

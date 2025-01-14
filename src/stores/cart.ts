@@ -1,47 +1,65 @@
-import { Product } from '@/types';
 import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
+import { Product } from '@/types';
+import { storage } from '@/utils/storage';
 
-export const useCartStore = defineStore('cart', {
-  state: () => ({
-    items: JSON.parse(localStorage.getItem('cart') || '[]') as Product[],
-  }),
+export const useCartStore = defineStore('cart', () => {
+  const CART_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-  getters: {
-    totalItems: (state) => state.items.reduce((total, item) => total + item.quantity, 0),
-    totalPrice: (state) =>
-      state.items.reduce((total, item) => total + item.quantity * item.price, 0),
-  },
+  const items = ref<Product[]>(storage.get('cart') || []);
 
-  actions: {
-    addItem(item: Product) {
-      const existingItem = this.items.find((i) => i.id === item.id);
-      if (existingItem) {
-        existingItem.quantity += item.quantity;
+  const totalItems = computed(() => items.value.reduce((total, item) => total + item.quantity, 0));
+
+  const totalPrice = computed(() =>
+    items.value.reduce((total, item) => total + item.quantity * item.price, 0),
+  );
+
+  const addItem = (item: Product) => {
+    const existingItem = items.value.find((i) => i.id === item.id);
+    if (existingItem) {
+      existingItem.quantity += item.quantity;
+    } else {
+      items.value.push({ ...item });
+    }
+    saveCart();
+  };
+
+  const updateQuantity = (id: number, quantity: number) => {
+    const item = items.value.find((i) => i.id === id);
+    if (item) {
+      if (quantity < 1) {
+        removeItem(id);
       } else {
-        this.items.push({ ...item });
+        item.quantity = quantity;
       }
-      this.saveCart();
-    },
-    updateQuantity(id: number, quantity: number) {
-      const item = this.items.find((i) => i.id === id);
-      if (item) {
-        if (quantity < 1) {
-          this.removeItem(id);
-        } else {
-          item.quantity = quantity;
-        }
-      }
-      this.saveCart();
-    },
-    removeItem(id: number) {
-      this.items = this.items.filter((item) => item.id !== id);
-    },
-    saveCart() {
-      localStorage.setItem('cart', JSON.stringify(this.items));
-    },
-    clearCart() {
-      this.items = [];
-      this.saveCart();
-    },
-  },
+    }
+    saveCart();
+  };
+
+  const removeItem = (id: number) => {
+    items.value = items.value.filter((item) => item.id !== id);
+    saveCart();
+  };
+
+  const saveCart = () => {
+    storage.set('cart', items.value, {
+      expiration: CART_EXPIRATION,
+      version: '1.0',
+    });
+  };
+
+  const clearCart = () => {
+    items.value = [];
+    saveCart();
+  };
+
+  return {
+    items,
+    totalItems,
+    totalPrice,
+    addItem,
+    updateQuantity,
+    removeItem,
+    clearCart,
+  };
 });

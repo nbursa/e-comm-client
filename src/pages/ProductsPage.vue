@@ -55,7 +55,7 @@
 import { computed, ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-import { useProductCacheStore } from '@/stores/products';
+import { useProductStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/stores/cart';
@@ -73,7 +73,7 @@ const props = defineProps({
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
-const productCache = useProductCacheStore();
+const productCache = useProductStore();
 const { t } = useI18n();
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
