@@ -24,6 +24,7 @@ export default {
     products: 'Produits',
     settings: 'Paramètres',
     ecomm: 'E-comm',
+    cart: 'Panier',
   },
   settings: {
     title: 'Paramètres',

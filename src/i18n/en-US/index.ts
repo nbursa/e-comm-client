@@ -24,6 +24,7 @@ export default {
     products: 'Products',
     settings: 'Settings',
     ecomm: 'E-comm',
+    cart: 'Cart',
   },
   settings: {
     title: 'Settings',
@@ -48,7 +49,7 @@ export default {
     clearCacheConfirm: 'Are you sure you want to clear the product cache?',
     clearCacheSuccess: 'Cache cleared successfully',
     resetDescription: 'Reset all settings to default values',
-    resetButton: 'Reset All Settings'
+    resetButton: 'Reset All Settings',
   },
   home: {
     title: 'Welcome to E-Comm Platform',

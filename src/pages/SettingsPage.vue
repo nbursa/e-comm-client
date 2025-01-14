@@ -49,7 +49,7 @@
           <q-card-actions align="right">
             <q-btn
               flat
-              :class="isDark ? 'bg-light text-black' : 'bg-dark text-white'"
+              :class="isDark ? 'bg-white text-black' : 'bg-dark text-white'"
               @click="clearCache"
             >
               {{ $t('settings.clearCacheButton') }}
@@ -66,7 +66,7 @@
           <q-card-actions align="right">
             <q-btn
               flat
-              :class="isDark ? 'bg-light text-black' : 'bg-dark text-white'"
+              :class="isDark ? 'bg-white text-black' : 'bg-dark text-white'"
               @click="resetStorage"
             >
               {{ $t('settings.resetButton') }}
@@ -156,11 +156,14 @@ const clearCache = () => {
     ok: {
       label: t('common.yes'),
       flat: true,
-      color: $q.dark.isActive ? 'grey-4' : 'grey-8',
+      color: $q.dark.isActive ? 'bg-white' : 'bg-dark',
+      textColor: $q.dark.isActive ? 'text-black' : 'text-white',
     },
     cancel: {
       label: t('common.no'),
       flat: true,
+      color: 'transparent',
+      textColor: $q.dark.isActive ? 'white' : 'black',
     },
   }).onOk(() => {
     storage.clearProductsCache();
@@ -180,11 +183,14 @@ const resetStorage = () => {
     ok: {
       label: t('common.yes'),
       flat: true,
-      color: 'negative',
+      color: $q.dark.isActive ? 'bg-white' : 'bg-dark',
+      textColor: $q.dark.isActive ? 'text-black' : 'text-white',
     },
     cancel: {
       label: t('common.no'),
       flat: true,
+      color: 'transparent',
+      textColor: $q.dark.isActive ? 'white' : 'black',
     },
   }).onOk(() => {
     storage.clearUserSettings();

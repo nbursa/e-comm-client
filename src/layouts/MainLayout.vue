@@ -45,6 +45,7 @@ const menuItems = computed(() => [
 const mobileMenuItems = computed(() => [
   { label: t('main.home'), path: '/' },
   { label: t('main.products'), path: '/products' },
+  { label: t('main.cart'), path: '/cart' },
 ]);
 
 const navigate = (item: { label: string; path: string }) => {

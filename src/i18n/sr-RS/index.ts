@@ -24,6 +24,7 @@ export default {
     products: 'Proizvodi',
     settings: 'Podešavanja',
     ecomm: 'E-Kom',
+    cart: 'Korpa',
   },
   settings: {
     title: 'Podešavanja',

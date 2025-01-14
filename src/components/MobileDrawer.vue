@@ -59,16 +59,16 @@
           {{ $t('settings.dataManagement') }}
         </h6>
 
-        <div class="tw-flex tw-flex-col tw-gap-4 tw-px-4">
+        <div class="tw-flex tw-flex-col tw-gap-4">
           <q-card flat class="!tw-bg-transparent">
-            <q-card-section>
+            <q-card-section class="!tw-p-0">
               <div class="text-body2">{{ $t('settings.clearCache') }}</div>
               <div class="text-caption">{{ $t('settings.clearCacheDescription') }}</div>
             </q-card-section>
             <q-card-actions align="right">
               <q-btn
                 flat
-                :class="$q.dark.isActive ? 'bg-light text-black' : 'bg-dark text-white'"
+                :class="$q.dark.isActive ? 'bg-white text-black' : 'bg-dark text-white'"
                 @click="clearProducts"
               >
                 {{ $t('settings.clearCacheButton') }}
@@ -84,7 +84,7 @@
             <q-card-actions align="right">
               <q-btn
                 flat
-                :class="$q.dark.isActive ? 'bg-light text-black' : 'bg-dark text-white'"
+                :class="$q.dark.isActive ? 'bg-white text-black' : 'bg-dark text-white'"
                 @click="clearSettings"
               >
                 {{ $t('settings.resetButton') }}
@@ -196,16 +196,17 @@ const clearProducts = () => {
   $q.dialog({
     title: t('settings.resetTitle'),
     message: t('settings.resetConfirm'),
-    class: $q.dark.isActive ? 'bg-dark text-white' : 'bg-light text-black',
     ok: {
       label: t('common.yes'),
-      textColor: $q.dark.isActive ? 'black' : 'white',
-      color: $q.dark.isActive ? 'white' : 'black',
+      flat: true,
+      color: $q.dark.isActive ? 'bg-white' : 'bg-dark',
+      textColor: $q.dark.isActive ? 'text-black' : 'text-white',
     },
     cancel: {
       label: t('common.no'),
-      textColor: $q.dark.isActive ? 'white' : 'black',
+      flat: true,
       color: 'transparent',
+      textColor: $q.dark.isActive ? 'white' : 'black',
     },
     persistent: true,
   }).onOk(() => {
@@ -231,11 +232,14 @@ const clearSettings = () => {
     ok: {
       label: t('common.yes'),
       flat: true,
-      color: $q.dark.isActive ? 'grey-4' : 'grey-8',
+      color: $q.dark.isActive ? 'bg-white' : 'bg-dark',
+      textColor: $q.dark.isActive ? 'text-black' : 'text-white',
     },
     cancel: {
       label: t('common.no'),
       flat: true,
+      color: 'transparent',
+      textColor: $q.dark.isActive ? 'white' : 'black',
     },
   }).onOk(() => {
     storage.clearUserSettings();
@@ -247,29 +251,4 @@ const clearSettings = () => {
     });
   });
 };
-
-// const resetStorage = () => {
-//   $q.dialog({
-//     title: t('settings.resetTitle'),
-//     message: t('settings.resetConfirm'),
-//     ok: {
-//       label: t('common.yes'),
-//       flat: true,
-//       color: 'negative',
-//     },
-//     cancel: {
-//       label: t('common.no'),
-//       flat: true,
-//     },
-//   }).onOk(() => {
-//     storage.clear();
-//     $q.notify({
-//       type: 'positive',
-//       message: t('settings.resetSuccess'),
-//       position: 'top',
-//       timeout: 1000,
-//     });
-//     window.location.reload();
-//   });
-// };
 </script>
