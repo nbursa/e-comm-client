@@ -125,7 +125,7 @@ const formatCategoryLabel = (category: string) => {
 .sticky-top {
   top: 54px !important;
   @media (max-width: 600px) {
-    top: 71px !important;
+    top: 62px !important;
   }
 }
 </style>
