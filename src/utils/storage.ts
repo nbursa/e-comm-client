@@ -1,5 +1,5 @@
 const STORAGE_KEY = 'e-comm-shop';
-const DEBUG = import.meta.env.VITE_DEV;
+const DEBUG = import.meta.env.DEV;
 
 interface StorageOptions {
   expiration?: number;

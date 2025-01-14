@@ -304,7 +304,6 @@ const goBack = () => {
 
 const showOrderConfirmation = () => {
   showDialog.value = true;
-  console.log('showDialog', showDialog.value);
 };
 
 const handleOrderConfirmation = () => {
