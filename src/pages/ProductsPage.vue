@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="tw-relative">
-    <h5 class="q-my-md tw-font-serif">{{ $t('products.title') }}</h5>
+    <h5 class="tw-font-serif">{{ $t('products.title') }}</h5>
     <ProductTabs
       :selected-category="selectedCategory"
       :categories="categories"

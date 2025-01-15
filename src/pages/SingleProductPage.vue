@@ -101,7 +101,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
@@ -151,6 +151,8 @@ const translateY = ref(0);
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
+const scrollToTop = inject('scrollToTop') as () => void;
+
 const imageLocalUrl = (imagePath: string) => {
   return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
 };
@@ -158,13 +160,6 @@ const imageLocalUrl = (imagePath: string) => {
 const imageStyle = computed(() => ({
   transform: `translate(${translateX.value}px, ${translateY.value}px) scale(${isZoomed.value ? 2 : 1})`,
 }));
-
-const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  });
-};
 
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });

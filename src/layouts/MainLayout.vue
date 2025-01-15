@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="tw-w-screen tw-h-screen text-body1 scroll">
+  <q-layout view="hHh lpR fFf" class="tw-w-screen tw-h-screen">
     <AppHeader
       :menu-items="menuItems"
       :drawer-open="drawerOpen"
@@ -7,13 +7,31 @@
       @update:drawer-open="toggleDrawer"
     />
 
-    <MobileDrawer
-      v-model:drawer-open="drawerOpen"
-      :menu-items="mobileMenuItems"
-      @navigate="navigate"
-    />
-
-    <q-scroll-area ref="scrollContainer" class="tw-w-full tw-h-full">
+    <q-scroll-area
+      ref="scrollContainer"
+      class="tw-w-full tw-h-full"
+      :thumb-style="{
+        right: '2px',
+        borderRadius: '5px',
+        backgroundColor: '#027be3',
+        width: '5px',
+        opacity: '0.75',
+      }"
+      :bar-style="{
+        right: '2px',
+        borderRadius: '9px',
+        backgroundColor: '#027be3',
+        width: '9px',
+        opacity: '0.2',
+      }"
+      :vertical-thumb-style="{ opacity: scrolling ? '0.75' : '0' }"
+      :delay="300"
+      :distance="3"
+      :thumb-style-delay="100"
+      :content-style="{ overscrollBehavior: 'contain' }"
+      :content-active-style="{ overscrollBehavior: 'contain' }"
+      behavior="smooth"
+    >
       <q-page-container class="tw-mx-auto tw-max-w-screen-xl">
         <router-view :scroll-position="position" :scroll-offset="scrollPosition" />
       </q-page-container>
@@ -22,6 +40,12 @@
     </q-scroll-area>
 
     <AppFooter />
+
+    <MobileDrawer
+      v-model:drawer-open="drawerOpen"
+      :menu-items="mobileMenuItems"
+      @navigate="navigate"
+    />
   </q-layout>
 </template>
 
@@ -44,6 +68,7 @@ const { t } = useI18n();
 const drawerOpen = ref(false);
 const scrollPosition = ref(0);
 const scrollContainer = ref<ScrollAreaRef | null>(null);
+const scrolling = ref(false);
 const position = ref(0);
 
 const menuItems = computed(() => [
@@ -82,6 +107,7 @@ const scrollHandler = (details: {
   inflectionPoint: { top: number; left: number };
 }) => {
   scrollPosition.value = details.position.top;
+  scrolling.value = true;
 };
 
 provide('scrollToTop', scrollToTop);
