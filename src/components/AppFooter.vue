@@ -4,7 +4,7 @@
     :style="footerStyle"
   >
     <div
-      class="tw-min-h-4 tw-w-full !tw-flex tw-flex-row !tw-justify-between tw-items-center tw-gap-4"
+      class="tw-min-h-8 sm:tw-min-h-4 tw-w-full !tw-flex tw-flex-row !tw-justify-between tw-items-center tw-gap-4"
     >
       <PageInfoText
         class="!tw-m-0 tw-p-0 !tw-text-xs"
@@ -13,7 +13,7 @@
       />
       <q-btn
         v-if="isScrolledBtn"
-        class="!tw-relative tw-bottom-0 tw-right-0 !tw-py-0 tw-px-4 tw-z-40"
+        class="!tw-relative tw-bottom-0 tw-right-0 sm:!tw-py-0 tw-px-4 tw-z-40"
         color="white"
         text-color="black"
         icon="arrow_upward"
