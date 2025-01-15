@@ -12,8 +12,23 @@
 @import 'q-btn.scss';
 @import 'q-select.scss';
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  scroll-behavior: smooth;
+}
+
 html {
   background-color: black;
+  font-size: 20px;
+}
+
+body {
+  font-size: 100%;
 }
 
 .body--light {
@@ -31,21 +46,6 @@ h4,
 h5,
 h6 {
   margin: 0;
-}
-
-html,
-body {
-  height: 100%;
-  overflow: auto;
-  scroll-behavior: smooth;
-}
-
-html {
-  font-size: 20px;
-}
-
-body {
-  font-size: 100%;
 }
 
 .price-text {
