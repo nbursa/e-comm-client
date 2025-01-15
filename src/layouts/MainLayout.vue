@@ -1,16 +1,15 @@
 <template>
   <q-layout view="hHh lpR fff" class="tw-relative">
-    <AppHeader
-      :menu-items="menuItems"
-      :drawer-open="drawerOpen"
-      :scroll-offset="scrollPosition"
-      @update:drawer-open="toggleDrawer"
-    />
-
-    <q-page-container class="tw-mx-auto tw-max-w-screen-xl">
+    <q-page-container class="tw-mx-auto">
+      <AppHeader
+        :menu-items="menuItems"
+        :drawer-open="drawerOpen"
+        :scroll-offset="scrollPosition"
+        @update:drawer-open="toggleDrawer"
+      />
       <q-scroll-area
         ref="scrollContainer"
-        class="tw-w-full"
+        class="!tw-w-full"
         :style="{
           height: `calc(var(--content-height) - env(safe-area-inset-bottom, 20px))`,
         }"
@@ -45,15 +44,14 @@
         <q-scroll-observer @scroll="scrollHandler" />
         <div class="tw-h-[env(safe-area-inset-bottom,20px)]"></div>
       </q-scroll-area>
+      <AppFooter />
+
+      <MobileDrawer
+        v-model:drawer-open="drawerOpen"
+        :menu-items="mobileMenuItems"
+        @navigate="navigate"
+      />
     </q-page-container>
-
-    <AppFooter />
-
-    <MobileDrawer
-      v-model:drawer-open="drawerOpen"
-      :menu-items="mobileMenuItems"
-      @navigate="navigate"
-    />
   </q-layout>
 </template>
 
@@ -128,7 +126,7 @@ onMounted(() => {
 
 <style lang="scss">
 :root {
-  --header-height: 55px;
+  --header-height: 54px;
   --footer-height: 35px;
   --content-height: calc(100vh - var(--header-height) - var(--footer-height));
 }
