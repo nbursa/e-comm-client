@@ -5,7 +5,7 @@
   >
     <AnimatedLights :scroll-position="scrollOffset" direction="toRight" />
 
-    <div class="!tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
+    <div class="tw-min-h-8 !tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
       <PageInfoText
         class="!tw-m-0 tw-p-0 !tw-text-xs"
         :color="isDark ? 'white' : 'black'"
