@@ -41,7 +41,7 @@
 
     <q-btn
       v-if="isScrolledBtn"
-      class="!tw-fixed !tw-bottom-12 !tw-right-4 !tw-p-2 tw-z-40"
+      class="!tw-fixed !tw-bottom-12 !tw-right-4 !tw-p-3 tw-z-40"
       round
       color="white"
       text-color="black"

@@ -9,28 +9,10 @@
       />
       <q-scroll-area
         ref="scrollContainer"
-        class="!tw-w-full"
+        class="!tw-w-full !min-h-full"
         :style="{
           height: `calc(var(--content-height) - env(safe-area-inset-bottom, 20px))`,
         }"
-        :thumb-style="{
-          right: '2px',
-          borderRadius: '5px',
-          backgroundColor: '#027be3',
-          width: '5px',
-          opacity: '0.75',
-        }"
-        :bar-style="{
-          right: '2px',
-          borderRadius: '9px',
-          backgroundColor: '#027be3',
-          width: '9px',
-          opacity: '0.2',
-        }"
-        :vertical-thumb-style="{ opacity: scrolling ? '0.75' : '0' }"
-        :delay="300"
-        :distance="3"
-        :thumb-style-delay="100"
         :content-style="{ overscrollBehavior: 'contain' }"
         :content-active-style="{ overscrollBehavior: 'contain' }"
         behavior="smooth"
@@ -115,12 +97,29 @@ const scrollHandler = (details: {
 
 provide('scrollToTop', scrollToTop);
 
+const setViewportHeight = () => {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+};
+
 onMounted(() => {
-  const setVH = () => {
-    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+  // const setVH = () => {
+  //   document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+  // };
+  // setVH();
+  // window.addEventListener('resize', setVH);
+  setViewportHeight();
+  window.addEventListener('resize', setViewportHeight);
+
+  // For iOS Safari address bar height changes
+  window.addEventListener('orientationchange', () => {
+    setTimeout(setViewportHeight, 100);
+  });
+
+  return () => {
+    window.removeEventListener('resize', setViewportHeight);
+    window.removeEventListener('orientationchange', setViewportHeight);
   };
-  setVH();
-  window.addEventListener('resize', setVH);
 });
 </script>
 
