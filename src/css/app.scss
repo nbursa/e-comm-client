@@ -12,12 +12,23 @@
 @import 'q-btn.scss';
 @import 'q-select.scss';
 
+$light-lighter: #d1c9ad;
+
 :root {
   --vh: 1vh;
   --header-height: 54px;
   --footer-height: 20px;
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
   --content-height: calc(100dvh - var(--header-height) - var(--footer-height));
+  --q-bg-light: #f7f7f7;
+  --q-bg-dark: #1d1d1d;
+  --q-bg-white: #ffffff;
+  --q-bg-black: #000000;
+  --q-bg-pale: #f9f9f9;
+  // --q-light-lighter: #d1c9ad;
+  --q-light-lighter: #{$light-lighter};
+  // --q-bg-light-lighter: var(--q-light-lighter);
+  --q-bg-light-lighter: #d1c9ad;
 }
 
 @supports (-webkit-touch-callout: none) {
