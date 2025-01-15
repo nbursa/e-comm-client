@@ -3,7 +3,7 @@
     :class="[
       'sticky tw-transition-all tw-duration-300',
       isSticky
-        ? `tw-fixed tw-left-0 tw-w-screen tw-z-50 tw-px-3 tw-shadow-md !tw-py-0 !tw-text-xs tw-bg-[var(--q-bg-${theme.stickyBgColor})] sticky-top`
+        ? `tw-fixed tw-left-0 tw-w-screen tw-z-50 tw-px-3 tw-shadow-md !tw-py-0  tw-bg-[var(--q-bg-${theme.stickyBgColor})] tw-top-0`
         : '',
     ]"
   >
@@ -62,7 +62,7 @@ const emit = defineEmits(['update:selectedCategory']);
 const $q = useQuasar() as QVueGlobals;
 
 const isSticky = ref(false);
-const stickyContainer = ref<HTMLElement | null>(null);
+// const stickyContainer = ref<HTMLElement | null>(null);
 const localCategory = ref(props.selectedCategory);
 
 const theme = computed(() => ({
@@ -77,17 +77,25 @@ const theme = computed(() => ({
 //   return $q.screen.gt.xs ? '61px !improtant' : '70px';
 // });
 
+// watch(
+//   () => props.scrollOffset,
+//   (newOffset) => {
+//     const headerHeight = 70;
+//     isSticky.value = newOffset > headerHeight;
+
+//     if (isSticky.value && stickyContainer.value) {
+//       stickyContainer.value.style.top = `${headerHeight}px`;
+//     } else if (stickyContainer.value) {
+//       stickyContainer.value.style.top = 'initial';
+//     }
+//   },
+//   { immediate: true },
+// );
+
 watch(
   () => props.scrollOffset,
   (newOffset) => {
-    const headerHeight = 70;
-    isSticky.value = newOffset > headerHeight;
-
-    if (isSticky.value && stickyContainer.value) {
-      stickyContainer.value.style.top = `${headerHeight}px`;
-    } else if (stickyContainer.value) {
-      stickyContainer.value.style.top = 'initial';
-    }
+    isSticky.value = newOffset > 0;
   },
   { immediate: true },
 );
@@ -121,8 +129,5 @@ const formatCategoryLabel = (category: string) => {
   label.q-field {
     margin: 0 !important;
   }
-}
-.sticky-top {
-  top: 53px !important;
 }
 </style>

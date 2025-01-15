@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fff" class="safe-bottom tw-h-screen tw-w-screen">
+  <q-layout view="hHh lpR fff" class="tw-relative">
     <AppHeader
       :menu-items="menuItems"
       :drawer-open="drawerOpen"
@@ -7,37 +7,45 @@
       @update:drawer-open="toggleDrawer"
     />
 
-    <q-scroll-area
-      ref="scrollContainer"
-      class="tw-w-full tw-h-full"
-      :thumb-style="{
-        right: '2px',
-        borderRadius: '5px',
-        backgroundColor: '#027be3',
-        width: '5px',
-        opacity: '0.75',
-      }"
-      :bar-style="{
-        right: '2px',
-        borderRadius: '9px',
-        backgroundColor: '#027be3',
-        width: '9px',
-        opacity: '0.2',
-      }"
-      :vertical-thumb-style="{ opacity: scrolling ? '0.75' : '0' }"
-      :delay="300"
-      :distance="3"
-      :thumb-style-delay="100"
-      :content-style="{ overscrollBehavior: 'contain' }"
-      :content-active-style="{ overscrollBehavior: 'contain' }"
-      behavior="smooth"
-    >
-      <q-page-container class="tw-mx-auto tw-max-w-screen-xl">
-        <router-view :scroll-position="position" :scroll-offset="scrollPosition" />
-      </q-page-container>
+    <q-page-container class="tw-mx-auto tw-max-w-screen-xl">
+      <q-scroll-area
+        ref="scrollContainer"
+        class="tw-w-full"
+        :style="{
+          height: `calc(var(--content-height) - env(safe-area-inset-bottom, 20px))`,
+        }"
+        :thumb-style="{
+          right: '2px',
+          borderRadius: '5px',
+          backgroundColor: '#027be3',
+          width: '5px',
+          opacity: '0.75',
+        }"
+        :bar-style="{
+          right: '2px',
+          borderRadius: '9px',
+          backgroundColor: '#027be3',
+          width: '9px',
+          opacity: '0.2',
+        }"
+        :vertical-thumb-style="{ opacity: scrolling ? '0.75' : '0' }"
+        :delay="300"
+        :distance="3"
+        :thumb-style-delay="100"
+        :content-style="{ overscrollBehavior: 'contain' }"
+        :content-active-style="{ overscrollBehavior: 'contain' }"
+        behavior="smooth"
+      >
+        <router-view
+          :scroll-position="position"
+          :scroll-offset="scrollPosition"
+          class="tw-pb-safe"
+        />
 
-      <q-scroll-observer @scroll="scrollHandler" />
-    </q-scroll-area>
+        <q-scroll-observer @scroll="scrollHandler" />
+        <div class="tw-h-[env(safe-area-inset-bottom,20px)]"></div>
+      </q-scroll-area>
+    </q-page-container>
 
     <AppFooter />
 
@@ -117,3 +125,16 @@ onMounted(() => {
   window.addEventListener('resize', setVH);
 });
 </script>
+
+<style lang="scss">
+:root {
+  --header-height: 55px;
+  --footer-height: 35px;
+  --content-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+.q-layout {
+  min-height: 100vh;
+  height: 100vh;
+}
+</style>

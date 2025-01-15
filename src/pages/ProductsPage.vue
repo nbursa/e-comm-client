@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="tw-relative">
+  <q-page padding>
     <h5 class="tw-font-serif">{{ $t('products.title') }}</h5>
     <ProductTabs
       :selected-category="selectedCategory"
@@ -78,8 +78,6 @@ const router = useRouter();
 const productCache = useProductStore();
 const { t } = useI18n();
 
-const apiUrl = import.meta.env.VITE_API_URL || '';
-
 const products = ref<Product[]>([]);
 const currentPage = ref(1);
 const itemsPerPage = 10;
@@ -146,7 +144,7 @@ const fetchCategories = async () => {
       }
     }
 
-    const response = await fetch(`${apiUrl}/products/categories`);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/products/categories`);
 
     if (!response.ok) {
       console.warn(`API returned ${response.status} for categories`);
@@ -180,7 +178,7 @@ const fetchProducts = async (category = 'all') => {
     }
 
     const response = await fetch(
-      `${apiUrl}/products${category !== 'all' ? `/category/${category}` : ''}`,
+      `${import.meta.env.VITE_API_URL}/products${category !== 'all' ? `/category/${category}` : ''}`,
     );
 
     if (!response.ok) {
