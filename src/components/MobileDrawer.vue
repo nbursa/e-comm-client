@@ -24,7 +24,7 @@
       />
     </div>
 
-    <q-scroll-area class="tw-h-full">
+    <q-scroll-area ref="scrollContainer" class="tw-h-full">
       <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-pt-8 tw-pb-16">
         <q-list class="tw-w-full tw-text-center tw-px-4">
           <q-item
@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed, PropType, watch, ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { useUserStore } from '@/stores/user';
 import LanguageSelector from '@/components/base/LanguageSelector.vue';
@@ -124,12 +124,15 @@ import { CurrencyOption, LanguageOption, MenuItem, ThemeOption } from '@/types';
 import { QVueGlobals } from 'quasar/dist/types/globals';
 import { useI18n } from 'vue-i18n';
 import { storage } from '@/utils/storage';
+import { ScrollAreaRef } from '@/types';
+
+const scrollContainer = ref<ScrollAreaRef | null>(null);
 
 const userStore = useUserStore();
 const $q = useQuasar() as QVueGlobals;
 const { t } = useI18n();
 
-defineProps({
+const props = defineProps({
   drawerOpen: {
     type: Boolean as PropType<boolean>,
     required: true,
@@ -144,6 +147,16 @@ const emit = defineEmits<{
   'update:drawerOpen': [value: boolean];
   navigate: [MenuItem];
 }>();
+
+watch(
+  () => props.drawerOpen,
+  (newVal) => {
+    if (newVal && scrollContainer.value) {
+      scrollContainer.value?.setScrollPosition('vertical', 0, 300);
+    }
+  },
+  { immediate: true },
+);
 
 const buttonSize = computed(() => {
   if ($q.screen.lt.sm) return 'lg';
@@ -207,11 +220,11 @@ const useSystemPreference = computed({
   set: (value: boolean) => userStore.setSystemPreference(value),
 });
 
+const drawerWidth = computed(() => ($q.screen.lt.sm ? $q.screen.width : 380));
+
 const onSystemPreferenceChange = (value: boolean) => {
   useSystemPreference.value = value;
 };
-
-const drawerWidth = computed(() => ($q.screen.lt.sm ? $q.screen.width : 380));
 
 const clearProducts = () => {
   $q.dialog({
