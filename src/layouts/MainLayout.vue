@@ -1,12 +1,12 @@
 <template>
   <q-layout view="hHh lpR fFf" class="tw-relative">
+    <AppHeader
+      :menu-items="menuItems"
+      :drawer-open="drawerOpen"
+      :scroll-offset="scrollPosition"
+      @update:drawer-open="toggleDrawer"
+    />
     <q-page-container class="tw-mx-auto">
-      <AppHeader
-        :menu-items="menuItems"
-        :drawer-open="drawerOpen"
-        :scroll-offset="scrollPosition"
-        @update:drawer-open="toggleDrawer"
-      />
       <q-scroll-area
         ref="scrollContainer"
         class="!tw-w-full !min-h-full"
@@ -27,13 +27,13 @@
         <div class="tw-h-[env(safe-area-inset-bottom,20px)]"></div>
       </q-scroll-area>
       <AppFooter />
-
-      <MobileDrawer
-        v-model:drawer-open="drawerOpen"
-        :menu-items="mobileMenuItems"
-        @navigate="navigate"
-      />
     </q-page-container>
+
+    <MobileDrawer
+      v-model:drawer-open="drawerOpen"
+      :menu-items="mobileMenuItems"
+      @navigate="navigate"
+    />
   </q-layout>
 </template>
 
@@ -143,11 +143,12 @@ onMounted(() => {
 :root {
   --header-height: 54px;
   --footer-height: 35px;
-  --content-height: calc(100vh - var(--header-height) - var(--footer-height));
+  // --content-height: calc(100vh - var(--header-height) - var(--footer-height));
+  --content-height: 80px;
 }
 
 .q-layout {
-  min-height: 100vh;
-  height: 100vh;
+  min-height: 100dvh;
+  height: 100dvh;
 }
 </style>
