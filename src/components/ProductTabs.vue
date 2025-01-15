@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
 import { QVueGlobals } from 'quasar/dist/types/globals';
-import { ref, computed, watch, PropType } from 'vue';
+import { ref, computed, watch, PropType, inject } from 'vue';
 import CategorySelect from './CategorySelect.vue';
 
 const props = defineProps({
@@ -57,8 +57,8 @@ const props = defineProps({
   },
 });
 
+const scrollToTop = inject('scrollToTop') as () => void;
 const emit = defineEmits(['update:selectedCategory']);
-
 const $q = useQuasar() as QVueGlobals;
 
 const isSticky = ref(false);
@@ -113,6 +113,7 @@ watch(
   () => localCategory.value,
   (newCategory) => {
     emit('update:selectedCategory', newCategory);
+    scrollToTop();
   },
 );
 

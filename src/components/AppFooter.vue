@@ -14,8 +14,7 @@
       <q-btn
         v-if="isScrolledBtn"
         class="!tw-relative tw-bottom-0 tw-right-0 sm:!tw-py-0 tw-px-4 tw-z-40"
-        color="white"
-        text-color="black"
+        :class="isDark ? 'bg-white text-dark' : 'bg-black text-white'"
         icon="arrow_upward"
         @click="scrollToTop"
       />

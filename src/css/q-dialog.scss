@@ -1,21 +1,35 @@
-.q-dialog--modal {
-  .q-dialog .q-select__dialog {
-    max-width: 500px !important;
-    .q-virtual-scroll__content {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      justify-content: center;
-      justify-items: center;
-      text-align: center;
-      gap: 1rem;
-      padding: 0.45rem 0;
+.q-dialog {
+  &--modal {
+    .q-dialog__inner {
+      max-width: 500px !important;
+      width: 90vw !important;
+      margin: 20px auto;
     }
-  }
 
-  .q-item.q-router-link--active,
-  .q-item.q-item--active.q-item--dark.q-link {
-    background-color: var(--q-dark) !important;
-    color: var(--q-light) !important;
+    .q-select__dialog {
+      width: 100% !important;
+      max-width: 500px !important;
+
+      .q-virtual-scroll__content {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        justify-items: center;
+        text-align: center;
+        gap: 1rem;
+        padding: 0.45rem 0;
+
+        @media screen and (max-width: 599px) {
+          .q-item {
+            .q-item__section--main {
+              .q-item__label {
+                font-size: 16px !important;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
