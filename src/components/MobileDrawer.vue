@@ -9,9 +9,7 @@
     :style="{ background: theme.drawerBackground }"
     @update:model-value="$emit('update:drawerOpen', $event)"
   >
-    <div
-      class="tw-h-[54px] tw-flex tw-items-center tw-justify-between tw-px-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-800"
-    >
+    <div class="tw-h-[54px] tw-flex tw-items-center tw-justify-between tw-px-4">
       <div class="tw-flex-1"></div>
       <q-btn
         flat
