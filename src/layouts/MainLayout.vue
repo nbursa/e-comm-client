@@ -144,7 +144,9 @@ onMounted(() => {
   --header-height: 54px;
   --footer-height: 35px;
   --mobile-bottom-offset: 80px;
-  --content-height: calc(100vh - var(--header-height) - var(--footer-height));
+  --content-height: calc(
+    100vh - var(--header-height) - var(--footer-height) - var(--mobile-bottom-offset)
+  );
 }
 
 .q-layout {
