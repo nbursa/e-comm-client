@@ -1,11 +1,5 @@
 <template>
-  <div
-    :class="[
-      'sticky tw-transition-all tw-duration-300',
-      isSticky &&
-        `tw-fixed tw-top-0 tw-left-0 tw-w-screen tw-z-50 tw-px-3 tw-shadow-md !tw-py-0 tw-bg-${theme.stickyBgColor}`,
-    ]"
-  >
+  <div :class="['sticky', { 'is-sticky': isSticky }, `tw-bg-${theme.stickyBgColor}`]">
     <q-tabs
       v-model="localCategory"
       indicator-color="transparent"
@@ -103,3 +97,35 @@ const formatCategoryLabel = (category: string) => {
     .join(' ');
 };
 </script>
+
+<style lang="scss" scoped>
+.sticky {
+  position: sticky;
+  top: 0;
+  transition: all 0.3s ease-in-out;
+  transform: translateY(0);
+
+  &.is-sticky {
+    position: fixed;
+    left: 0;
+    width: 100vw;
+    z-index: 50;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    transform: translateY(0);
+    animation: slideDown 0.3s ease-out;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+</style>
