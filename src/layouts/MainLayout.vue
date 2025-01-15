@@ -138,19 +138,44 @@ onMounted(() => {
   };
 });
 </script>
-
 <style lang="scss">
 :root {
   --header-height: 54px;
   --footer-height: 35px;
-  --mobile-bottom-offset: 200px;
-  --content-height: calc(
-    100vh - var(--header-height) - var(--footer-height) - var(--mobile-bottom-offset)
-  );
+  --content-height: calc(100dvh - var(--header-height) - var(--footer-height));
+}
+
+/* Mobile devices */
+@media screen and (max-width: 599px) {
+  :root {
+    --mobile-bottom-offset: 100px;
+
+    @supports (-webkit-touch-callout: none) {
+      /* iOS specific */
+      --content-height: calc(
+        100dvh - var(--header-height) - var(--footer-height) - var(--mobile-bottom-offset) - env(
+            safe-area-inset-bottom,
+            20px
+          )
+      );
+    }
+
+    @supports not (-webkit-touch-callout: none) {
+      /* Android specific */
+      --content-height: calc(
+        100dvh - var(--header-height) - var(--footer-height) - var(--mobile-bottom-offset)
+      );
+    }
+  }
 }
 
 .q-layout {
   min-height: 100dvh;
   height: 100dvh;
+
+  @supports not (height: 100dvh) {
+    min-height: 100vh;
+    height: 100vh;
+  }
 }
 </style>
