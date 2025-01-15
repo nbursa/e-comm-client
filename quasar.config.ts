@@ -7,7 +7,7 @@ dotenv.config();
 export default defineConfig((ctx: { modeName: string }) => {
   return {
     preFetch: true,
-    boot: ['init', 'ga', 'i18n', 'axios', 'theme'],
+    boot: ['init', 'ga', 'i18n', 'axios', 'theme', 'lightbox'],
     css: ['app.scss'],
     extras: ['roboto-font', 'material-icons'],
     build: {
@@ -101,8 +101,8 @@ export default defineConfig((ctx: { modeName: string }) => {
           dark: '#1A202C',
           'dark-lighter': '#2D3748',
           'bg-dark': '#1A202C',
-          'dark-rgb': 'rgba(26, 32, 44, 0.75)',
-          'light-rgb': 'rgba(242, 239, 233, 0.75)',
+          'dark-rgb': 'rgba(26, 32, 44, 0.95)',
+          'light-rgb': 'rgba(242, 239, 233, 0.95)',
           light: '#BFB48F',
           'light-lighter': '#D1C9AD',
           'bg-light': '#BFB48F',

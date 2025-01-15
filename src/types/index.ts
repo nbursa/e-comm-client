@@ -15,6 +15,7 @@ export interface Product {
   description: string;
   category: string;
   image: string;
+  additionalImages?: string[];
   rating?: ProductRating;
   discount?: boolean;
 }
@@ -84,4 +85,9 @@ export interface MenuItem {
 
 export interface ScrollAreaRef {
   setScrollPosition: (axis: 'vertical' | 'horizontal', offset: number, duration?: number) => void;
+}
+
+export interface PreviewImage {
+  src: string;
+  name: string;
 }

@@ -34,6 +34,8 @@
       :menu-items="mobileMenuItems"
       @navigate="navigate"
     />
+
+    <ImagePreview v-model="imageStore.isOpen" :images="imageStore.images" />
   </q-layout>
 </template>
 
@@ -46,9 +48,12 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import { provide } from 'vue';
 import { ScrollAreaRef } from '@/types';
+import ImagePreview from '@/components/ImagePreview.vue';
+import { useImageStore } from '@/stores/images';
 
 const router = useRouter();
 const { t } = useI18n();
+const imageStore = useImageStore();
 
 const drawerOpen = ref(false);
 const scrollPosition = ref(0);
@@ -100,7 +105,6 @@ provide('scrollToTop', scrollToTop);
 const setViewportHeight = () => {
   const visualViewport = window.visualViewport;
   if (visualViewport) {
-    console.log('Visual viewport height:', visualViewport.height);
     const vh = visualViewport.height * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   } else {

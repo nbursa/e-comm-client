@@ -71,32 +71,6 @@
         @click="goBack"
       />
     </div>
-
-    <!-- Image Overlay -->
-    <q-dialog v-model="showImageOverlay" maximized>
-      <q-card class="q-pa-md overlay" style="width: 100vw; height: 100vh; overflow: hidden">
-        <div class="row justify-between items-center q-mb-md">
-          <div class="text-caption tw-font-black">{{ product.name }}</div>
-          <q-btn flat dense round icon="close" @click="showImageOverlay = false" />
-        </div>
-        <q-img
-          :src="imageLocalUrl(product.image)"
-          :alt="imageUrl"
-          class="zoomable-image tw-cursor-pointer"
-          :class="{ 'zoom-in': isZoomed, 'zoom-out': !isZoomed }"
-          style="max-width: 100%; max-height: 100%"
-          :style="imageStyle"
-          fit="contain"
-          @click="toggleZoom"
-          @mouseenter="startHoverPanning"
-          @mousemove="panImage"
-          @mouseleave="stopPanning"
-          @touchstart="startTouchPanning"
-          @touchmove="panTouchImage"
-          @touchend="stopTouchPanning"
-        />
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -107,9 +81,10 @@ import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useI18n } from 'vue-i18n';
-import { Product } from '@/types';
+import { PreviewImage, Product } from '@/types';
 import { formatPrice } from '@/utils';
 import { useProductStore } from '@/stores/products';
+import { useImageStore } from '@/stores/images';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -119,6 +94,7 @@ const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
 const { t } = useI18n();
 const productCache = useProductStore();
+const imageStore = useImageStore();
 
 const product = ref<Product>({
   id: 0,
@@ -135,15 +111,6 @@ const product = ref<Product>({
   },
 });
 
-const showImageOverlay = ref(false);
-const imageUrl = ref('');
-const isZoomed = ref(false);
-const isPanning = ref(false);
-const startX = ref(0);
-const startY = ref(0);
-const translateX = ref(0);
-const translateY = ref(0);
-
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
@@ -153,9 +120,24 @@ const imageLocalUrl = (imagePath: string) => {
     : imagePath;
 };
 
-const imageStyle = computed(() => ({
-  transform: `translate(${translateX.value}px, ${translateY.value}px) scale(${isZoomed.value ? 2 : 1})`,
-}));
+const openImageOverlay = (mainImage: string) => {
+  const previewImages: PreviewImage[] = [
+    {
+      src: imageLocalUrl(mainImage),
+      name: product.value.name || product.value.title || '',
+    },
+  ];
+
+  if (product.value.additionalImages?.length) {
+    const additionalPreviewImages = product.value.additionalImages.map((image) => ({
+      src: imageLocalUrl(image),
+      name: product.value.name || product.value.title || '',
+    }));
+    previewImages.push(...additionalPreviewImages);
+  }
+
+  imageStore.openPreview(previewImages);
+};
 
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
@@ -167,77 +149,6 @@ const addToCart = (product: Product) => {
     message: t('singleProduct.itemAdded'),
     icon: 'check_circle',
   });
-};
-
-const openImageOverlay = (image: string) => {
-  imageUrl.value = image;
-  showImageOverlay.value = true;
-  isZoomed.value = false;
-};
-
-const toggleZoom = () => {
-  if (isZoomed.value) {
-    resetZoom();
-  } else {
-    isZoomed.value = true;
-  }
-};
-
-const resetZoom = () => {
-  isZoomed.value = false;
-  translateX.value = 0;
-  translateY.value = 0;
-};
-
-const startHoverPanning = (event: MouseEvent) => {
-  if (!isZoomed.value) {
-    toggleZoom();
-    return;
-  }
-  isPanning.value = true;
-  startX.value = event.clientX - translateX.value;
-  startY.value = event.clientY - translateY.value;
-};
-
-const startTouchPanning = (event: TouchEvent) => {
-  isPanning.value = true;
-  const touch = event.touches[0];
-  if (touch) {
-    startX.value = touch.clientX - translateX.value;
-    startY.value = touch.clientY - translateY.value;
-    document.addEventListener('touchmove', panTouchImage);
-    document.addEventListener('touchend', stopTouchPanning);
-  }
-};
-
-const panTouchImage = (event: TouchEvent) => {
-  if (!isZoomed.value || !isPanning.value) return;
-  const touch = event.touches[0];
-  if (touch) {
-    translateX.value = (touch.clientX - startX.value) * -1;
-    translateY.value = (touch.clientY - startY.value) * -1;
-  }
-};
-
-const panImage = (event: MouseEvent) => {
-  if (!isZoomed.value || !isPanning.value) return;
-  translateX.value = (event.clientX - startX.value) * -1;
-  translateY.value = (event.clientY - startY.value) * -1;
-};
-
-const stopPanning = () => {
-  if (!isZoomed.value) return;
-  isPanning.value = false;
-};
-
-const stopTouchPanning = () => {
-  if (!isZoomed.value) {
-    isZoomed.value = true;
-    return;
-  }
-  isPanning.value = false;
-  document.removeEventListener('touchmove', panTouchImage);
-  document.removeEventListener('touchend', stopTouchPanning);
 };
 
 const goBack = () => {
@@ -301,20 +212,3 @@ onMounted(() => {
   fetchProductDetails();
 });
 </script>
-
-<style lang="scss">
-.zoomable-image {
-  transition: transform 0.3s ease;
-  &.zoom-in {
-    cursor: grab;
-    transform: scale(2) translate(var(--translate-x, 0), var(--translate-y, 0));
-    transition: transform 0.3s ease;
-    will-change: transform;
-  }
-  &.zoom-out {
-    cursor: pointer;
-    transform: scale(1);
-    transition: transform 0.3s ease;
-  }
-}
-</style>

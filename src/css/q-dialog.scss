@@ -1,9 +1,9 @@
 .q-dialog {
   &--modal {
     .q-dialog__inner {
-      max-width: 500px !important;
-      width: 90vw !important;
-      margin: 20px auto;
+      width: 100vw !important;
+      height: 100vh !important;
+      margin: 0 !important;
     }
 
     .q-select__dialog {
