@@ -3,7 +3,9 @@
     :class="['tw-overflow-hidden tw-relative tw-px-2 !tw-py-1 md:tw-px-4', themeClasses]"
     :style="footerStyle"
   >
-    <div class="tw-min-h-8 !tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
+    <div
+      class="tw-min-h-4 tw-w-full !tw-flex tw-flex-row !tw-justify-between tw-items-center tw-gap-4"
+    >
       <PageInfoText
         class="!tw-m-0 tw-p-0 !tw-text-xs"
         :color="isDark ? 'white' : 'black'"
@@ -11,7 +13,7 @@
       />
       <q-btn
         v-if="isScrolledBtn"
-        class="!tw-relative tw-bottom-0 tw-right-0 tw-p-4 tw-z-40"
+        class="!tw-relative tw-bottom-0 tw-right-0 !tw-py-0 tw-px-4 tw-z-40"
         color="white"
         text-color="black"
         icon="arrow_upward"
