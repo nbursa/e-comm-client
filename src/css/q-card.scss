@@ -10,7 +10,7 @@ $shadow-white: 10px 14px 10px rgba(255, 255, 255, 0.05);
 }
 
 .product.q-card {
-  background: var(--q-white) !important;
+  background: var(--q-transparent) !important;
   box-shadow: none;
   transition:
     box-shadow 0.3s ease,
@@ -24,7 +24,6 @@ $shadow-white: 10px 14px 10px rgba(255, 255, 255, 0.05);
   }
 
   &.q-card--dark {
-    background: var(--q-dark) !important;
     transition:
       box-shadow 0.3s ease,
       transform 0.3s ease;
