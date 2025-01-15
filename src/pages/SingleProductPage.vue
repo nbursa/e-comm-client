@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding class="!tw-pb-16 md:tw-pb-24 !tw-pt-4">
     <div class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1200px">
       <div class="row items-stretch full-height" :class="{ 'col-reverse-md': $q.screen.md }">
         <div

@@ -40,7 +40,7 @@ const scrollToTop = inject('scrollToTop') as () => void;
 const userStore = useUserStore();
 
 const isDark = computed(() => userStore.settings.theme === 'dark');
-const isScrolledBtn = computed(() => props.scrollOffset > 300);
+const isScrolledBtn = computed(() => props.scrollOffset > 350);
 
 const footerStyle = computed(() => {
   return {

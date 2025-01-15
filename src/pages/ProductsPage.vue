@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding class="!tw-pb-16 !tw-pt-4">
     <h5 class="tw-font-serif">{{ $t('products.title') }}</h5>
     <ProductTabs
       :selected-category="selectedCategory"

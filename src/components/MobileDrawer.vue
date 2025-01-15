@@ -5,12 +5,12 @@
     :width="drawerWidth"
     overlay
     behavior="desktop"
-    class="drawer"
+    class="drawer tw-overflow-y-auto"
     :style="{ background: theme.drawerBackground }"
     @update:model-value="$emit('update:drawerOpen', $event)"
   >
     <q-scroll-area class="tw-h-full">
-      <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-pt-8">
+      <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-pt-8 tw-pb-16">
         <q-list class="tw-w-full tw-text-center tw-px-4">
           <q-item
             v-for="item in menuItems"

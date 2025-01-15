@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding class="!tw-pb-16 !tw-pt-4">
     <div
       v-if="cartStore.items.length === 0"
       class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-screen -tw-mt-32"

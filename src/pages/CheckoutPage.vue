@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding class="!tw-pb-16">
     <div class="tw-container tw-max-w-screen-xl tw-mx-auto">
       <div class="row q-col-gutter-md">
         <div class="col-12 col-md-8">
