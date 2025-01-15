@@ -9,7 +9,7 @@
       />
       <q-scroll-area
         ref="scrollContainer"
-        class="!tw-w-full !min-h-full"
+        class="!tw-w-full !min-h-full tw-pb-10 sm:tw-pb-0"
         :style="{
           height: `calc(var(--content-height) - env(safe-area-inset-bottom, 20px))`,
         }"
@@ -98,26 +98,42 @@ const scrollHandler = (details: {
 provide('scrollToTop', scrollToTop);
 
 const setViewportHeight = () => {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
+  // Use visual viewport for more accurate mobile height
+  const visualViewport = window.visualViewport;
+  if (visualViewport) {
+    console.log('Visual viewport height:', visualViewport.height);
+    const vh = visualViewport.height * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  } else {
+    // Fallback for browsers without visualViewport support
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
 };
 
 onMounted(() => {
-  // const setVH = () => {
-  //   document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-  // };
-  // setVH();
-  // window.addEventListener('resize', setVH);
   setViewportHeight();
-  window.addEventListener('resize', setViewportHeight);
 
-  // For iOS Safari address bar height changes
+  // Listen to visual viewport changes
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', setViewportHeight);
+    window.visualViewport.addEventListener('scroll', setViewportHeight);
+  } else {
+    window.addEventListener('resize', setViewportHeight);
+  }
+
+  // Handle orientation changes
   window.addEventListener('orientationchange', () => {
     setTimeout(setViewportHeight, 100);
   });
 
   return () => {
-    window.removeEventListener('resize', setViewportHeight);
+    if (window.visualViewport) {
+      window.visualViewport.removeEventListener('resize', setViewportHeight);
+      window.visualViewport.removeEventListener('scroll', setViewportHeight);
+    } else {
+      window.removeEventListener('resize', setViewportHeight);
+    }
     window.removeEventListener('orientationchange', setViewportHeight);
   };
 });
