@@ -1,0 +1,1 @@
+import{b as e}from"./index-DF1W0wiT.js";const g=e(({router:t})=>{const o="G-KN141HH496";t.afterEach(a=>{if(window.gtag&&o)try{window.gtag("config",o,{page_path:a.path,page_location:window.location.href,page_title:document.title||"E-Comm Platform"})}catch(r){console.error("GA tracking error:",r)}})});export{g as default};
