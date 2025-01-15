@@ -14,6 +14,10 @@
 
 :root {
   --vh: 1vh;
+  --header-height: 54px;
+  --footer-height: 35px;
+  --content-height: calc(100dvh - var(--header-height) - var(--footer-height));
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 @supports (-webkit-touch-callout: none) {
@@ -26,7 +30,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: 100dvh;
+  height: -webkit-fill-available;
   width: 100%;
   overflow: hidden;
   scroll-behavior: smooth;
@@ -35,9 +40,22 @@ body {
 html {
   background-color: black;
   font-size: 20px;
-  height: -webkit-fill-available;
-  @media screen and (max-width: 600px) {
-    padding-bottom: 80px !important;
+
+  @supports (-webkit-touch-callout: none) {
+    /* iOS specific */
+    min-height: -webkit-fill-available;
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+}
+
+.q-layout {
+  min-height: 100dvh;
+  height: 100dvh;
+
+  @supports not (height: 100dvh) {
+    /* Fallback for browsers that don't support dvh */
+    min-height: 100vh;
+    height: 100vh;
   }
 }
 

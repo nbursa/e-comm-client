@@ -9,7 +9,7 @@
       />
       <q-scroll-area
         ref="scrollContainer"
-        class="!tw-w-full !min-h-full sm:tw-pb-0"
+        class="!tw-w-full !min-h-full"
         :style="{
           height: `calc(var(--content-height) - env(safe-area-inset-bottom, 20px))`,
         }"
