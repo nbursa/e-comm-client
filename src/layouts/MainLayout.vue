@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fff" class="tw-relative">
+  <q-layout view="hHh lpR fFf" class="tw-relative">
     <q-page-container class="tw-mx-auto">
       <AppHeader
         :menu-items="menuItems"

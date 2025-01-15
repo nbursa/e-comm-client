@@ -48,6 +48,10 @@ html {
   }
 }
 
+.q-footer {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
 .q-layout {
   min-height: 100dvh;
   height: 100dvh;
