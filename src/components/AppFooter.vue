@@ -3,7 +3,7 @@
     :class="['tw-overflow-hidden tw-relative tw-px-2 !tw-py-1 md:tw-px-4', themeClasses]"
     :style="footerStyle"
   >
-    <AnimatedLights :scroll-position="scrollOffset" direction="toRight" />
+    <!-- <AnimatedLights :scroll-position="scrollOffset" direction="toRight" /> -->
 
     <div class="tw-min-h-8 !tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
       <PageInfoText
@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import PageInfoText from '@/components/base/PageInfoText.vue';
-import AnimatedLights from './base/AnimatedLights.vue';
+// import AnimatedLights from './base/AnimatedLights.vue';
 import { useUserStore } from '@/stores/user';
 import { computed, PropType, inject } from 'vue';
 
