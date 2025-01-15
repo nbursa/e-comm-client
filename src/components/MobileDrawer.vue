@@ -4,11 +4,26 @@
     side="right"
     :width="drawerWidth"
     overlay
-    behavior="desktop"
+    behavior="mobile"
     class="drawer tw-overflow-y-auto"
     :style="{ background: theme.drawerBackground }"
     @update:model-value="$emit('update:drawerOpen', $event)"
   >
+    <div
+      class="tw-h-[54px] tw-flex tw-items-center tw-justify-between tw-px-4 tw-border-b tw-border-gray-200 dark:tw-border-gray-800"
+    >
+      <div class="tw-flex-1"></div>
+      <q-btn
+        flat
+        round
+        dense
+        :size="buttonSize"
+        :color="$q.dark.isActive ? 'white' : 'black'"
+        icon="close"
+        @click="$emit('update:drawerOpen', false)"
+      />
+    </div>
+
     <q-scroll-area class="tw-h-full">
       <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-pt-8 tw-pb-16">
         <q-list class="tw-w-full tw-text-center tw-px-4">
@@ -129,6 +144,12 @@ const emit = defineEmits<{
   'update:drawerOpen': [value: boolean];
   navigate: [MenuItem];
 }>();
+
+const buttonSize = computed(() => {
+  if ($q.screen.lt.sm) return 'lg';
+  if ($q.screen.lt.md) return 'md';
+  return 'md';
+});
 
 const theme = computed(() => ({
   drawerBackground: $q.dark.isActive
