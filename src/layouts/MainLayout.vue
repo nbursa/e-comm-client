@@ -26,7 +26,7 @@
         <q-scroll-observer @scroll="scrollHandler" />
         <div class="tw-h-[env(safe-area-inset-bottom,20px)]"></div>
       </q-scroll-area>
-      <AppFooter />
+      <AppFooter :scroll-offset="scrollPosition" />
     </q-page-container>
 
     <MobileDrawer

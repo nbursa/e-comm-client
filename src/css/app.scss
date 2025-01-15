@@ -40,12 +40,6 @@ body {
 html {
   background-color: black;
   font-size: 20px;
-
-  @supports (-webkit-touch-callout: none) {
-    /* iOS specific */
-    min-height: -webkit-fill-available;
-    padding-bottom: var(--safe-area-inset-bottom);
-  }
 }
 
 .q-footer {

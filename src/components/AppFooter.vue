@@ -1,18 +1,23 @@
 <template>
   <q-footer
-    :class="[
-      'tw-text-center tw-py-0 tw-overflow-hidden tw-relative tw-px-2 md:tw-px-4',
-      themeClasses,
-    ]"
+    :class="['tw-overflow-hidden tw-relative tw-px-2 !tw-py-1 md:tw-px-4', themeClasses]"
     :style="footerStyle"
   >
     <AnimatedLights :scroll-position="scrollOffset" direction="toRight" />
 
     <div class="!tw-flex tw-flex-row tw-justify-center tw-items-center tw-gap-4">
       <PageInfoText
-        class="!tw-m-0 tw-p-1 !tw-text-xs"
+        class="!tw-m-0 tw-p-0 !tw-text-xs"
         :color="isDark ? 'white' : 'black'"
         :description="$t('home.description')"
+      />
+      <q-btn
+        v-if="isScrolledBtn"
+        class="!tw-relative tw-bottom-0 tw-right-0 tw-p-4 tw-z-40"
+        color="white"
+        text-color="black"
+        icon="arrow_upward"
+        @click="scrollToTop"
       />
     </div>
   </q-footer>
@@ -22,18 +27,21 @@
 import PageInfoText from '@/components/base/PageInfoText.vue';
 import AnimatedLights from './base/AnimatedLights.vue';
 import { useUserStore } from '@/stores/user';
-import { computed, PropType } from 'vue';
+import { computed, PropType, inject } from 'vue';
 
-defineProps({
+const props = defineProps({
   scrollOffset: {
     type: Number as PropType<number>,
     default: 0,
   },
 });
 
+const scrollToTop = inject('scrollToTop') as () => void;
+
 const userStore = useUserStore();
 
 const isDark = computed(() => userStore.settings.theme === 'dark');
+const isScrolledBtn = computed(() => props.scrollOffset > 300);
 
 const footerStyle = computed(() => {
   return {

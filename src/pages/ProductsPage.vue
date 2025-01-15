@@ -39,7 +39,7 @@
       @update:model-value="scrollToTop"
     />
 
-    <q-btn
+    <!-- <q-btn
       v-if="isScrolledBtn"
       class="!tw-fixed !tw-bottom-0 sm:!tw-bottom-12 !tw-right-4 sm:!tw-right-12 !tw-p-4 sm:!tw-p-3 tw-z-40"
       round
@@ -47,7 +47,7 @@
       text-color="black"
       icon="arrow_upward"
       @click="scrollToTop"
-    />
+    /> -->
   </q-page>
 </template>
 
@@ -65,7 +65,7 @@ import ProductTabs from '@/components/ProductTabs.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
-const props = defineProps({
+defineProps({
   scrollOffset: {
     type: Number,
     required: true,
@@ -109,7 +109,7 @@ const paginatedProducts = computed(() => {
 });
 
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
-const isScrolledBtn = computed(() => props.scrollOffset > 300);
+// const isScrolledBtn = computed(() => props.scrollOffset > 300);
 
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
