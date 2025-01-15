@@ -98,14 +98,12 @@ const scrollHandler = (details: {
 provide('scrollToTop', scrollToTop);
 
 const setViewportHeight = () => {
-  // Use visual viewport for more accurate mobile height
   const visualViewport = window.visualViewport;
   if (visualViewport) {
     console.log('Visual viewport height:', visualViewport.height);
     const vh = visualViewport.height * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   } else {
-    // Fallback for browsers without visualViewport support
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   }
@@ -114,7 +112,6 @@ const setViewportHeight = () => {
 onMounted(() => {
   setViewportHeight();
 
-  // Listen to visual viewport changes
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', setViewportHeight);
     window.visualViewport.addEventListener('scroll', setViewportHeight);
@@ -122,7 +119,6 @@ onMounted(() => {
     window.addEventListener('resize', setViewportHeight);
   }
 
-  // Handle orientation changes
   window.addEventListener('orientationchange', () => {
     setTimeout(setViewportHeight, 100);
   });
@@ -138,6 +134,4 @@ onMounted(() => {
   };
 });
 </script>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

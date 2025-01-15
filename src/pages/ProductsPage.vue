@@ -38,16 +38,6 @@
       :active-text-color="theme.paginationActiveTextColor"
       @update:model-value="scrollToTop"
     />
-
-    <!-- <q-btn
-      v-if="isScrolledBtn"
-      class="!tw-fixed !tw-bottom-0 sm:!tw-bottom-12 !tw-right-4 sm:!tw-right-12 !tw-p-4 sm:!tw-p-3 tw-z-40"
-      round
-      color="white"
-      text-color="black"
-      icon="arrow_upward"
-      @click="scrollToTop"
-    /> -->
   </q-page>
 </template>
 
@@ -109,7 +99,6 @@ const paginatedProducts = computed(() => {
 });
 
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
-// const isScrolledBtn = computed(() => props.scrollOffset > 300);
 
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });

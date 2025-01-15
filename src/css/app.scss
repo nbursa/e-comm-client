@@ -51,7 +51,6 @@ html {
   height: 100dvh;
 
   @supports not (height: 100dvh) {
-    /* Fallback for browsers that don't support dvh */
     min-height: 100vh;
     height: 100vh;
   }
@@ -79,13 +78,12 @@ h6 {
   margin: 0;
 }
 
-/* Mobile devices */
 @media screen and (max-width: 599px) {
   :root {
     --mobile-bottom-offset: 30px;
 
     @supports (-webkit-touch-callout: none) {
-      /* iOS specific */
+      /* Ios */
       --content-height: calc(
         100dvh - var(--header-height) - var(--footer-height) - var(--mobile-bottom-offset) - env(
             safe-area-inset-bottom,
@@ -95,7 +93,7 @@ h6 {
     }
 
     @supports not (-webkit-touch-callout: none) {
-      /* Android specific */
+      /* Android */
       --content-height: calc(
         100dvh - var(--header-height) - var(--footer-height) - var(--mobile-bottom-offset)
       );
