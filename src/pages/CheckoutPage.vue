@@ -191,7 +191,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, inject } from 'vue';
 import { useQuasar } from 'quasar';
 import { useCartStore } from '../stores/cart';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
@@ -202,6 +202,8 @@ import QRCode from 'qrcode';
 import { formatPrice } from '@/utils';
 import type { ComponentPublicInstance } from 'vue';
 import OrderConfirmationDialog from '@/components/OrderConfirmationDialog.vue';
+
+const scrollToTop = inject('scrollToTop') as () => void;
 
 type QFormInstance = ComponentPublicInstance<{ validate: () => boolean }>;
 
@@ -365,10 +367,12 @@ const emailOrder = async () => {
 
 const nextStep = () => {
   step.value++;
+  scrollToTop();
 };
 
 onMounted(() => {
   generateQrCode();
+  scrollToTop();
 });
 </script>
 

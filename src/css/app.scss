@@ -12,6 +12,16 @@
 @import 'q-btn.scss';
 @import 'q-select.scss';
 
+:root {
+  --vh: 1vh;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 html,
 body {
   margin: 0;

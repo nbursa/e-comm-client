@@ -101,20 +101,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted, inject } from 'vue';
+import { ref, computed, onMounted, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
-import { scroll } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils';
 import { useProductStore } from '@/stores/products';
 
-const { getVerticalScrollPosition } = scroll;
-
-const apiUrl = import.meta.env.VITE_API_URL || '';
+const scrollToTop = inject('scrollToTop') as () => void;
 
 const route = useRoute();
 const router = useRouter();
@@ -138,7 +135,6 @@ const product = ref<Product>({
   },
 });
 
-const isCollapsed = ref(false);
 const showImageOverlay = ref(false);
 const imageUrl = ref('');
 const isZoomed = ref(false);
@@ -151,10 +147,10 @@ const translateY = ref(0);
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
-const scrollToTop = inject('scrollToTop') as () => void;
-
 const imageLocalUrl = (imagePath: string) => {
-  return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
+  return process.env.NODE_ENV === 'development'
+    ? `${import.meta.env.VITE_API_URL}${imagePath}`
+    : imagePath;
 };
 
 const imageStyle = computed(() => ({
@@ -262,7 +258,7 @@ const fetchProductDetails = async () => {
       }
     }
 
-    const response = await fetch(`${apiUrl}/products/${slug}`);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/products/${slug}`);
 
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`);
@@ -301,18 +297,8 @@ const fetchProductDetails = async () => {
   }
 };
 
-const handleScroll = () => {
-  const scrollTop = getVerticalScrollPosition(window);
-  isCollapsed.value = scrollTop > 0;
-};
-
 onMounted(() => {
   fetchProductDetails();
-  window.addEventListener('scroll', handleScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 

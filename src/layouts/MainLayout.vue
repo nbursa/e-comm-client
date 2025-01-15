@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="tw-w-screen tw-h-screen">
+  <q-layout view="hHh lpR fff" class="safe-bottom tw-h-screen tw-w-screen">
     <AppHeader
       :menu-items="menuItems"
       :drawer-open="drawerOpen"
@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import MobileDrawer from '@/components/MobileDrawer.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
@@ -108,4 +108,12 @@ const scrollHandler = (details: {
 };
 
 provide('scrollToTop', scrollToTop);
+
+onMounted(() => {
+  const setVH = () => {
+    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+  };
+  setVH();
+  window.addEventListener('resize', setVH);
+});
 </script>

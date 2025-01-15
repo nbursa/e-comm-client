@@ -138,12 +138,12 @@
 import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useCartStore } from 'src/stores/cart';
-import { computed } from 'vue';
+import { computed, inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { formatPrice } from '@/utils';
 
-const apiUrl = import.meta.env.VITE_API_URL || '';
+const scrollToTop = inject('scrollToTop') as () => void;
 
 const cartStore = useCartStore();
 const $q = useQuasar() as QVueGlobals;
@@ -155,7 +155,9 @@ const color = computed(() => (isDark.value ? 'white' : 'dark'));
 const text = computed(() => (isDark.value ? 'dark' : 'white'));
 
 const imageUrl = (imagePath: string) => {
-  return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
+  return process.env.NODE_ENV === 'development'
+    ? `${import.meta.env.VITE_API_URL}${imagePath}`
+    : imagePath;
 };
 
 const updateQuantity = (id: number, quantity: number) => {
@@ -196,6 +198,10 @@ const removeItem = (id: number) => {
     });
   });
 };
+
+onMounted(() => {
+  scrollToTop();
+});
 </script>
 
 <style lang="scss" scoped>

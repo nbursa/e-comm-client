@@ -28,6 +28,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':slug',
         component: loadPage('SingleProductPage'),
+        props: true,
         meta: { requiresAuth: false, title: 'Product Details' },
       },
     ],
