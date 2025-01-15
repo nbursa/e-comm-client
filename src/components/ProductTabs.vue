@@ -1,5 +1,5 @@
 <template>
-  <div :class="['sticky', { 'is-sticky': isSticky }, `tw-bg-${theme.stickyBgColor}`]">
+  <div :class="['sticky', { 'is-sticky': isSticky }, isSticky && `tw-bg-${theme.stickyBgColor}`]">
     <q-tabs
       v-model="localCategory"
       indicator-color="transparent"
