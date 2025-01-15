@@ -23,20 +23,17 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       ? createWebHistory
       : createWebHashHistory;
 
-  // scrollBehavior(to, from, savedPosition) {
-  //   if (savedPosition) {
-  //     return savedPosition;
-  //   }
-  // }
   const Router = createRouter({
+    routes,
     scrollBehavior(to, from, savedPosition) {
       if (savedPosition) {
         return savedPosition;
+      } else if (to.hash) {
+        return { el: to.hash, behavior: 'smooth' };
       } else {
-        return { left: 0, top: 0 };
+        return { top: 0, behavior: 'smooth' };
       }
     },
-    routes,
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath

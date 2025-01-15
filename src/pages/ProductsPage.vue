@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref, onMounted, inject } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useProductStore } from '@/stores/products';
@@ -62,6 +62,8 @@ import { useCartStore } from '@/stores/cart';
 import { Product } from '@/types';
 import { QVueGlobals } from 'quasar/dist/types/globals';
 import ProductTabs from '@/components/ProductTabs.vue';
+
+const scrollToTop = inject('scrollToTop') as () => void;
 
 const props = defineProps({
   scrollOffset: {
@@ -110,15 +112,6 @@ const paginatedProducts = computed(() => {
 
 const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
 const isScrolledBtn = computed(() => props.scrollOffset > 300);
-
-const scrollToTop = () => {
-  const scrollArea = document.querySelector('.q-page-container') as HTMLElement;
-  if (scrollArea) {
-    scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
-  } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-};
 
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });

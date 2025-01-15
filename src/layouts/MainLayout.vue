@@ -32,13 +32,18 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
+import { provide } from 'vue';
+
+interface ScrollAreaRef {
+  setScrollPosition: (axis: 'vertical' | 'horizontal', offset: number, duration?: number) => void;
+}
 
 const router = useRouter();
 const { t } = useI18n();
 
 const drawerOpen = ref(false);
 const scrollPosition = ref(0);
-const scrollContainer = ref<HTMLElement | null>(null);
+const scrollContainer = ref<ScrollAreaRef | null>(null);
 const position = ref(0);
 
 const menuItems = computed(() => [
@@ -61,15 +66,23 @@ const toggleDrawer = () => {
   drawerOpen.value = !drawerOpen.value;
 };
 
-const scrollHandler = (details: { position: { top: number; left: number } }) => {
-  const scrollTop = details.position.top;
-  scrollPosition.value = scrollTop;
-  const scrollArea = document.querySelector('.q-scrollarea__container') as HTMLElement;
-  if (scrollArea) {
-    const scrollHeight = scrollArea.scrollHeight - scrollArea.clientHeight;
-    position.value = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+const scrollToTop = () => {
+  if (scrollContainer.value) {
+    scrollContainer.value.setScrollPosition('vertical', 0, 300);
   } else {
-    console.error('Scroll area container not found.');
+    console.warn('ScrollArea ref is null');
   }
 };
+
+const scrollHandler = (details: {
+  position: { top: number; left: number };
+  direction: 'up' | 'down' | 'left' | 'right';
+  directionChanged: boolean;
+  delta: { top: number; left: number };
+  inflectionPoint: { top: number; left: number };
+}) => {
+  scrollPosition.value = details.position.top;
+};
+
+provide('scrollToTop', scrollToTop);
 </script>
