@@ -143,8 +143,7 @@ onMounted(() => {
 :root {
   --header-height: 54px;
   --footer-height: 35px;
-  // --content-height: calc(100vh - var(--header-height) - var(--footer-height));
-  --content-height: 80px;
+  --content-height: calc(100vh - var(--header-height) - var(--footer-height));
 }
 
 .q-layout {
