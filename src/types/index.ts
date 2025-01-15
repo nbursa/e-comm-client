@@ -81,3 +81,7 @@ export interface MenuItem {
   label: string;
   path: string;
 }
+
+export interface ScrollAreaRef {
+  setScrollPosition: (axis: 'vertical' | 'horizontal', offset: number, duration?: number) => void;
+}

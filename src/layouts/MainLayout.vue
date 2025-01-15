@@ -57,10 +57,7 @@ import { useRouter } from 'vue-router';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import { provide } from 'vue';
-
-interface ScrollAreaRef {
-  setScrollPosition: (axis: 'vertical' | 'horizontal', offset: number, duration?: number) => void;
-}
+import { ScrollAreaRef } from '@/types';
 
 const router = useRouter();
 const { t } = useI18n();
