@@ -148,7 +148,7 @@ onMounted(() => {
 /* Mobile devices */
 @media screen and (max-width: 599px) {
   :root {
-    --mobile-bottom-offset: 50px;
+    --mobile-bottom-offset: 54px;
 
     @supports (-webkit-touch-callout: none) {
       /* iOS specific */
