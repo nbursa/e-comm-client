@@ -80,6 +80,8 @@ export default defineConfig((ctx: { modeName: string }) => {
       cssMinifier: 'esbuild',
       preloadChunks: true,
       prefetchChunks: true,
+      assetsDir: 'assets',
+      emptyOutDir: true,
     },
     devServer: {
       port: 9000,

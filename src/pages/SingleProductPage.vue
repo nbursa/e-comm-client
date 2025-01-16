@@ -156,26 +156,6 @@ const openImageOverlay = (mainImage: string) => {
 
   imageStore.openPreview(previewImages);
 };
-// const openImageOverlay = (mainImage: string) => {
-//   // Cache preview images
-//   if (!imageStore.previewImages.length) {
-//     const previewImages: PreviewImage[] = [{
-//       src: imageLocalUrl.value(mainImage),
-//       name: product.value.name || product.value.title || '',
-//     }];
-//     imageStore.openPreview(previewImages);
-//   }
-// };
-// const openImageOverlay = (mainImage: string) => {
-//   const previewImages: PreviewImage[] = [
-//     {
-//       src: imageLocalUrl(mainImage),
-//       name: product.value.name || '',
-//     },
-//   ];
-
-//   imageStore.openPreview(previewImages);
-// };
 
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
@@ -207,8 +187,9 @@ const fetchProductDetails = async () => {
       }
     }
 
-    // const response = await fetch(`${import.meta.env.VITE_API_URL}/products/${slug}`);
-    const response = await fetch(`${baseUrl}/products/${slug}`);
+    const apiUrl = baseUrl.endsWith('/products') ? baseUrl.slice(0, -9) : baseUrl;
+
+    const response = await fetch(`${apiUrl}/products/${slug}`);
 
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`);
