@@ -1,1 +1,0 @@
-import{b as e}from"./index-3fevySbJ.js";import{u as s}from"./index-BEF3arra.js";import{u as r}from"./rates-BlFJQ4p0.js";const n=e(()=>{const t=r(),o=s();t.loadExchangeRates(),o.loadSettings()});export{n as default};

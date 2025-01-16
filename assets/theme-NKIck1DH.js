@@ -1,1 +1,0 @@
-import{b as s}from"./index-3fevySbJ.js";import{a as t,s as e}from"./index-BEF3arra.js";const i=s(({app:a})=>{const o=a.config.globalProperties.$q;e(o),t()});export{i as default,t as initThemeManager};
