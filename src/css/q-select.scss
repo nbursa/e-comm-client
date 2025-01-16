@@ -15,7 +15,7 @@
   }
 }
 
-.q-field:not(.q-field--dark) {
+.q-field--outlined:not(.q-field--dark) {
   .q-field__control {
     &:before {
       border: 2px solid #000 !important;
