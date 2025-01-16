@@ -82,11 +82,13 @@ import { useQuasar } from 'quasar';
 import type { QVueGlobals } from 'quasar/dist/types/globals';
 import { useI18n } from 'vue-i18n';
 import { PreviewImage, Product } from '@/types';
-import { formatPrice } from '@/utils';
+import { formatPrice } from '@/utils/currency';
 import { useProductStore } from '@/stores/products';
 import { useImageStore } from '@/stores/images';
 
 const scrollToTop = inject('scrollToTop') as () => void;
+
+const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
 
 const route = useRoute();
 const router = useRouter();
@@ -114,10 +116,10 @@ const product = ref<Product>({
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
-const imageLocalUrl = (imagePath: string) => {
-  return process.env.NODE_ENV === 'development'
-    ? `${import.meta.env.VITE_API_URL}${imagePath}`
-    : imagePath;
+const imageLocalUrl = (imagePath: string | undefined): string => {
+  if (!imagePath) return '/assets/placeholder.webp';
+
+  return process.env.NODE_ENV === 'development' ? `${baseUrl}${imagePath}` : imagePath;
 };
 
 const openImageOverlay = (mainImage: string) => {
@@ -169,26 +171,28 @@ const fetchProductDetails = async () => {
       }
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/products/${slug}`);
+    const response = await fetch(`${baseUrl}/products/${slug}`);
 
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`);
     }
 
-    const data = await response.json();
+    const result = await response.json();
+    const data = result.data;
+
     product.value = {
       id: data.id,
       name: data.name,
-      title: data.title,
-      price: data.price,
+      title: data.title || data.name,
+      price: Number(data.price),
       description: data.description,
       image: data.image,
-      additionalImages: data.additionalImages,
+      additionalImages: data.additionalImages || [],
       category: data.category,
       discount: data.discount || 0,
       discountedPrice: data.price - (data.price * (data.discount || 10)) / 100,
-      quantity: data.quantity,
-      rating: data.rating,
+      quantity: data.quantity || 0,
+      rating: data.rating || { rate: 0, count: 0 },
     };
 
     productCache.setCache([product.value], 'viewed');
@@ -209,7 +213,7 @@ const fetchProductDetails = async () => {
   }
 };
 
-onMounted(() => {
-  fetchProductDetails();
+onMounted(async () => {
+  await fetchProductDetails();
 });
 </script>

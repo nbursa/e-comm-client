@@ -199,7 +199,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { OrderDetails } from '@/types';
 import QRCode from 'qrcode';
-import { formatPrice } from '@/utils';
+import { formatPrice } from '@/utils/currency';
 import type { ComponentPublicInstance } from 'vue';
 import OrderConfirmationDialog from '@/components/OrderConfirmationDialog.vue';
 

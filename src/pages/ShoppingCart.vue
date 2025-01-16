@@ -141,7 +141,7 @@ import { useCartStore } from 'src/stores/cart';
 import { computed, inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { formatPrice } from '@/utils';
+import { formatPrice } from '@/utils/currency';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 

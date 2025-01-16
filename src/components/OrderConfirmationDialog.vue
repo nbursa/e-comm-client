@@ -63,7 +63,7 @@
 
 <script lang="ts" setup>
 import { OrderDetails } from '@/types';
-import { formatPrice } from '@/utils';
+import { formatPrice } from '@/utils/currency';
 import { computed, PropType } from 'vue';
 
 const props = defineProps({

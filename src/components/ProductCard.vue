@@ -40,7 +40,7 @@
 
 <script lang="ts" setup>
 import { Product } from '@/types';
-import { formatPrice } from '@/utils';
+import { formatPrice } from '@/utils/currency';
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
 
