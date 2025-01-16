@@ -15,7 +15,7 @@ applyTheme();
 
 watch(
   () => userStore.settings.theme === 'dark',
-  (isDark) => {
+  (isDark: boolean) => {
     document.body.classList.toggle('dark--page', isDark);
     document.body.classList.toggle('light--page', !isDark);
   },

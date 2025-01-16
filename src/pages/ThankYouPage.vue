@@ -13,12 +13,10 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { QVueGlobals } from 'quasar/dist/types/globals';
+import { QVueGlobals } from 'quasar';
 import { computed } from 'vue';
-// import { useI18n } from 'vue-i18n';
 
 const $q = useQuasar() as QVueGlobals;
-// const { $t } = useI18n();
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));

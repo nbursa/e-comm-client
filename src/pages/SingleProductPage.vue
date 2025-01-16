@@ -75,11 +75,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, inject } from 'vue';
+import { ref, computed, onMounted, inject, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
-import type { QVueGlobals } from 'quasar/dist/types/globals';
+import type { QVueGlobals } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { PreviewImage, Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
@@ -89,6 +89,8 @@ import { useImageStore } from '@/stores/images';
 const scrollToTop = inject('scrollToTop') as () => void;
 
 const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
+
+const imageUrlCache = new Map<string, string>();
 
 const route = useRoute();
 const router = useRouter();
@@ -119,7 +121,21 @@ const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const imageLocalUrl = (imagePath: string | undefined): string => {
   if (!imagePath) return '/assets/placeholder.webp';
 
-  return process.env.NODE_ENV === 'development' ? `${baseUrl}${imagePath}` : imagePath;
+  const cached = imageUrlCache.get(imagePath);
+  if (cached) return cached;
+
+  if (imagePath.startsWith('/static')) {
+    const fullUrl = `${baseUrl}${imagePath}`;
+    imageUrlCache.set(imagePath, fullUrl);
+    return fullUrl;
+  }
+
+  if (imagePath.startsWith('http')) {
+    imageUrlCache.set(imagePath, imagePath);
+    return imagePath;
+  }
+
+  return imagePath;
 };
 
 const openImageOverlay = (mainImage: string) => {
@@ -140,6 +156,26 @@ const openImageOverlay = (mainImage: string) => {
 
   imageStore.openPreview(previewImages);
 };
+// const openImageOverlay = (mainImage: string) => {
+//   // Cache preview images
+//   if (!imageStore.previewImages.length) {
+//     const previewImages: PreviewImage[] = [{
+//       src: imageLocalUrl.value(mainImage),
+//       name: product.value.name || product.value.title || '',
+//     }];
+//     imageStore.openPreview(previewImages);
+//   }
+// };
+// const openImageOverlay = (mainImage: string) => {
+//   const previewImages: PreviewImage[] = [
+//     {
+//       src: imageLocalUrl(mainImage),
+//       name: product.value.name || '',
+//     },
+//   ];
+
+//   imageStore.openPreview(previewImages);
+// };
 
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
@@ -171,6 +207,7 @@ const fetchProductDetails = async () => {
       }
     }
 
+    // const response = await fetch(`${import.meta.env.VITE_API_URL}/products/${slug}`);
     const response = await fetch(`${baseUrl}/products/${slug}`);
 
     if (!response.ok) {
@@ -215,5 +252,9 @@ const fetchProductDetails = async () => {
 
 onMounted(async () => {
   await fetchProductDetails();
+});
+
+onUnmounted(() => {
+  imageUrlCache.clear();
 });
 </script>

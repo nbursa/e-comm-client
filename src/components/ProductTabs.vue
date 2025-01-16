@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { QVueGlobals } from 'quasar/dist/types/globals';
+import { QVueGlobals } from 'quasar';
 import { ref, computed, watch, PropType, inject } from 'vue';
 import CategorySelect from './CategorySelect.vue';
 

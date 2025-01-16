@@ -119,7 +119,7 @@ import CurrencySelector from '@/components/base/CurrencySelector.vue';
 import ThemeSelector from '@/components/base/ThemeSelector.vue';
 import AppButton from './base/AppButton.vue';
 import { CurrencyOption, LanguageOption, MenuItem, ThemeOption } from '@/types';
-import { QVueGlobals } from 'quasar/dist/types/globals';
+import { QVueGlobals } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { storage } from '@/utils/storage';
 import { ScrollAreaRef } from '@/types';
@@ -248,7 +248,7 @@ const clearProducts = () => {
       message: t('settings.resetSuccess'),
       position: 'top',
       timeout: 1000,
-      classes: 'notification-center',
+      class: 'notification-center',
     });
     setTimeout(() => {
       emit('update:drawerOpen', false);

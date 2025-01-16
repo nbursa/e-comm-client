@@ -87,7 +87,7 @@ import CurrencySelector from '@/components/base/CurrencySelector.vue';
 import ThemeSelector from '@/components/base/ThemeSelector.vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
-import { QVueGlobals } from 'quasar/dist/types';
+import { QVueGlobals } from 'quasar';
 import { storage } from '@/utils/storage';
 
 const userStore = useUserStore();

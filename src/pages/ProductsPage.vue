@@ -50,7 +50,7 @@ import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/stores/cart';
 import { Product } from '@/types';
-import { QVueGlobals } from 'quasar/dist/types/globals';
+import { QVueGlobals } from 'quasar';
 import ProductTabs from '@/components/ProductTabs.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;

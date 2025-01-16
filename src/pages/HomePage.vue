@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { useQuasar } from 'quasar';
-import type { QVueGlobals } from 'quasar/dist/types/globals';
+import type { QVueGlobals } from 'quasar';
 import { computed } from 'vue';
 import PageTitle from '@/components/base/PageTitle.vue';
 import PageSubtitle from '@/components/base/PageSubtitle.vue';

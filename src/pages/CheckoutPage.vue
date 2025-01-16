@@ -194,7 +194,7 @@
 import { ref, computed, onMounted, inject } from 'vue';
 import { useQuasar } from 'quasar';
 import { useCartStore } from '../stores/cart';
-import type { QVueGlobals } from 'quasar/dist/types/globals';
+import type { QVueGlobals } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { OrderDetails } from '@/types';

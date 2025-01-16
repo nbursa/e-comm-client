@@ -8,6 +8,9 @@ import pluginQuasar from '@quasar/app-vite/eslint';
 import vueTsEslintConfig from '@vue/eslint-config-typescript';
 import prettierSkipFormatting from '@vue/eslint-config-prettier/skip-formatting';
 import prettierConfig from '@vue/eslint-config-prettier';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

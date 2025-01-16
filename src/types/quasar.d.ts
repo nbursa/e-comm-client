@@ -1,3 +1,10 @@
+/// <reference types="@quasar/app-vite" />
+/// <reference types="vite/client" />
+
+declare module '@quasar/app-vite' {
+  export function defineConfig(config: unknown): unknown;
+}
+
 export declare module '#q-app/wrappers' {
   import type { App } from 'vue';
   import type { Router } from 'vue-router';

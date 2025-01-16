@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
-import type { QVueGlobals } from 'quasar/dist/types/globals';
+import type { QVueGlobals } from 'quasar';
 import type { PropType } from 'vue';
 import { useRouter } from 'vue-router';
 

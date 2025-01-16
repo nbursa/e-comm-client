@@ -136,7 +136,7 @@
 
 <script lang="ts" setup>
 import { useQuasar } from 'quasar';
-import type { QVueGlobals } from 'quasar/dist/types/globals';
+import type { QVueGlobals } from 'quasar';
 import { useCartStore } from 'src/stores/cart';
 import { computed, inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';

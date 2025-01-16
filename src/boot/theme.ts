@@ -1,6 +1,6 @@
 import { boot } from 'quasar/wrappers';
-import { watch, type App } from 'vue';
-import type { QVueGlobals } from 'quasar/dist/types';
+import { watch, type App as VueApp } from 'vue';
+import type { QVueGlobals } from 'quasar';
 import { useUserStore } from '@/stores/user';
 
 let $q: QVueGlobals | null = null;
@@ -46,7 +46,7 @@ export const initThemeManager = (quasar: QVueGlobals) => {
   systemPreference.addEventListener('change', handleSystemChange);
 };
 
-export default boot(({ app }: { app: App }) => {
-  const quasar = app.config.globalProperties.$q as QVueGlobals;
+export default boot(({ app }: { app: VueApp }) => {
+  const quasar = app.config.globalProperties.$q as unknown as QVueGlobals;
   initThemeManager(quasar);
 });

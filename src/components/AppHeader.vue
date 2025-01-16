@@ -39,7 +39,7 @@
 import { computed, PropType, ref, watch } from 'vue';
 import { useCartStore } from '@/stores/cart';
 import { useQuasar } from 'quasar';
-import { QVueGlobals } from 'quasar/dist/types/globals';
+import { QVueGlobals } from 'quasar';
 import AppButton from './base/AppButton.vue';
 import { MenuItem } from '@/types';
 import MenuButton from './base/MenuButton.vue';

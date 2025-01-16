@@ -1,6 +1,7 @@
 import { defineConfig } from '@quasar/app-vite/wrappers';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
+import type { UserConfig } from 'vite';
 
 dotenv.config();
 
@@ -29,10 +30,13 @@ export default defineConfig((ctx: { modeName: string }) => {
       typescript: {
         strict: true,
         vueShim: true,
+        useVueTsc: true,
+        moduleResolution: 'bundler',
+        tsconfigPath: './tsconfig.json',
       },
       publicPath: '/',
       vueRouterMode: 'history',
-      extendViteConf(viteConf) {
+      extendViteConf(viteConf: UserConfig) {
         viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';
         viteConf.resolve ??= {};
         viteConf.resolve.alias = {
@@ -113,6 +117,7 @@ export default defineConfig((ctx: { modeName: string }) => {
         },
         dark: true,
       },
+      utilities: true,
       plugins: ['Notify', 'Loading', 'Dialog'],
       cssAddon: false,
     },

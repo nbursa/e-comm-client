@@ -1,11 +1,11 @@
 {
   "extends": "./.quasar/tsconfig.json",
   "compilerOptions": {
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["./src/types", "node_modules/@types"],
     "allowSyntheticDefaultImports": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "strict": true,
     "jsx": "preserve",
     "esModuleInterop": true,
@@ -13,21 +13,13 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "types": ["node", "@quasar/app-vite", "vite/client"],
     "paths": {
       "@/*": ["src/*"],
       "#q-app/*": [".quasar/*"],
-      "#q-app/wrappers": ["node_modules/@quasar/app-vite/types/app-wrappers.d.ts"],
-      "quasar": ["node_modules/quasar/dist/types/index.d.ts"]
+      "#q-app/wrappers": ["node_modules/@quasar/app-vite/types/app-wrappers.d.ts"]
     }
   },
-  "include": [
-    "src/**/*",
-    ".quasar/**/*",
-    "quasar.d.ts",
-    "node_modules/quasar/types/index.d.ts",
-    "src/shims-quasar.d.ts",
-    "src/env.d.ts",
-    "src/plugins.d.ts"
-  ],
+  "include": ["src/**/*", ".quasar/**/*", "*.d.ts"],
   "exclude": ["node_modules", "dist", "server"]
 }
