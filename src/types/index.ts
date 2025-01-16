@@ -1,4 +1,5 @@
-import { MessageLanguages } from '@/boot/i18n';
+import type { DateTimeFormat, NumberFormat } from '@intlify/core-base';
+import messages from '../i18n';
 
 export type ProductRating = {
   rate: number;
@@ -50,8 +51,6 @@ export interface EssentialLinkProps {
   icon?: string;
 }
 
-export type { MessageLanguages } from '@/boot/i18n';
-
 export interface LanguageOption {
   value: MessageLanguages;
   label: string;
@@ -91,3 +90,15 @@ export interface PreviewImage {
   src: string;
   name: string;
 }
+
+export type MessageLanguages = keyof typeof messages;
+export type MessageSchema = (typeof messages)['en-US'];
+
+export type I18nOptions = {
+  locale: string;
+  fallbackLocale: string;
+  legacy: boolean;
+  messages: Record<string, unknown>;
+  datetimeFormats: Record<string, DateTimeFormat>;
+  numberFormats: Record<string, NumberFormat>;
+};

@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
-import { setLanguage } from '@/boot/i18n';
-import { Currency, ThemeOption, UserSettings } from '@/types';
+import { Currency, I18nOptions, MessageLanguages, ThemeOption, UserSettings } from '@/types';
 import { storage } from '@/utils/storage';
-import { languages, currencies } from '@/utils/i18n';
+import { languages, currencies, STORAGE_LANGUAGE_KEY } from '@/utils/i18n';
 import { themeOptions } from '@/utils/theme';
 
 export const useUserStore = defineStore('user', () => {
@@ -51,15 +50,27 @@ export const useUserStore = defineStore('user', () => {
     saveSettings();
   };
 
-  const updateI18n = () => {
-    try {
-      setLanguage(settings.value.language);
-    } catch (err) {
-      console.error('Failed to update language:', err);
+  const setLanguage = async (lang: MessageLanguages) => {
+    settings.value.language = lang;
+    await setI18nLanguage(lang);
+    saveSettings();
+  };
+
+  const getStoredLanguage = (): MessageLanguages => {
+    const lang = storage.get(STORAGE_LANGUAGE_KEY);
+    return (lang?.data as MessageLanguages) || 'en-US';
+  };
+
+  const setI18nLanguage = async (lang: MessageLanguages): Promise<void> => {
+    const { i18n } = await import('@/boot/i18n');
+    const i18nInstance = i18n as unknown as I18nOptions;
+    if (i18nInstance.locale) {
+      i18nInstance.locale = lang;
+      storage.set(STORAGE_LANGUAGE_KEY, lang);
     }
   };
 
-  watch(() => settings.value.language, updateI18n);
+  watch(() => settings.value.language, setLanguage);
 
   return {
     settings,
@@ -71,5 +82,7 @@ export const useUserStore = defineStore('user', () => {
     setCurrency,
     currencyOptions,
     loadSettings,
+    getStoredLanguage,
+    setI18nLanguage,
   };
 });
