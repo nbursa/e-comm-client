@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { setLanguage } from '@/boot/i18n';
-import { Currency, CurrencyOption, LanguageOption, ThemeOption, UserSettings } from '@/types';
+import { Currency, ThemeOption, UserSettings } from '@/types';
 import { storage } from '@/utils/storage';
+import { languages, currencies } from '@/utils/i18n';
+import { themeOptions } from '@/utils/theme';
 
 export const useUserStore = defineStore('user', () => {
   const USER_CACHE_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
@@ -14,22 +16,8 @@ export const useUserStore = defineStore('user', () => {
     currency: 'EUR',
   });
 
-  const languageOptions = computed<LanguageOption[]>(() => [
-    { value: 'en-US', label: 'English' },
-    { value: 'sr-RS', label: 'Serbian' },
-    { value: 'fr-FR', label: 'French' },
-  ]);
-
-  const themeOptions = computed<ThemeOption[]>(() => [
-    { value: 'light', label: 'Light' },
-    { value: 'dark', label: 'Dark' },
-  ]);
-
-  const currencyOptions = computed<CurrencyOption[]>(() => [
-    { value: 'USD', label: 'US Dollar' },
-    { value: 'EUR', label: 'Euro' },
-    { value: 'RSD', label: 'Serbian Dinar' },
-  ]);
+  const languageOptions = computed(() => languages);
+  const currencyOptions = computed(() => currencies);
 
   const loadSettings = () => {
     const stored = storage.get('user_settings');

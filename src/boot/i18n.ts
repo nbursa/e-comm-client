@@ -1,58 +1,41 @@
 import messages from '../i18n';
 import type { App } from 'vue';
 import { boot } from 'quasar/wrappers';
-import { type Composer, createI18n } from 'vue-i18n';
-import { CurrencyOption, LanguageOption } from '@/types';
+import type { DateTimeFormat, NumberFormat } from '@intlify/core-base';
+import { createI18n as _createI18n } from 'vue-i18n';
+import { STORAGE_LANGUAGE_KEY, i18nConfig } from '@/utils/i18n';
 
 export type MessageLanguages = keyof typeof messages;
 export type MessageSchema = (typeof messages)['en-US'];
 
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-declare module 'vue-i18n' {
-  export interface DefineLocaleMessage extends MessageSchema {}
-  export interface DefineDateTimeFormat {}
-  export interface DefineNumberFormat {}
+type I18nOptions = {
+  locale: string;
+  fallbackLocale: string;
+  legacy: boolean;
+  messages: Record<string, unknown>;
+  datetimeFormats: Record<string, DateTimeFormat>;
+  numberFormats: Record<string, NumberFormat>;
+};
+
+function getStoredLanguage(): MessageLanguages {
+  return (localStorage.getItem(STORAGE_LANGUAGE_KEY) as MessageLanguages) || 'en-US';
 }
 
-export const STORAGE_LANGUAGE_KEY = 'language';
-
-export const languageOptions = [
-  { value: 'en-US', label: 'English' },
-  { value: 'sr-RS', label: 'Srpski' },
-  { value: 'fr-FR', label: 'Français' },
-] as LanguageOption[];
-
-export const currencyOptions = [
-  { value: 'USD', label: 'US Dollar' },
-  { value: 'EUR', label: 'Euro' },
-  { value: 'RSD', label: 'Serbian Dinar' },
-] as CurrencyOption[];
-
-const i18n = createI18n<{ message: MessageSchema }, MessageLanguages>({
+const options: I18nOptions = {
   locale: getStoredLanguage(),
   fallbackLocale: 'en-US',
   legacy: false,
   messages,
-  datetimeFormats: {
-    'en-US': { short: { year: 'numeric', month: 'short', day: 'numeric' } },
-    'fr-FR': { short: { year: 'numeric', month: 'short', day: 'numeric' } },
-    'sr-RS': { short: { year: 'numeric', month: 'short', day: 'numeric' } },
-  },
-  numberFormats: {
-    'en-US': { currency: { style: 'currency', currency: 'USD' } },
-    'fr-FR': { currency: { style: 'currency', currency: 'EUR' } },
-    'sr-RS': { currency: { style: 'currency', currency: 'RSD' } },
-  },
-});
+  datetimeFormats: i18nConfig.datetimeFormats,
+  numberFormats: i18nConfig.numberFormats,
+};
 
-function getStoredLanguage(): MessageLanguages {
-  const storedLang = localStorage.getItem(STORAGE_LANGUAGE_KEY);
-  return (storedLang as MessageLanguages) || 'en-US';
-}
+const i18n = _createI18n(options);
 
 export function setLanguage(lang: MessageLanguages) {
-  const i18nGlobal = i18n.global as unknown as Composer;
-  i18nGlobal.locale.value = lang;
+  if (i18n.global.locale) {
+    i18n.global.locale.value = lang;
+  }
 }
 
 export default boot(({ app }: { app: App }) => {

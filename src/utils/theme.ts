@@ -1,6 +1,7 @@
 import type { QVueGlobals } from 'quasar';
 import { useUserStore } from '@/stores/user';
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
+import { ThemeOption } from '@/types';
 
 let $q: QVueGlobals | null = null;
 
@@ -9,6 +10,11 @@ const systemPreference = window.matchMedia('(prefers-color-scheme: dark)');
 export const setQuasarInstance = (quasar: QVueGlobals) => {
   $q = quasar;
 };
+
+export const themeOptions = computed<ThemeOption[]>(() => [
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+]);
 
 export const applyTheme = () => {
   const userStore = useUserStore();
