@@ -6,6 +6,7 @@
       :scroll-offset="scrollPosition"
       @update:drawer-open="toggleDrawer"
     />
+
     <q-page-container class="tw-mx-auto">
       <q-scroll-area
         ref="scrollContainer"
@@ -35,7 +36,7 @@
       @navigate="navigate"
     />
 
-    <ImagePreview v-model="imageStore.isOpen" :images="imageStore.images" />
+    <ImagePreview v-model="imageStore.isOpen" :imgs="imageStore.images" />
   </q-layout>
 </template>
 

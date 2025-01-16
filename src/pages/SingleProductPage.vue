@@ -183,6 +183,7 @@ const fetchProductDetails = async () => {
       price: data.price,
       description: data.description,
       image: data.image,
+      additionalImages: data.additionalImages,
       category: data.category,
       discount: data.discount || 0,
       discountedPrice: data.price - (data.price * (data.discount || 10)) / 100,
