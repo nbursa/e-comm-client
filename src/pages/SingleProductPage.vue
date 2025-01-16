@@ -178,24 +178,17 @@ const fetchProductDetails = async () => {
   $q.loading.show();
 
   try {
-    console.log('Checking cache for product:', slug);
-    const viewedCache = productCache.getCache('viewed');
-    console.log('Viewed cache:', viewedCache);
+    const viewedCache = productCache.getViewedCache();
 
-    if (viewedCache && productCache.isCacheValid('viewed')) {
-      const found = viewedCache.products.find((p) => p.id === Number(slug));
+    if (viewedCache) {
+      const found = viewedCache.products.find((p: { id: number }) => p.id === Number(slug));
       if (found) {
-        console.log('Cache hit for product:', slug);
         product.value = found;
         return;
       }
     }
 
-    console.log('Cache miss, fetching from API');
     const apiUrl = baseUrl.endsWith('/products') ? baseUrl.slice(0, -9) : baseUrl;
-
-    console.log('API URL:', apiUrl, `${apiUrl}/products/${slug}`);
-
     const response = await fetch(`${apiUrl}/products/${slug}`);
 
     if (!response.ok) {
@@ -220,15 +213,14 @@ const fetchProductDetails = async () => {
       rating: data.rating || { rate: 0, count: 0 },
     };
 
-    productCache.setCache([product.value], 'viewed');
-    console.log('Updated cache with new product data');
+    productCache.setViewedCache(product.value);
   } catch (error) {
     console.warn('Error fetching product:', error);
     $q.notify({
       color: 'negative',
       position: 'top',
       timeout: 1000,
-      message: 'Failed to fetch product details.',
+      message: t('errors.fetchProduct'),
       icon: 'error',
     });
     if (!product.value.id) {
@@ -245,10 +237,5 @@ onMounted(async () => {
 
 onUnmounted(() => {
   imageUrlCache.clear();
-
-  if (!productCache.isCacheValid('viewed')) {
-    console.log('Clearing expired product cache');
-    productCache.setCache([], 'viewed');
-  }
 });
 </script>

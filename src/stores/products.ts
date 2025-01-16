@@ -1,134 +1,95 @@
 import { defineStore } from 'pinia';
-import { Product } from '@/types';
+import { CategoryCache, Product, ProductResponse } from '@/types';
 import { storage } from '@/utils/storage';
-
-export interface CacheEntry {
-  products: Product[];
-  timestamp: number;
-  category: string;
-}
-
-export interface CategoryCache {
-  categories: string[];
-  timestamp: number;
-}
-
-export interface ProductsValue {
-  all: Product[];
-  viewed: Product[];
-  categories: string[];
-  timestamp: number;
-}
-
-interface ProductsStore {
-  all: Product[];
-  viewed: Product[];
-  categories: string[];
-  product_categories: Record<string, Product[]>;
-  timestamp: number;
-  version: string;
-  expiration: number;
-}
 
 export const useProductStore = defineStore('products', () => {
   const PRODUCTS_EXPIRATION = 5 * 60 * 1000;
   const PRODUCTS_KEY = 'products';
   const MAX_VIEWED = 10;
 
-  const getStore = (): ProductsStore => {
-    const defaultStore: ProductsStore = {
-      all: [],
-      viewed: [],
-      categories: [],
-      product_categories: {},
-      timestamp: Date.now(),
-      version: '1.0',
-      expiration: PRODUCTS_EXPIRATION,
-    };
-
-    const store = storage.get(PRODUCTS_KEY) as ProductsStore;
-    return store ? (store as ProductsStore) : defaultStore;
+  const getStore = () => {
+    const store = storage.get(PRODUCTS_KEY);
+    if (!store) {
+      return {
+        cache: {},
+        viewed: {
+          products: [],
+          timestamp: Date.now(),
+        },
+        categories: [],
+        timestamp: Date.now(),
+        version: '1.0',
+      };
+    }
+    return store;
   };
 
-  const setCache = (products: Product[], category: string = 'all'): void => {
+  const setCache = (data: ProductResponse, cacheKey: string): void => {
     const store = getStore();
+    store.cache[cacheKey] = {
+      data: data.data,
+      meta: data.meta,
+      timestamp: Date.now(),
+    };
 
-    if (category === 'all') {
-      store.all = products;
-    } else if (category === 'viewed') {
-      const newProduct = products[0];
-      if (newProduct) {
-        store.viewed = [
-          newProduct,
-          ...(store.viewed || []).filter((p: Product) => p.id !== newProduct.id),
-        ].slice(0, MAX_VIEWED);
-      }
-    } else {
-      store.product_categories = store.product_categories || {};
-      const categoryKey = category.startsWith('product_')
-        ? category
-        : `product_${category.toLowerCase()}`;
-      store.product_categories[categoryKey] = products;
-    }
-
-    store.timestamp = Date.now();
     storage.set(PRODUCTS_KEY, store, {
       expiration: PRODUCTS_EXPIRATION,
       version: '1.0',
     });
   };
 
-  const getCache = (category: string = 'all'): CacheEntry | null => {
+  const getCache = (cacheKey: string) => {
     const store = getStore();
-    let products: Product[] = [];
-
-    if (category === 'all') {
-      products = store.all || [];
-    } else if (category === 'viewed') {
-      products = store.viewed || [];
-    } else if (category.startsWith('product_')) {
-      products = store.product_categories?.[category] || [];
-    }
-
-    return products.length
-      ? {
-          products,
-          timestamp: store.timestamp,
-          category,
-        }
-      : null;
+    return isCacheValid(cacheKey) ? store.cache[cacheKey] : null;
   };
 
-  const isCacheValid = (category: string = 'all'): boolean => {
+  const clearCache = (cacheKey: string): void => {
     const store = getStore();
-    const timestamp = store.timestamp;
-    const now = Date.now();
 
-    console.log('Cache check:', {
-      category,
-      timestamp,
-      age: now - timestamp,
+    if (cacheKey === 'viewed') {
+      store.viewed = {
+        products: [],
+        timestamp: Date.now(),
+      };
+    } else if (store.cache[cacheKey]) {
+      delete store.cache[cacheKey];
+    }
+
+    storage.set(PRODUCTS_KEY, store, {
       expiration: PRODUCTS_EXPIRATION,
-      isValid: now - timestamp < PRODUCTS_EXPIRATION,
+      version: '1.0',
     });
-
-    if (category === 'all') {
-      return Boolean(store.all?.length) && Date.now() - timestamp < PRODUCTS_EXPIRATION;
-    }
-
-    if (category === 'viewed') {
-      return Boolean(store.viewed?.length) && Date.now() - timestamp < PRODUCTS_EXPIRATION;
-    }
-
-    if (category.startsWith('product_')) {
-      const categoryProducts = store.product_categories?.[category];
-      return Boolean(categoryProducts?.length) && Date.now() - timestamp < PRODUCTS_EXPIRATION;
-    }
-
-    return false;
   };
 
-  const isCategoryCacheValid = () => !storage.isExpired(PRODUCTS_KEY);
+  const isCacheValid = (cacheKey: string): boolean => {
+    const store = getStore();
+    if (!store.cache[cacheKey]) return false;
+
+    const cacheAge = Date.now() - store.cache[cacheKey].timestamp;
+    return cacheAge < PRODUCTS_EXPIRATION;
+  };
+
+  const setViewedCache = (product: Product): void => {
+    const store = getStore();
+
+    store.viewed = {
+      products: [
+        product,
+        ...(store.viewed?.products || []).filter((p: { id: number }) => p.id !== product.id),
+      ].slice(0, MAX_VIEWED),
+      timestamp: Date.now(),
+    };
+
+    storage.set(PRODUCTS_KEY, store, {
+      expiration: PRODUCTS_EXPIRATION,
+      version: '1.0',
+    });
+  };
+
+  const getViewedCache = () => {
+    const store = getStore();
+    return store.viewed?.products?.length ? store.viewed : null;
+  };
 
   const setCategoryCache = (categories: string[]): void => {
     const store = getStore();
@@ -155,8 +116,10 @@ export const useProductStore = defineStore('products', () => {
     setCache,
     getCache,
     isCacheValid,
+    clearCache,
     setCategoryCache,
     getCategoryCache,
-    isCategoryCacheValid,
+    setViewedCache,
+    getViewedCache,
   };
 });

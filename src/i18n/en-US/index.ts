@@ -139,4 +139,7 @@ export default {
     contactSupport: 'Contact Support',
     additionalInfo: 'Additional Information',
   },
+  errors: {
+    fetchProduct: 'Failed to fetch product details.',
+  }
 };

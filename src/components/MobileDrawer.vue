@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType, watch, ref } from 'vue';
+import { computed, PropType, watch, ref, nextTick } from 'vue';
 import { useQuasar } from 'quasar';
 import { useUserStore } from '@/stores/user';
 import LanguageSelector from '@/components/base/LanguageSelector.vue';
@@ -196,7 +196,14 @@ const currentLanguage = computed({
   get: () =>
     (languageOptions.value.find((opt) => opt.value === userStore.settings.language) ||
       languageOptions.value[0])!,
-  set: (option: LanguageOption) => userStore.setLanguage(option.value),
+  set: async (option: LanguageOption) => {
+    await userStore.setLanguage(option.value);
+    nextTick(() => {
+      if (props.drawerOpen) {
+        emit('update:drawerOpen', false);
+      }
+    });
+  },
 });
 
 const currentCurrency = computed({

@@ -102,3 +102,54 @@ export type I18nOptions = {
   datetimeFormats: Record<string, DateTimeFormat>;
   numberFormats: Record<string, NumberFormat>;
 };
+
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  lastPage: number;
+}
+
+export interface ProductResponse {
+  status: string;
+  data: Product[];
+  meta: PaginationMeta;
+}
+
+export interface ProductCacheEntry {
+  data: Product[];
+  meta?: PaginationMeta;
+  timestamp: number;
+  category: string;
+}
+
+export interface ViewedCache {
+  products: Product[];
+  timestamp: number;
+}
+
+export interface CacheEntry {
+  products: Product[];
+  timestamp: number;
+  category: string;
+}
+
+export interface CategoryCache {
+  categories: string[];
+  timestamp: number;
+}
+
+export interface ProductsValue {
+  all: Product[];
+  viewed: Product[];
+  categories: string[];
+  timestamp: number;
+}
+
+export interface ProductStore {
+  cache: Record<string, ProductCacheEntry>;
+  viewed: ViewedCache;
+  categories: string[];
+  timestamp: number;
+  version: string;
+}

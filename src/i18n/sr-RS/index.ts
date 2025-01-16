@@ -139,4 +139,7 @@ export default {
     contactSupport: 'Kontaktirajte podršku',
     additionalInfo: 'Dodatne informacije',
   },
+  errors: {
+    fetchProduct: 'Nije uspelo učitavanje proizvoda!',
+  }
 };

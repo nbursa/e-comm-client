@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
-import { Currency, I18nOptions, MessageLanguages, ThemeOption, UserSettings } from '@/types';
+import { Currency, MessageLanguages, ThemeOption, UserSettings } from '@/types';
 import { storage } from '@/utils/storage';
 import { languages, currencies, STORAGE_LANGUAGE_KEY } from '@/utils/i18n';
 import { themeOptions } from '@/utils/theme';
+import { i18n } from '@/boot/i18n';
 
 export const useUserStore = defineStore('user', () => {
   const USER_CACHE_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
@@ -52,7 +53,9 @@ export const useUserStore = defineStore('user', () => {
 
   const setLanguage = async (lang: MessageLanguages) => {
     settings.value.language = lang;
-    await setI18nLanguage(lang);
+    const i18nInstance = i18n.global;
+    i18nInstance.locale = lang;
+    storage.set(STORAGE_LANGUAGE_KEY, lang);
     saveSettings();
   };
 
@@ -61,14 +64,7 @@ export const useUserStore = defineStore('user', () => {
     return (lang?.data as MessageLanguages) || 'en-US';
   };
 
-  const setI18nLanguage = async (lang: MessageLanguages): Promise<void> => {
-    const { i18n } = await import('@/boot/i18n');
-    const i18nInstance = i18n as unknown as I18nOptions;
-    if (i18nInstance.locale) {
-      i18nInstance.locale = lang;
-      storage.set(STORAGE_LANGUAGE_KEY, lang);
-    }
-  };
+  loadSettings();
 
   watch(() => settings.value.language, setLanguage);
 
@@ -83,6 +79,5 @@ export const useUserStore = defineStore('user', () => {
     currencyOptions,
     loadSettings,
     getStoredLanguage,
-    setI18nLanguage,
   };
 });

@@ -139,4 +139,7 @@ export default {
     contactSupport: 'Contacter le support',
     additionalInfo: 'Informations supplémentaires',
   },
+  errors: {
+    fetchProduct: 'Impossible de charger les détails du produit!',
+  },
 };

@@ -15,7 +15,7 @@
         class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 tw-gap-4"
       >
         <ProductCard
-          v-for="product in paginatedProducts"
+          v-for="product in displayedProducts"
           :key="product.id"
           :product="product"
           :color="theme.backgroundColor"
@@ -27,7 +27,7 @@
     </div>
 
     <q-pagination
-      v-if="products.length > itemsPerPage"
+      v-if="meta.total > 0"
       v-model="currentPage"
       :max="totalPages"
       boundary-numbers
@@ -36,24 +36,26 @@
       :text-color="theme.paginationTextColor"
       :active-color="theme.paginationActiveColor"
       :active-text-color="theme.paginationActiveTextColor"
-      @update:model-value="scrollToTop"
+      @update:model-value="handlePageChange"
     />
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, inject } from 'vue';
+import { computed, ref, onMounted, inject, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useProductStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/stores/cart';
-import { Product } from '@/types';
+import { Product, ProductResponse } from '@/types';
 import { QVueGlobals } from 'quasar';
 import ProductTabs from '@/components/ProductTabs.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
+
+const CATEGORY_CACHE_KEY = 'products_categories';
 
 defineProps({
   scrollOffset: {
@@ -74,7 +76,22 @@ const itemsPerPage = 10;
 const selectedCategory = ref('all');
 const categories = ref<string[]>([]);
 const isLoadingCategories = ref(true);
+const filters = ref({
+  search: '',
+  minPrice: 0,
+  maxPrice: 999999,
+  sortBy: 'id',
+  sortOrder: 'asc',
+});
+const meta = ref({
+  total: 0,
+  page: 1,
+  limit: 10,
+  lastPage: 1,
+});
 
+const totalPages = computed(() => Math.ceil(meta.value.total / meta.value.limit));
+const displayedProducts = computed(() => products.value);
 const theme = computed(() => ({
   activeTextColor: $q.dark.isActive ? 'dark' : 'black',
   backgroundColor: $q.dark.isActive ? 'white' : 'black',
@@ -85,20 +102,14 @@ const theme = computed(() => ({
   paginationActiveTextColor: $q.dark.isActive ? 'black' : 'white',
 }));
 
-const filteredProducts = computed(() => {
-  if (!products.value.length) return [];
-  if (selectedCategory.value === 'all') return products.value;
-  return products.value.filter((product) => product.category === selectedCategory.value);
-});
-
-const paginatedProducts = computed(() => {
-  return filteredProducts.value.slice(
-    (currentPage.value - 1) * itemsPerPage,
-    currentPage.value * itemsPerPage,
-  );
-});
-
-const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage));
+watch(
+  filters,
+  () => {
+    currentPage.value = 1;
+    fetchProducts(selectedCategory.value);
+  },
+  { deep: true },
+);
 
 const addToCart = (product: Product) => {
   cartStore.addItem({ ...product, quantity: 1 });
@@ -115,6 +126,12 @@ const viewProduct = (product: Product) => {
   router.push(`/products/${product.id}`);
 };
 
+const handlePageChange = (page: number) => {
+  currentPage.value = page;
+  scrollToTop();
+  fetchProducts(selectedCategory.value);
+};
+
 const onCategoryChange = async (newCategory: string) => {
   selectedCategory.value = newCategory;
   currentPage.value = 1;
@@ -125,7 +142,7 @@ const fetchCategories = async () => {
   try {
     isLoadingCategories.value = true;
 
-    if (productCache.isCategoryCacheValid()) {
+    if (productCache.isCacheValid(CATEGORY_CACHE_KEY)) {
       const cached = productCache.getCategoryCache();
       if (cached) {
         categories.value = cached.categories;
@@ -153,32 +170,76 @@ const fetchCategories = async () => {
   }
 };
 
+const buildCacheKey = (params: {
+  category: string;
+  page: number;
+  limit: number;
+  search: string;
+  minPrice: number;
+  maxPrice: number;
+  sortBy: string;
+  sortOrder: string;
+}): string => {
+  return `products_${params.category}_${params.page}_${params.limit}_${params.search}_${params.minPrice}_${params.maxPrice}_${params.sortBy}_${params.sortOrder}`;
+};
+
 const fetchProducts = async (category = 'all') => {
   $q.loading.show();
   try {
-    const cacheKey = category !== 'all' ? `product_${category}` : category;
+    const params = {
+      category,
+      page: currentPage.value,
+      limit: itemsPerPage,
+      search: filters.value.search,
+      minPrice: filters.value.minPrice,
+      maxPrice: filters.value.maxPrice,
+      sortBy: filters.value.sortBy,
+      sortOrder: filters.value.sortOrder,
+    };
 
-    if (productCache.isCacheValid(cacheKey)) {
-      const cached = productCache.getCache(cacheKey);
-      if (cached) {
-        products.value = cached.products;
-        return;
-      }
+    const cacheKey = buildCacheKey(params);
+
+    const cached = productCache.getCache(cacheKey);
+
+    if (cached?.meta && cached?.data) {
+      products.value = cached.data;
+      meta.value = cached.meta;
+      $q.loading.hide();
+      return;
     }
 
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/products${category !== 'all' ? `/category/${category}` : ''}`,
-    );
+    const queryParams = new URLSearchParams({
+      page: currentPage.value.toString(),
+      limit: itemsPerPage.toString(),
+      search: filters.value.search,
+      minPrice: filters.value.minPrice.toString(),
+      maxPrice: filters.value.maxPrice.toString(),
+      sortBy: filters.value.sortBy,
+      sortOrder: filters.value.sortOrder,
+    });
+
+    const url = `${import.meta.env.VITE_API_URL}/products${
+      category !== 'all' ? `/category/${category}` : ''
+    }?${queryParams}`;
+
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`);
     }
 
-    const data = await response.json();
-    products.value = data;
-    productCache.setCache(data, cacheKey);
+    const result = (await response.json()) as ProductResponse;
+    products.value = result.data;
+    meta.value = result.meta;
+
+    productCache.setCache(result, cacheKey);
   } catch (error) {
     console.error('Error fetching products:', error);
+    $q.notify({
+      color: 'negative',
+      message: t('errors.fetchProducts'),
+      icon: 'error',
+    });
   } finally {
     $q.loading.hide();
   }
