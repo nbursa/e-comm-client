@@ -4,6 +4,7 @@ import { Currency, MessageLanguages, ThemeOption, UserSettings } from '@/types';
 import { storage } from '@/utils/storage';
 import { languages, currencies, STORAGE_LANGUAGE_KEY } from '@/utils/i18n';
 import { themeOptions } from '@/utils/theme';
+import { i18n } from '@/boot/i18n';
 
 export const useUserStore = defineStore('user', () => {
   const USER_CACHE_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
