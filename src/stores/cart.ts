@@ -6,7 +6,22 @@ import { storage } from '@/utils/storage';
 export const useCartStore = defineStore('cart', () => {
   const CART_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-  const items = ref<Product[]>(Array.isArray(storage.get('cart')) ? storage.get('cart') : []);
+  const loadInitialCart = (): Product[] => {
+    const savedCart = storage.get('cart');
+    if (!savedCart) return [];
+
+    if (savedCart['0'] && savedCart.timestamp) {
+      return [savedCart['0']];
+    }
+
+    if (Array.isArray(savedCart) && !storage.isExpired('cart')) {
+      return savedCart;
+    }
+
+    return [];
+  };
+
+  const items = ref<Product[]>(loadInitialCart());
 
   const totalItems = computed(() => items.value.reduce((total, item) => total + item.quantity, 0));
 
@@ -61,5 +76,5 @@ export const useCartStore = defineStore('cart', () => {
     updateQuantity,
     removeItem,
     clearCart,
-  };
+  } as const;
 });
