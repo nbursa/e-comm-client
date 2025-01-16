@@ -1,7 +1,7 @@
 import { defineConfig } from '@quasar/app-vite/wrappers';
 import { fileURLToPath } from 'node:url';
-import dotenv from 'dotenv';
 import type { UserConfig } from 'vite';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -36,6 +36,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       },
       publicPath: '/',
       vueRouterMode: 'history',
+      distDir: 'dist/spa',
       extendViteConf(viteConf: UserConfig) {
         viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';
         viteConf.resolve ??= {};

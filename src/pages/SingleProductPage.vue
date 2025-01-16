@@ -178,16 +178,23 @@ const fetchProductDetails = async () => {
   $q.loading.show();
 
   try {
+    console.log('Checking cache for product:', slug);
     const viewedCache = productCache.getCache('viewed');
-    if (viewedCache) {
+    console.log('Viewed cache:', viewedCache);
+
+    if (viewedCache && productCache.isCacheValid('viewed')) {
       const found = viewedCache.products.find((p) => p.id === Number(slug));
       if (found) {
+        console.log('Cache hit for product:', slug);
         product.value = found;
         return;
       }
     }
 
+    console.log('Cache miss, fetching from API');
     const apiUrl = baseUrl.endsWith('/products') ? baseUrl.slice(0, -9) : baseUrl;
+
+    console.log('API URL:', apiUrl, `${apiUrl}/products/${slug}`);
 
     const response = await fetch(`${apiUrl}/products/${slug}`);
 
@@ -214,6 +221,7 @@ const fetchProductDetails = async () => {
     };
 
     productCache.setCache([product.value], 'viewed');
+    console.log('Updated cache with new product data');
   } catch (error) {
     console.warn('Error fetching product:', error);
     $q.notify({
@@ -237,5 +245,10 @@ onMounted(async () => {
 
 onUnmounted(() => {
   imageUrlCache.clear();
+
+  if (!productCache.isCacheValid('viewed')) {
+    console.log('Clearing expired product cache');
+    productCache.setCache([], 'viewed');
+  }
 });
 </script>

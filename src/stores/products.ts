@@ -102,6 +102,15 @@ export const useProductStore = defineStore('products', () => {
   const isCacheValid = (category: string = 'all'): boolean => {
     const store = getStore();
     const timestamp = store.timestamp;
+    const now = Date.now();
+
+    console.log('Cache check:', {
+      category,
+      timestamp,
+      age: now - timestamp,
+      expiration: PRODUCTS_EXPIRATION,
+      isValid: now - timestamp < PRODUCTS_EXPIRATION,
+    });
 
     if (category === 'all') {
       return Boolean(store.all?.length) && Date.now() - timestamp < PRODUCTS_EXPIRATION;

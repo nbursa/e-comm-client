@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, computed, onMounted, defineProps, defineEmits } from 'vue';
+import { PropType, ref, computed, onMounted } from 'vue';
 import { PreviewImage } from '@/types';
 import VueEasyLightbox from 'vue-easy-lightbox';
 
