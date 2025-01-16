@@ -17,12 +17,13 @@
     "dev": "quasar dev",
     "dev:smtp": "concurrently \"npm run dev:server\" \"npm run dev\"",
     "build": "quasar build",
-    "build:client": "quasar build -m spa",
+    "build:spa": "cross-env NODE_ENV=production quasar build -m spa",
     "build:server": "mkdir -p dist/server && cp server/* dist/server/",
-    "build-all": "npm run build:client && npm run build:server",
+    "build-all": "npm run build:spa && npm run build:server",
     "postinstall": "quasar prepare",
     "analyze": "quasar build --analyze",
-    "deploy": "dotenv -e .env.production -- cross-env NODE_ENV=production quasar build -m spa rm -f dist/spa/CNAME && echo 'shop.nenadbursac.com' > dist/spa/CNAME && gh-pages -d dist/spa"
+    "build-cname": "echo $VITE_APP_DOMAIN > dist/spa/CNAME",
+    "deploy": "dotenv -e .env.production -- npm run build:spa && gh-pages -d dist/spa"
   },
   "dependencies": {
     "@quasar/app-vite": "^2.0.5",
