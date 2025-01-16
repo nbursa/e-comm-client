@@ -1,1 +1,0 @@
-import{b as t}from"./index-3fevySbJ.js";import{a as e,b as s}from"./index-9txCErRn.js";const i=t(({app:a})=>{const o=a.config.globalProperties.$q;s(o),e()});export{i as default,e as initThemeManager};
