@@ -4,13 +4,12 @@ import { Currency, MessageLanguages, ThemeOption, UserSettings } from '@/types';
 import { storage } from '@/utils/storage';
 import { languages, currencies, STORAGE_LANGUAGE_KEY } from '@/utils/i18n';
 import { themeOptions } from '@/utils/theme';
-import { i18n } from '@/boot/i18n';
 
 export const useUserStore = defineStore('user', () => {
   const USER_CACHE_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
 
   const settings = ref<UserSettings>({
-    language: 'en-US',
+    language: storage.get('user_settings')?.language || 'en-US',
     theme: 'light',
     useSystemPreference: false,
     currency: 'EUR',
@@ -53,8 +52,7 @@ export const useUserStore = defineStore('user', () => {
 
   const setLanguage = async (lang: MessageLanguages) => {
     settings.value.language = lang;
-    const i18nInstance = i18n.global;
-    i18nInstance.locale = lang;
+    i18n.global.locale.value = lang;
     storage.set(STORAGE_LANGUAGE_KEY, lang);
     saveSettings();
   };
