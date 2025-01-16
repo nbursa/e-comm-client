@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import 'quasar/src/css/index.sass';
 import { useUserStore } from '@/stores/user';
-import { applyTheme } from './boot/theme';
+import { applyTheme } from '@/utils/theme';
 import { watch } from 'vue';
 
 const userStore = useUserStore();
