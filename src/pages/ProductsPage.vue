@@ -52,6 +52,7 @@ import { useCartStore } from '@/stores/cart';
 import { Product, ProductResponse } from '@/types';
 import { QVueGlobals } from 'quasar';
 import ProductTabs from '@/components/ProductTabs.vue';
+import { CATEGORY_PATH, PRODUCT_PATH } from '@/router';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -123,7 +124,7 @@ const addToCart = (product: Product) => {
 };
 
 const viewProduct = (product: Product) => {
-  router.push(`/products/${product.id}`);
+  router.push(`${PRODUCT_PATH}/${product.id}`);
 };
 
 const handlePageChange = (page: number) => {
@@ -150,7 +151,7 @@ const fetchCategories = async () => {
       }
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/products/categories`);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${CATEGORY_PATH}`);
 
     if (!response.ok) {
       console.warn(`API returned ${response.status} for categories`);
@@ -245,8 +246,7 @@ const fetchProducts = async (category = 'all') => {
   }
 };
 
-onMounted(() => {
-  fetchCategories();
-  fetchProducts();
+onMounted(async () => {
+  await Promise.all([fetchCategories(), fetchProducts()]);
 });
 </script>
