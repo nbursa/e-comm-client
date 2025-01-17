@@ -70,6 +70,7 @@ export default {
       mensClothing: 'Muška odeća',
       womensClothing: 'Ženska odeća',
     },
+    noImage: 'Proizvod nema sliku za prikaz.',
   },
   cart: {
     emptyCart: 'Vaša korpa je prazna',
@@ -141,5 +142,5 @@ export default {
   },
   errors: {
     fetchProducts: 'Nije uspelo učitavanje proizvoda!',
-  }
+  },
 };

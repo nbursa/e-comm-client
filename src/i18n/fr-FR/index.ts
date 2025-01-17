@@ -70,6 +70,7 @@ export default {
       mensClothing: 'Vêtements homme',
       womensClothing: 'Vêtements femme',
     },
+    noImage: "Le produit n'a pas d'images pour un aperçu.",
   },
   cart: {
     emptyCart: 'Votre panier est vide',

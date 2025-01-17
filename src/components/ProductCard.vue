@@ -5,12 +5,21 @@
     @click="viewProduct(product)"
   >
     <q-img
+      v-if="product.image"
+      ref="imageSection"
       :src="imageUrl(product.image)"
       :alt="product.name"
       fit="contain"
       class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"
     />
-    <q-card-section class="tw-flex-grow q-px-sm !tw-pb-0">
+    <div
+      v-if="!product.image"
+      ref="noImageSection"
+      class="tw-p-1.5 tw-flex tw-items-center tw-justify-center tw-min-h-64 tw-w-full tw-max-h-1.5"
+    >
+      {{ $t('products.noImage') }}
+    </div>
+    <q-card-section class="q-px-sm !tw-pb-0">
       <div class="text-bold">{{ product.name || product.title }}</div>
       <div class="text-caption">{{ getFirstSentence(product.description) }}</div>
     </q-card-section>
@@ -41,10 +50,11 @@
 <script lang="ts" setup>
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
+import { watch, ref } from 'vue';
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
 
-defineProps({
+const props = defineProps({
   product: {
     type: Object as () => Product,
     required: true,
@@ -61,6 +71,9 @@ defineProps({
 
 const emit = defineEmits(['add-to-cart', 'view-product']);
 
+const imageSection = ref<HTMLImageElement | null>(null);
+const noImageSection = ref<HTMLDivElement | null>(null);
+
 const addToCart = (product: Product) => {
   emit('add-to-cart', product);
 };
@@ -73,8 +86,21 @@ const imageUrl = (imagePath: string) => {
   return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
 };
 
+const adjustNoImageSection = () => {
+  if (imageSection.value && noImageSection.value) {
+    noImageSection.value.style.height = `${imageSection.value.clientHeight}px`;
+  }
+};
+
 const getFirstSentence = (description: string) => {
   const match = description.match(/[^.!?]*[.!?]/);
   return match ? match[0] : description;
 };
+
+watch(
+  () => props.product.image,
+  () => {
+    adjustNoImageSection();
+  },
+);
 </script>

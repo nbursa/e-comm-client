@@ -7,6 +7,8 @@ import {
 } from 'vue-router';
 import routes from './routes';
 
+export const PAGE_TITLE = 'E-Comm Shop';
+
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -41,8 +43,11 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach((to, from, next) => {
-    const defaultTitle = 'E-Comm Platform';
-    document.title = to.meta.title ? `${to.meta.title} - ${defaultTitle}` : defaultTitle;
+    if (to.meta.title) {
+      document.title = `${to.meta.title} - ${PAGE_TITLE}`;
+    } else {
+      document.title = PAGE_TITLE;
+    }
     next();
   });
 

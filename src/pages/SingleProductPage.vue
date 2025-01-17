@@ -85,6 +85,7 @@ import { PreviewImage, Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import { useProductStore } from '@/stores/products';
 import { useImageStore } from '@/stores/images';
+import { PAGE_TITLE } from '@/router';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -186,7 +187,7 @@ const fetchProductDetails = async () => {
         product.value = found;
 
         useMeta({
-          title: `${found.name || found.title} - E-Comm Shop`,
+          title: `${found.name || found.title} - ${PAGE_TITLE}`,
         });
 
         return;
@@ -220,7 +221,7 @@ const fetchProductDetails = async () => {
     productCache.setViewedCache(product.value);
 
     useMeta({
-      title: `${product.value.name || product.value.title} - E-Comm Shop`,
+      title: `${product.value.name || product.value.title} - ${PAGE_TITLE}`,
     });
   } catch (error) {
     console.warn('Error fetching product:', error);

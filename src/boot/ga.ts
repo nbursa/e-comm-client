@@ -21,7 +21,7 @@ export default boot(({ router }) => {
           window.gtag('config', gaId, {
             page_path: to.path,
             page_location: window.location.href,
-            page_title: document.title || 'E-Comm Platform',
+            page_title: document.title,
           });
         } catch (error) {
           console.error('GA tracking error:', error);
