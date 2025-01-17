@@ -4,7 +4,7 @@ This project is a simple client application for an e-commerce platform, built us
 
 ## Backend
 
-The backend for this application is built using the Gin framework in Go. It provides a simple API for managing products and their categories. Repository can be found at: [E-commerce Backend](https://github.com/nbursa/e-comm-backend)
+The backend for this application is built using the Gin framework in Go. It provides a simple API for managing products and their categories. Repository can be found at: [E-commerce Platform API](https://github.com/nbursa/e-comm-api)
 
 ## Installation
 
