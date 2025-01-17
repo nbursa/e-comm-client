@@ -55,7 +55,6 @@ export const useUserStore = defineStore('user', () => {
     settings.value.language = lang;
     const i18n = getI18n();
     i18n.global.locale.value = lang;
-    storage.set(STORAGE_LANGUAGE_KEY, lang);
     saveSettings();
   };
 
