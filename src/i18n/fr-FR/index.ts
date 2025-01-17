@@ -140,6 +140,6 @@ export default {
     additionalInfo: 'Informations supplémentaires',
   },
   errors: {
-    fetchProduct: 'Impossible de charger les détails du produit!',
+    fetchProducts: 'Impossible de charger les détails du produit!',
   },
 };

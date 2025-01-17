@@ -140,6 +140,6 @@ export default {
     additionalInfo: 'Additional Information',
   },
   errors: {
-    fetchProduct: 'Failed to fetch product details.',
+    fetchProducts: 'Failed to fetch product details.',
   }
 };

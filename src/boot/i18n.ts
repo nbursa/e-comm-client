@@ -4,17 +4,23 @@ import messages from '../i18n';
 import { createI18n } from 'vue-i18n';
 import { i18nConfig } from '@/utils/i18n';
 
-const i18nInstance = createI18n({
-  locale: 'en-US',
-  fallbackLocale: 'en-US',
-  legacy: false,
-  messages,
-  datetimeFormats: i18nConfig.datetimeFormats,
-  numberFormats: i18nConfig.numberFormats,
-});
+let i18nInstance: ReturnType<typeof createI18n>;
 
-export const i18n = i18nInstance;
+export function getI18n() {
+  if (!i18nInstance) {
+    i18nInstance = createI18n({
+      locale: 'en-US',
+      fallbackLocale: 'en-US',
+      legacy: false,
+      messages,
+      datetimeFormats: i18nConfig.datetimeFormats,
+      numberFormats: i18nConfig.numberFormats,
+    });
+  }
+  return i18nInstance;
+}
 
 export default boot(({ app }: { app: App }) => {
+  const i18n = getI18n();
   app.use(i18n);
 });

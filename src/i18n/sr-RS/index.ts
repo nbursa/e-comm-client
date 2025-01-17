@@ -140,6 +140,6 @@ export default {
     additionalInfo: 'Dodatne informacije',
   },
   errors: {
-    fetchProduct: 'Nije uspelo učitavanje proizvoda!',
+    fetchProducts: 'Nije uspelo učitavanje proizvoda!',
   }
 };
