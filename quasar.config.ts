@@ -34,7 +34,7 @@ export default defineConfig((ctx: { modeName: string }) => {
         moduleResolution: 'bundler',
         tsconfigPath: './tsconfig.json',
       },
-      publicPath: '/',
+      publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
       vueRouterMode: 'history',
       distDir: 'dist/spa',
       extendViteConf(viteConf: UserConfig) {
