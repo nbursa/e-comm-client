@@ -78,14 +78,13 @@
 import { ref, computed, onMounted, inject, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCartStore } from '@/stores/cart';
-import { useQuasar } from 'quasar';
+import { useQuasar, useMeta } from 'quasar';
 import type { QVueGlobals } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { PreviewImage, Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import { useProductStore } from '@/stores/products';
 import { useImageStore } from '@/stores/images';
-import { useMeta } from 'quasar';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -194,8 +193,7 @@ const fetchProductDetails = async () => {
       }
     }
 
-    const apiUrl = baseUrl.endsWith('/products') ? baseUrl.slice(0, -9) : baseUrl;
-    const response = await fetch(`${apiUrl}/products/${slug}`);
+    const response = await fetch(`${baseUrl}/products/${slug}`);
 
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`);
