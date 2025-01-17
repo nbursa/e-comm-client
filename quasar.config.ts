@@ -37,6 +37,7 @@ export default defineConfig((ctx: { modeName: string }) => {
       publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
       vueRouterMode: 'history',
       distDir: 'dist/spa',
+
       extendViteConf(viteConf: UserConfig) {
         viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';
         viteConf.resolve ??= {};
