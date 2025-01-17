@@ -121,7 +121,7 @@ export default defineConfig((ctx: { modeName: string }) => {
         dark: true,
       },
       utilities: true,
-      plugins: ['Notify', 'Loading', 'Dialog'],
+      plugins: ['Meta', 'Notify', 'Loading', 'Dialog'],
       cssAddon: false,
     },
     animations: 'all',

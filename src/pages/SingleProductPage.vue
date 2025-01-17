@@ -85,6 +85,7 @@ import { PreviewImage, Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import { useProductStore } from '@/stores/products';
 import { useImageStore } from '@/stores/images';
+import { useMeta } from 'quasar';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -184,6 +185,11 @@ const fetchProductDetails = async () => {
       const found = viewedCache.products.find((p: { id: number }) => p.id === Number(slug));
       if (found) {
         product.value = found;
+
+        useMeta({
+          title: `${found.name || found.title} - E-Comm Shop`,
+        });
+
         return;
       }
     }
@@ -214,6 +220,10 @@ const fetchProductDetails = async () => {
     };
 
     productCache.setViewedCache(product.value);
+
+    useMeta({
+      title: `${product.value.name || product.value.title} - E-Comm Shop`,
+    });
   } catch (error) {
     console.warn('Error fetching product:', error);
     $q.notify({
