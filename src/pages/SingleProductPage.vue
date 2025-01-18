@@ -119,6 +119,7 @@ const product = ref<Product>({
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
+const metaTitle = computed(() => `${product.value.name || product.value.title} - ${PAGE_TITLE}`);
 
 const imageLocalUrl = (imagePath: string | undefined): string => {
   if (!imagePath) return '/assets/placeholder.webp';
@@ -188,7 +189,7 @@ const fetchProductDetails = async () => {
         product.value = found;
 
         useMeta({
-          title: `${found.name || found.title} - ${PAGE_TITLE}`,
+          title: metaTitle.value,
         });
 
         return;
@@ -224,7 +225,7 @@ const fetchProductDetails = async () => {
     productCache.setViewedCache(product.value);
 
     useMeta({
-      title: `${product.value.name || product.value.title} - ${PAGE_TITLE}`,
+      title: metaTitle.value,
     });
   } catch (error) {
     console.warn('Error fetching product:', error);
@@ -243,8 +244,8 @@ const fetchProductDetails = async () => {
   }
 };
 
-onMounted(async () => {
-  await fetchProductDetails();
+onMounted(() => {
+  fetchProductDetails();
 });
 
 onUnmounted(() => {
