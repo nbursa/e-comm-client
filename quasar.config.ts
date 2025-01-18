@@ -1,6 +1,9 @@
 import { defineConfig } from '@quasar/app-vite/wrappers';
 import { fileURLToPath } from 'node:url';
 import type { UserConfig } from 'vite';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default defineConfig((ctx) => {
   return {

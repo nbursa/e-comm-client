@@ -244,8 +244,8 @@ const fetchProductDetails = async () => {
   }
 };
 
-onMounted(() => {
-  fetchProductDetails();
+onMounted(async () => {
+  await fetchProductDetails();
 });
 
 onUnmounted(() => {
