@@ -21,8 +21,8 @@
     "postinstall": "quasar prepare",
     "analyze": "quasar build --analyze",
     "dev": "cross-env NODE_ENV=development quasar dev",
-    "build:spa": "cross-env NODE_ENV=production quasar build -m spa",
     "build-cname": "echo $VITE_APP_DOMAIN > dist/spa/CNAME",
+    "build:spa": "cross-env NODE_ENV=production vite build --mode production",
     "deploy": "dotenv -e .env.prod -- npm run build:spa && gh-pages -d dist/spa"
   },
   "dependencies": {
