@@ -122,7 +122,7 @@ const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const metaTitle = computed(() => `${product.value.name || product.value.title} - ${PAGE_TITLE}`);
 
 const imageLocalUrl = (imagePath: string | undefined): string => {
-  if (!imagePath) return '/assets/placeholder.webp';
+  if (!imagePath) return '/api/static/placeholder.webp';
 
   const cached = imageUrlCache.get(imagePath);
   if (cached) return cached;
