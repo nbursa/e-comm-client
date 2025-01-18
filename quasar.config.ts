@@ -1,19 +1,18 @@
 import { defineConfig } from '@quasar/app-vite/wrappers';
 import { fileURLToPath } from 'node:url';
 import type { UserConfig } from 'vite';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-export default defineConfig((ctx: { modeName: string }) => {
+export default defineConfig((ctx) => {
   return {
     preFetch: true,
     boot: ['i18n', 'init', 'ga', 'axios', 'theme', 'lightbox'],
     css: ['app.scss'],
     extras: ['roboto-font', 'material-icons'],
+    set: false,
+    pwd: 999,
     build: {
       env: {
-        VITE_GA_ID: process.env.NODE_ENV === 'development' ? '' : process.env.VITE_GA_ID,
+        VITE_GA_ID: process.env.VITE_GA_ID,
         VITE_API_URL: process.env.VITE_API_URL,
         VITE_RN: process.env.VITE_RN,
         VITE_RATES_API_URL: process.env.VITE_RATES_API_URL,
@@ -34,12 +33,12 @@ export default defineConfig((ctx: { modeName: string }) => {
         moduleResolution: 'bundler',
         tsconfigPath: './tsconfig.json',
       },
-      publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
+      publicPath: ctx.dev ? '/' : '',
       vueRouterMode: 'history',
       distDir: 'dist/spa',
 
       extendViteConf(viteConf: UserConfig) {
-        viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';
+        viteConf.base = ctx.dev ? '/' : '';
         viteConf.resolve ??= {};
         viteConf.resolve.alias = {
           ...viteConf.resolve.alias,
@@ -87,17 +86,7 @@ export default defineConfig((ctx: { modeName: string }) => {
     },
     devServer: {
       port: 9000,
-      proxy: {
-        '/api': {
-          target: 'http://localhost:3000',
-          changeOrigin: true,
-          secure: true,
-          ws: true,
-          pathRewrite: {
-            '^/api': '',
-          },
-        },
-      },
+      open: false,
     },
     framework: {
       config: {
@@ -133,6 +122,7 @@ export default defineConfig((ctx: { modeName: string }) => {
     },
     pwa: {
       workboxMode: 'InjectManifest',
+      options: null,
     },
     capacitor: {
       hideSplashscreen: true,
