@@ -22,7 +22,7 @@
     "analyze": "quasar build --analyze",
     "dev": "cross-env NODE_ENV=development quasar dev",
     "build-cname": "echo $VITE_APP_DOMAIN > dist/spa/CNAME",
-    "build:spa": "cross-env NODE_ENV=production vite build --mode production",
+    "build:spa": "cross-env NODE_ENV=production quasar build -m spa",
     "deploy": "dotenv -e .env.production -- npm run build:spa && gh-pages -d dist/spa"
   },
   "dependencies": {
