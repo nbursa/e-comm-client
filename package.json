@@ -23,7 +23,7 @@
     "dev": "cross-env NODE_ENV=development quasar dev",
     "build-cname": "echo $VITE_APP_DOMAIN > dist/spa/CNAME",
     "build:spa": "cross-env NODE_ENV=production vite build --mode production",
-    "deploy": "dotenv -e .env.prod -- npm run build:spa && gh-pages -d dist/spa"
+    "deploy": "dotenv -e .env.production -- npm run build:spa && gh-pages -d dist/spa"
   },
   "dependencies": {
     "@quasar/app-vite": "^2.0.5",
