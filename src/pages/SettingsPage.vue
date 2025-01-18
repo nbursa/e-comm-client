@@ -94,28 +94,25 @@ const userStore = useUserStore();
 const { t } = useI18n();
 const $q = useQuasar() as QVueGlobals;
 
-// const languageOptions = computed<LanguageOption[]>(() => userStore.languageOptions);
-// const currencyOptions = computed<CurrencyOption[]>(() => userStore.currencyOptions);
-// const themeOptions = computed<ThemeOption[]>(() => userStore.themeOptions);
 const isDark = computed(() => userStore.settings.theme === 'dark');
 const languageOptions = computed(() =>
   userStore.languageOptions.map((option) => ({
     ...option,
-    label: t(`language.${option.value}`),
+    label: t(`common.language.${option.value}`),
   })),
 );
 
 const themeOptions = computed(() =>
   userStore.themeOptions.map((option) => ({
     ...option,
-    label: t(`theme.${option.value}`),
+    label: t(`common.theme.${option.value}`),
   })),
 );
 
 const currencyOptions = computed(() =>
   userStore.currencyOptions.map((option) => ({
     ...option,
-    label: t(`currencyLabel.${option.value}`),
+    label: t(`common.currencyLabel.${option.value}`),
   })),
 );
 

@@ -1,0 +1,17 @@
+export const cart = {
+  emptyCart: 'Votre panier est vide',
+  continue: 'Continuer vos achats',
+  each: 'chaque',
+  orderSummary: 'Récapitulatif de la commande',
+  items: 'Articles',
+  shipping: 'Livraison',
+  free: 'Gratuit',
+  total: 'Total',
+  checkout: 'Passez à la caisse',
+  errorRemoving: "Impossible de supprimer l'article du panier!",
+  itemRemoved: 'Article retiré du panier!',
+  confirmDelete: 'Êtes-vous sûr de vouloir supprimer cet article?',
+  deleteMessage: 'Cette action est irréversible.',
+  cancel: 'Annuler',
+  delete: 'Supprimer',
+};

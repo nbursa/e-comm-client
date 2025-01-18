@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import { ThemeOption } from '@/types';
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
   modelValue: ThemeOption;

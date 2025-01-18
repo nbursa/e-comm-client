@@ -54,11 +54,14 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   return Router;
 });
 
-export const CATEGORY_PATH = '/products/categories';
-export const PRODUCT_PATH = '/products';
+export const CATEGORIES_PATH = '/products/categories';
+export const CATEGORY_PATH = '/category';
+export const PRODUCTS_PATH = '/products';
 export const CART_PATH = '/cart';
 export const CHECKOUT_PATH = '/checkout';
-export const ORDER_PATH = '/orders';
+export const ORDER_PATH = '/checkout/order-overview';
+export const THANK_YOU_PATH = '/thankyou';
+export const ORDERS_PATH = '/orders';
 export const ORDER_DETAILS_PATH = '/orders/:id';
 export const LOGIN_PATH = '/login';
 export const REGISTER_PATH = '/register';

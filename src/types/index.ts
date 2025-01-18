@@ -21,17 +21,33 @@ export interface Product {
   discount?: boolean;
 }
 
-export interface OrderDetails {
-  id: number;
-  items: Product[];
+export interface ShippingDetails {
   firstName: string;
   lastName: string;
-  email: string;
   address: string;
+  email: string;
+}
+
+export interface CardDetails {
   cardNumber: string;
   expiry: string;
   cvv: string;
+}
+
+export interface PaymentDetails {
+  method: 'card' | 'ips';
+  cardDetails?: CardDetails;
+}
+
+export interface OrderDetails {
+  id: number;
+  items: Product[];
   total: number;
+}
+
+export interface IOrderForm {
+  shipping: ShippingDetails;
+  payment?: PaymentDetails;
 }
 
 export interface EmailConfig {

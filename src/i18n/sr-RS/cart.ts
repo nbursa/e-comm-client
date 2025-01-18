@@ -1,0 +1,17 @@
+export const cart = {
+  emptyCart: 'Vaša korpa je prazna',
+  continue: 'Nastavi kupovinu',
+  each: 'svaki',
+  orderSummary: 'Pregled porudžbine',
+  items: 'Proizvodi',
+  shipping: 'Dostava',
+  free: 'Besplatno',
+  total: 'Ukupno',
+  checkout: 'Nastavi na kasu',
+  errorRemoving: 'Nije uspelo uklanjanje proizvoda iz korpe!',
+  itemRemoved: 'Proizvod uklonjen iz korpe!',
+  confirmDelete: 'Da li ste sigurni da želite da obrišete ovaj proizvod?',
+  deleteMessage: 'Ova akcija je nepovratna.',
+  cancel: 'Otkaži',
+  delete: 'Obriši',
+};

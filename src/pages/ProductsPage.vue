@@ -52,7 +52,9 @@ import { useCartStore } from '@/stores/cart';
 import { Product, ProductResponse } from '@/types';
 import { QVueGlobals } from 'quasar';
 import ProductTabs from '@/components/ProductTabs.vue';
-import { CATEGORY_PATH, PRODUCT_PATH } from '@/router';
+import { CATEGORIES_PATH, CATEGORY_PATH, PRODUCTS_PATH } from '@/router';
+import { api } from '@/boot/axios';
+import { AxiosResponse } from 'axios';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -124,7 +126,7 @@ const addToCart = (product: Product) => {
 };
 
 const viewProduct = (product: Product) => {
-  router.push(`${PRODUCT_PATH}/${product.id}`);
+  router.push(`${PRODUCTS_PATH}/${product.id}`);
 };
 
 const handlePageChange = (page: number) => {
@@ -151,18 +153,15 @@ const fetchCategories = async () => {
       }
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}${CATEGORY_PATH}`);
+    const response: AxiosResponse<string[]> = await api.get(
+      `${import.meta.env.VITE_API_URL}${CATEGORIES_PATH}`,
+    );
 
-    if (!response.ok) {
-      console.warn(`API returned ${response.status} for categories`);
-      if (categories.value.length) {
-        return;
-      }
-      categories.value = ['all'];
-      return;
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch categories');
     }
 
-    categories.value = await response.json();
+    categories.value = response.data;
     productCache.setCategoryCache(categories.value);
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -219,27 +218,31 @@ const fetchProducts = async (category = 'all') => {
       sortOrder: filters.value.sortOrder,
     });
 
-    const url = `${import.meta.env.VITE_API_URL}/products${
-      category !== 'all' ? `/category/${category}` : ''
+    const url = `${import.meta.env.VITE_API_URL}${PRODUCTS_PATH}${
+      category !== 'all' ? `${CATEGORY_PATH}/${category}` : ''
     }?${queryParams}`;
 
-    const response = await fetch(url);
+    const response: AxiosResponse<ProductResponse> = await api.get(url, { params });
 
-    if (!response.ok) {
-      throw new Error(`API returned ${response.status}`);
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch products');
     }
 
-    const result = (await response.json()) as ProductResponse;
-    products.value = result.data;
-    meta.value = result.meta;
+    if (response && response.data) {
+      const result = response.data as ProductResponse;
+      products.value = result.data;
+      meta.value = result.meta;
 
-    productCache.setCache(result, cacheKey);
+      productCache.setCache(result, cacheKey);
+    }
   } catch (error) {
     console.error('Error fetching products:', error);
     $q.notify({
       color: 'negative',
       message: t('errors.fetchProducts'),
+      timeout: 1000,
       icon: 'error',
+      position: 'top',
     });
   } finally {
     $q.loading.hide();

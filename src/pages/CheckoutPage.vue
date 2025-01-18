@@ -3,125 +3,14 @@
     <div class="tw-container tw-max-w-screen-xl tw-mx-auto">
       <div class="row q-col-gutter-md">
         <div class="col-12 col-md-8">
-          <q-stepper
-            v-model="step"
-            vertical
-            class="checkout-stepper !tw-bg-transparent full-width"
-            color="none"
-            :text-color="text"
-            header-nav
-          >
-            <!-- Shipping Step -->
-            <q-step
-              :name="1"
-              :title="$t('checkout.shipping')"
-              icon="local_shipping"
-              :done="step > 1"
-              class="checkout-step"
-              :header-nav="true"
-            >
-              <q-card flat bordered class="!tw-p-0">
-                <q-card-section>
-                  <q-form ref="formRef" class="row q-col-gutter-md" @submit="validateShipping">
-                    <div class="col-12 col-sm-6">
-                      <q-input
-                        v-model="form.firstName"
-                        :label="$t('checkout.firstName')"
-                        :rules="[required]"
-                      />
-                    </div>
-                    <div class="col-12 col-sm-6">
-                      <q-input
-                        v-model="form.lastName"
-                        :label="$t('checkout.lastName')"
-                        :rules="[required]"
-                      />
-                    </div>
-                    <div class="col-12">
-                      <q-input
-                        v-model="form.email"
-                        :label="$t('checkout.email')"
-                        type="email"
-                        :rules="[required, emailRules]"
-                      />
-                    </div>
-                    <div class="col-12">
-                      <q-input
-                        v-model="form.address"
-                        :label="$t('checkout.address')"
-                        :rules="[required]"
-                      />
-                    </div>
-                  </q-form>
-                </q-card-section>
-              </q-card>
-            </q-step>
-
-            <!-- Payment Step -->
-            <q-step
-              :name="2"
-              :title="$t('checkout.payment')"
-              icon="payment"
-              :done="step > 2"
-              :header-nav="true"
-            >
-              <q-item class="!tw-p-0">
-                <q-item-section class="tw-text-sm">
-                  <q-radio v-model="paymentMethod" val="card" :label="$t('checkout.cardPayment')" />
-                  <q-radio v-model="paymentMethod" val="ips" :disable="!isIpsEnabled">
-                    <template #default>
-                      <span>
-                        {{ $t('checkout.ipsScanQrCode') }}
-                        <span v-if="!isIpsEnabled" class="text-positive text-xs">
-                          - {{ $t('checkout.ipsInfo') }}</span
-                        >
-                      </span>
-                    </template>
-                  </q-radio>
-                </q-item-section>
-              </q-item>
-
-              <q-card v-if="paymentMethod === 'card'" flat bordered>
-                <q-card-section>
-                  <q-form
-                    ref="paymentRef"
-                    class="row q-col-gutter-md"
-                    @submit.prevent="validatePayment"
-                  >
-                    <div class="col-12">
-                      <q-input
-                        v-model="payment.cardNumber"
-                        :label="$t('checkout.cardNumber')"
-                        mask="#### #### #### ####"
-                        :rules="[required]"
-                      />
-                    </div>
-                    <div class="col-6">
-                      <q-input
-                        v-model="payment.expiry"
-                        label="MM/YY"
-                        mask="##/##"
-                        :rules="[required]"
-                      />
-                    </div>
-                    <div class="col-6">
-                      <q-input v-model="payment.cvv" label="CVV" mask="###" :rules="[required]" />
-                    </div>
-                  </q-form>
-                </q-card-section>
-              </q-card>
-              <div v-if="isIpsEnabled && paymentMethod === 'ips'">
-                <div v-if="qrCodeDataUrl" class="q-mt-lg">
-                  <q-img
-                    :src="qrCodeDataUrl"
-                    alt="QR Code for Payment"
-                    fit="contain"
-                    class="tw-w-48 tw-h-48"
-                  />
-                </div>
-              </div>
-            </q-step>
-          </q-stepper>
+          <OrderForm
+            v-model:step="step"
+            :text="text"
+            :color="color"
+            :order-form="orderForm"
+            @shipping-valid="shippingValid"
+            @payment-valid="paymentValid"
+          />
         </div>
 
         <!-- Order Summary -->
@@ -144,7 +33,9 @@
                     {{ formatPrice(item.price * item.quantity) }}
                   </q-item-section>
                 </q-item>
+
                 <q-separator class="q-my-md" />
+
                 <q-item>
                   <q-item-section class="text-subtitle1 text-weight-bold">{{
                     $t('checkout.total')
@@ -158,22 +49,36 @@
                 </q-item>
               </q-list>
             </q-item-section>
+
             <q-card-actions align="center">
               <q-btn
                 :color="color"
                 :text-color="text"
-                :label="step === 2 ? $t('checkout.placeOrder') : $t('checkout.continue')"
+                :label="step === 2 ? $t('checkout.orderOverview') : $t('checkout.continue')"
+                :disable="(step === 1 && !isShippingValid) || (step === 2 && !isPaymentValid)"
                 type="submit"
                 class="full-width tw-mb-2 !tw-py-4"
-                @click="step === 2 ? showOrderConfirmation() : nextStep()"
+                @click="nextStep()"
               />
-              <q-btn
-                :color="text"
-                :text-color="color"
-                :label="$t('checkout.cart')"
-                class="full-width !tw-py-4"
-                @click="goBack()"
-              />
+
+              <div class="tw-w-full tw-flex tw-flex-row tw-gap-2">
+                <q-btn
+                  :color="text"
+                  :text-color="color"
+                  :label="step === 2 ? $t('checkout.toShipping') : $t('checkout.toCart')"
+                  class="full-width !tw-py-4"
+                  @click="step === 2 ? prevStep() : viewCart()"
+                />
+
+                <q-btn
+                  v-if="step === 2"
+                  :color="text"
+                  :text-color="color"
+                  :label="$t('checkout.toCart')"
+                  class="full-width !tw-py-4"
+                  @click="viewCart()"
+                />
+              </div>
             </q-card-actions>
           </q-item>
         </div>
@@ -181,197 +86,149 @@
     </div>
     <OrderConfirmationDialog
       v-model="showDialog"
-      :order-details="orderDetails"
+      :form="orderForm"
+      :details="orderDetails"
       :color="color"
       :text="text"
-      @confirm="handleOrderConfirmation"
+      @confirm="orderOverview"
       @cancel="handleOrderCancellation"
     />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, inject } from 'vue';
+import { ref, computed, onMounted, inject, reactive, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { useCartStore } from '../stores/cart';
+import { useOrderStore } from '../stores/order';
 import type { QVueGlobals } from 'quasar';
 import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import { OrderDetails } from '@/types';
-import QRCode from 'qrcode';
+import { IOrderForm, OrderDetails } from '@/types';
 import { formatPrice } from '@/utils/currency';
-import type { ComponentPublicInstance } from 'vue';
 import OrderConfirmationDialog from '@/components/OrderConfirmationDialog.vue';
+import { CART_PATH, ORDER_PATH } from '@/router';
+import OrderForm from '@/components/OrderForm.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
-type QFormInstance = ComponentPublicInstance<{ validate: () => boolean }>;
-
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
+const orderStore = useOrderStore();
 const router = useRouter();
-const { t } = useI18n();
 
 const step = ref(1);
-const paymentMethod = ref('card');
-const formRef = ref<QFormInstance | null>(null);
-const paymentRef = ref<QFormInstance | null>(null);
-const form = ref({
-  firstName: '',
-  lastName: '',
-  email: '',
-  address: '',
-});
-const payment = ref({
-  cardNumber: '',
-  expiry: '',
-  cvv: '',
-});
-const qrCodeDataUrl = ref<string | null>(null);
 const showDialog = ref(false);
+const isShippingValid = ref(false);
+const isPaymentValid = ref(false);
+
+const orderDetails = reactive<OrderDetails>({
+  id: Math.floor(Math.random() * 1000),
+  items: cartStore.items,
+  total: cartStore.totalPrice,
+});
+const orderForm = reactive<IOrderForm>({
+  shipping: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    address: '',
+  },
+  payment: {
+    method: 'card',
+    cardDetails: {
+      cardNumber: '',
+      expiry: '',
+      cvv: '',
+    },
+  },
+});
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 
 const isDark = $q.dark.isActive;
-const isIpsEnabled = false;
 const totalPrice = computed(() =>
   cartStore.items.reduce((total, item) => total + item.price * item.quantity, 0),
 );
 
-const email = import.meta.env.VITE_EMAIL_ADMIN || '';
-const rn = import.meta.env.VITE_RN || '';
-
-const orderDetails: OrderDetails = {
-  id: Math.floor(Math.random() * 1000),
-  items: cartStore.items,
-  total: totalPrice.value,
-  firstName: form.value.firstName,
-  lastName: form.value.lastName,
-  email: form.value.email,
-  address: form.value.address,
-  cardNumber: payment.value.cardNumber,
-  cvv: payment.value.cvv,
-  expiry: payment.value.expiry,
-};
-
-const generateQrCode = async () => {
-  const paymentPurpose = 'Payment for E-comm-platform';
-  const orderNr = Math.floor(Math.random() * 1000);
-  const ttl = computed(() => {
-    return formatPrice(totalPrice.value, 'RSD')
-      .trim()
-      .replace(/\s+/, '')
-      .replace(',', '')
-      .replace('.', ',')
-      .replace(/(,\d{2})?$/, (match) => (match ? match : ',00'));
-  });
-
-  const qrCodeInfo =
-    `K:PR|V:01|C:1|P:${totalPrice.value.toFixed(2)}|S:${paymentPurpose}|N:E-comm-platform|I:${ttl.value}|R:${rn}|RO:00${orderNr}|SF:289`.trim();
-
-  try {
-    qrCodeDataUrl.value = await QRCode.toDataURL(qrCodeInfo, { width: 300, margin: 2 });
-  } catch (error) {
-    console.error('Error generating QR code:', error);
-  }
-};
-
-const required = (val: string) => !!val || 'Field is required';
-const emailRules = (val: string) =>
-  /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val) || 'Invalid email';
-
-const validateShipping = () => {
-  const shippingForm = formRef.value;
-  if (shippingForm && shippingForm.validate()) {
-    step.value = 2;
-  } else {
-    $q.notify({
-      type: 'negative',
-      position: 'top',
-      message: 'Please fix errors in the form.',
-      timeout: 1000,
-    });
-  }
-};
-
-const validatePayment = () => {
-  const paymentForm = paymentRef.value;
-  if (paymentForm && paymentForm.validate()) {
-    $q.notify({
-      type: 'positive',
-      position: 'top',
-      message: 'Order placed successfully!',
-      timeout: 1000,
-    });
-    step.value = 3;
-  } else {
-    $q.notify({
-      type: 'negative',
-      position: 'top',
-      message: 'Please fix errors in the form.',
-      timeout: 1000,
-    });
-  }
-};
-
-const goBack = () => {
-  router.push('/cart');
-};
-
-const showOrderConfirmation = () => {
-  showDialog.value = true;
-};
-
-const handleOrderConfirmation = () => {
-  if (process.env.NODE_ENV === 'production') {
-    cartStore.clearCart();
-    router.push('/thankyou');
-  } else {
-    emailOrder();
-  }
+const orderOverview = () => {
+  console.log('orderOverview:', orderForm);
 };
 
 const handleOrderCancellation = () => {
   showDialog.value = false;
 };
 
-const emailOrder = async () => {
-  $q.loading.show();
-  try {
-    const response = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        orderDetails,
-      }),
-    });
-
-    if (!response.ok) throw new Error('Failed to send email');
-
-    cartStore.clearCart();
-    router.push('/thankyou');
-  } catch {
-    $q.notify({
-      color: 'negative',
-      position: 'top',
-      timeout: 1000,
-      message: t('checkout.orderFailed'),
-      icon: 'error',
-    });
-  } finally {
-    $q.loading.hide();
-  }
-};
-
-const nextStep = () => {
-  step.value++;
+const prevStep = () => {
+  step.value--;
   scrollToTop();
 };
 
+const nextStep = () => {
+  if (step.value === 1 && isShippingValid.value) {
+    orderStore.setShippingForm(orderForm.shipping);
+    step.value++;
+    scrollToTop();
+  } else if (step.value === 2 && isPaymentValid.value) {
+    orderStore.setPaymentForm(orderForm.payment);
+    router.push(ORDER_PATH);
+  } else {
+    scrollToTop();
+    $q.notify({
+      type: 'negative',
+      position: 'top',
+      message: 'Please fix errors in the form.',
+      timeout: 1000,
+    });
+  }
+};
+
+const viewCart = () => {
+  router.push(CART_PATH);
+};
+
+const shippingValid = (valid: boolean) => {
+  console.log('Shipping valid:', valid);
+  isShippingValid.value = valid;
+};
+const paymentValid = (valid: boolean) => {
+  console.log('payment valid:', valid);
+  isPaymentValid.value = valid;
+};
+
+const validateForm = () => {
+  isShippingValid.value =
+    !!orderForm.shipping.firstName &&
+    !!orderForm.shipping.lastName &&
+    !!orderForm.shipping.email &&
+    !!orderForm.shipping.address;
+  isPaymentValid.value =
+    !!orderForm.payment?.method &&
+    !!orderForm.payment.cardDetails?.cardNumber &&
+    !!orderForm.payment.cardDetails.expiry &&
+    !!orderForm.payment.cardDetails.cvv;
+};
+
+watch(
+  () => orderStore.orderForm,
+  (newOrderForm) => {
+    orderForm.shipping = newOrderForm.shipping;
+    orderForm.payment = newOrderForm.payment ?? {
+      method: 'card',
+      cardDetails: {
+        cardNumber: '',
+        expiry: '',
+        cvv: '',
+      },
+    };
+    validateForm();
+  },
+  { deep: true, immediate: true },
+);
+
 onMounted(() => {
-  generateQrCode();
+  orderStore.loadOrder();
+  validateForm();
   scrollToTop();
 });
 </script>

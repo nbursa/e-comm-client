@@ -14,16 +14,16 @@
     "clean": "quasar clean",
     "dev:server-ts": "NODE_OPTIONS='--loader ts-node/esm' ts-node --esm  --trace-deprecation server/index.ts",
     "dev:server": "node -r dotenv/config server/index.js dotenv_config_path=.env",
-    "dev": "quasar dev",
     "dev:smtp": "concurrently \"npm run dev:server\" \"npm run dev\"",
     "build": "quasar build",
-    "build:spa": "cross-env NODE_ENV=production quasar build -m spa",
     "build:server": "mkdir -p dist/server && cp server/* dist/server/",
     "build-all": "npm run build:spa && npm run build:server",
     "postinstall": "quasar prepare",
     "analyze": "quasar build --analyze",
+    "dev": "cross-env NODE_ENV=development quasar dev",
+    "build:spa": "cross-env NODE_ENV=production quasar build -m spa",
     "build-cname": "echo $VITE_APP_DOMAIN > dist/spa/CNAME",
-    "deploy": "dotenv -e .env.production -- npm run build:spa && gh-pages -d dist/spa"
+    "deploy": "dotenv -e .env.prod -- npm run build:spa && gh-pages -d dist/spa"
   },
   "dependencies": {
     "@quasar/app-vite": "^2.0.5",

@@ -9,7 +9,7 @@
     :style="{ background: theme.drawerBackground }"
     @update:model-value="$emit('update:drawerOpen', $event)"
   >
-    <div class="tw-h-[54px] tw-flex tw-items-center tw-justify-between tw-px-4">
+    <div class="tw-h-[54px] tw-flex tw-items-center tw-justify-between">
       <div class="tw-flex-1"></div>
       <q-btn
         flat
@@ -21,10 +21,9 @@
         @click="$emit('update:drawerOpen', false)"
       />
     </div>
-
-    <q-scroll-area ref="scrollContainer" class="tw-h-full">
-      <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-pt-8 tw-pb-16">
-        <q-list class="tw-w-full tw-text-center tw-px-4">
+    <q-scroll-area ref="scrollContainer" class="tw-h-full !tw-px-0">
+      <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-4 tw-pt-4 tw-pb-20">
+        <q-list class="tw-w-full tw-text-center">
           <q-item
             v-for="item in menuItems"
             :key="item.label"
@@ -46,29 +45,29 @@
 
         <h2 class="text-h6 tw-mb-2">{{ $t('settings.title') }}</h2>
 
-        <h6 class="text-subtitle2 text-weight-regular tw-mb-4 tw-mr-auto tw-px-4">
+        <h6 class="text-subtitle2 text-weight-regular tw-mb-4 tw-mr-auto">
           {{ $t('settings.themeSettings') }}
         </h6>
 
         <LanguageSelector
           v-model="currentLanguage"
           :language-options="languageOptions"
-          class="tw-w-full !tw-px-4 tw-mb-4"
+          class="tw-w-full tw-mb-4"
         />
         <CurrencySelector
           v-model="currentCurrency"
           :currency-options="currencyOptions"
-          class="tw-w-full !tw-px-4 tw-mb-4"
+          class="tw-w-full tw-mb-4"
         />
         <ThemeSelector
           v-model="themeSetting"
           :theme-options="themeOptions"
           :use-system-preference="useSystemPreference"
-          class="tw-w-full !tw-px-4 tw-mb-4"
+          class="tw-w-full tw-mb-4"
           @update:use-system-preference="onSystemPreferenceChange"
         />
 
-        <h6 class="text-subtitle2 text-weight-regular tw-mb-4 tw-mr-auto tw-px-4">
+        <h6 class="text-subtitle2 text-weight-regular tw-mb-4 tw-mr-auto">
           {{ $t('settings.dataManagement') }}
         </h6>
 
@@ -90,7 +89,7 @@
           </q-card>
 
           <q-card flat class="!tw-bg-transparent">
-            <q-card-section>
+            <q-card-section class="!tw-p-0">
               <div class="text-body2">{{ $t('settings.clearSettingsTitle') }}</div>
               <div class="text-caption">{{ $t('settings.resetDescription') }}</div>
             </q-card-section>
@@ -174,21 +173,21 @@ const theme = computed(() => ({
 const languageOptions = computed(() =>
   userStore.languageOptions.map((option) => ({
     ...option,
-    label: t(`language.${option.value}`),
+    label: t(`common.language.${option.value}`),
   })),
 );
 
 const themeOptions = computed(() =>
   userStore.themeOptions.map((option) => ({
     ...option,
-    label: t(`theme.${option.value}`),
+    label: t(`common.theme.${option.value}`),
   })),
 );
 
 const currencyOptions = computed(() =>
   userStore.currencyOptions.map((option) => ({
     ...option,
-    label: t(`currencyLabel.${option.value}`),
+    label: t(`common.currencyLabel.${option.value}`),
   })),
 );
 

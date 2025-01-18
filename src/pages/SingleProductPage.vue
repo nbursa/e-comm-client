@@ -85,7 +85,8 @@ import { PreviewImage, Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import { useProductStore } from '@/stores/products';
 import { useImageStore } from '@/stores/images';
-import { PAGE_TITLE } from '@/router';
+import { PAGE_TITLE, PRODUCTS_PATH } from '@/router';
+import { api } from '@/boot/axios';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -171,7 +172,7 @@ const addToCart = (product: Product) => {
 };
 
 const goBack = () => {
-  router.push('/products');
+  router.push(PRODUCTS_PATH);
 };
 
 const fetchProductDetails = async () => {
@@ -194,14 +195,16 @@ const fetchProductDetails = async () => {
       }
     }
 
-    const response = await fetch(`${baseUrl}/products/${slug}`);
-
-    if (!response.ok) {
-      throw new Error(`API returned ${response.status}`);
+    const response = await api.get(`${baseUrl}${PRODUCTS_PATH}/${slug}`);
+    if (!product.value.id) {
+      router.push(PRODUCTS_PATH);
     }
 
-    const result = await response.json();
-    const data = result.data;
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch product');
+    }
+
+    const { data } = response.data;
 
     product.value = {
       id: data.id,
@@ -233,7 +236,7 @@ const fetchProductDetails = async () => {
       icon: 'error',
     });
     if (!product.value.id) {
-      router.push('/products');
+      router.push(PRODUCTS_PATH);
     }
   } finally {
     $q.loading.hide();

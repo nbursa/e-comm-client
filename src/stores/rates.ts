@@ -1,3 +1,4 @@
+import { api } from '@/boot/axios';
 import { storage } from '@/utils/storage';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -16,8 +17,8 @@ export const useRatesStore = defineStore('rates', () => {
     }
 
     try {
-      const response = await fetch(`${ratesUrl}${baseCurrency}`);
-      const data = await response.json();
+      const response = await api.get(`${ratesUrl}${baseCurrency}`);
+      const data = response.data;
       exchangeRates.value = data.rates;
       storage.set('exchange_rates', exchangeRates.value, {
         expiration: RATES_CACHE_DURATION,

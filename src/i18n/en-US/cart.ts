@@ -1,0 +1,17 @@
+export const cart = {
+  emptyCart: 'Your cart is empty',
+  continue: 'Continue Shopping',
+  each: 'each',
+  orderSummary: 'Order Summary',
+  items: 'Items',
+  shipping: 'Shipping',
+  free: 'Free',
+  total: 'Total',
+  checkout: 'Proceed to Checkout',
+  errorRemoving: 'Failed to remove item from cart!',
+  itemRemoved: 'Item removed from cart!',
+  confirmDelete: 'Are you sure you want to delete this item?',
+  deleteMessage: 'This action cannot be undone.',
+  cancel: 'Cancel',
+  delete: 'Delete',
+};

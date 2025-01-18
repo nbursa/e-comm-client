@@ -37,7 +37,14 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/checkout',
     component: MainLayout,
-    children: [{ path: '', component: loadPage('CheckoutPage'), meta: { title: 'Checkout' } }],
+    children: [
+      { path: '', component: loadPage('CheckoutPage'), meta: { title: 'Checkout' } },
+      {
+        path: 'order-overview',
+        component: loadPage('OrderOverviewPage'),
+        meta: { title: 'Order' },
+      },
+    ],
   },
 
   {
