@@ -26,11 +26,7 @@
         :total-items="totalItems"
       />
 
-      <MenuButton
-        :button-size="buttonSize"
-        class="lt-lg"
-        @update:drawer-open="$emit('update:drawerOpen')"
-      />
+      <MenuButton :button-size="buttonSize" @update:drawer-open="$emit('update:drawerOpen')" />
     </q-toolbar>
   </q-header>
 </template>
