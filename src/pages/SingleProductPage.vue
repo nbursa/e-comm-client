@@ -151,8 +151,6 @@ const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const metaTitle = computed(() => `${product.value.name || product.value.title} - ${PAGE_TITLE}`);
 
-useMeta({ title: metaTitle.value });
-
 const cacheImageUrl = (url: string) => {
   if (!imageUrlCache.value.has(url)) {
     const img = new Image();
@@ -235,7 +233,6 @@ const fetchProduct = async () => {
       if (found) {
         product.value = found;
         loading.value = false;
-        useMeta({ title: metaTitle.value });
         return;
       }
     }
@@ -284,5 +281,6 @@ const fetchProduct = async () => {
 
 onMounted(() => {
   fetchProduct();
+  useMeta({ title: metaTitle.value });
 });
 </script>
