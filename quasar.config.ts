@@ -39,12 +39,12 @@ export default defineConfig((ctx) => {
         moduleResolution: 'bundler',
         tsconfigPath: './tsconfig.json',
       },
-      publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
+      publicPath: process.env.NODE_ENV === 'production' ? '/dist/spa/' : '/',
       vueRouterMode: 'history',
       distDir: 'dist/spa',
 
       extendViteConf(viteConf: UserConfig) {
-        viteConf.base = process.env.NODE_ENV === 'production' ? '' : '/';
+        viteConf.base = process.env.NODE_ENV === 'production' ? '/dist/spa/' : '/';
         viteConf.resolve ??= {};
         viteConf.resolve.alias = {
           ...viteConf.resolve.alias,
