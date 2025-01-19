@@ -65,7 +65,6 @@
 </template>
 
 <script lang="ts" setup>
-// import { orderOverview } from '@/i18n/sr-RS/orderOverview';
 import { OrderDetails, IOrderForm } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import { computed, PropType } from 'vue';
