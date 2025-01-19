@@ -1,6 +1,14 @@
 <template>
   <q-page padding class="!tw-pb-16 md:tw-pb-24 !tw-pt-4">
-    <div class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1200px">
+    <div v-if="loading" class="q-pa-md">
+      <q-spinner color="primary" size="50px" />
+    </div>
+    <div v-else-if="error" class="q-pa-md">
+      <q-banner type="negative" class="q-mb-md">
+        <div>{{ error }}</div>
+      </q-banner>
+    </div>
+    <div v-else class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1200px">
       <div class="row items-stretch full-height" :class="{ 'col-reverse-md': $q.screen.md }">
         <div
           class="col-12 col-md-4 q-py-lg tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
@@ -119,37 +127,12 @@ const product = ref<Product>({
   },
 });
 
+const loading = ref(true);
+const error = ref<string | null>(null);
+
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const metaTitle = computed(() => `${product.value.name || product.value.title} - ${PAGE_TITLE}`);
-
-// const imageLocalUrl = computed(() => {
-//   if (product.value?.image) {
-//     return getImageUrl(product.value.image);
-//   }
-//   return '';
-// });
-
-// const getImageUrl = (imagePath: string | undefined): string => {
-//   const fullUrl = `${baseUrl}${imagePath}`;
-//   console.log('imagePath:', imagePath, 'fullUrl:', fullUrl);
-
-//   const cached = imageUrlCache.get(fullUrl);
-//   if (cached) return cached;
-
-//   if (imagePath && imagePath.startsWith('/static')) {
-//     const fullUrl = `${baseUrl}${imagePath}`;
-//     imageUrlCache.set(imagePath, fullUrl);
-//     return fullUrl;
-//   }
-
-//   if (imagePath && imagePath.startsWith('http')) {
-//     imageUrlCache.set(imagePath, imagePath);
-//     return imagePath;
-//   }
-
-//   return fullUrl;
-// };
 
 const getImageUrl = (imagePath: string | undefined): string => {
   if (!imagePath) return '';
@@ -208,6 +191,7 @@ const goBack = () => {
 
 const fetchProductDetails = async () => {
   const { slug } = route.params;
+  loading.value = true;
   $q.loading.show();
 
   try {
@@ -222,15 +206,12 @@ const fetchProductDetails = async () => {
           title: metaTitle.value,
         });
 
+        loading.value = false;
         return;
       }
     }
 
     const response = await api.get(`${baseUrl}${PRODUCTS_PATH}/${slug}`);
-    // if (!product.value.id) {
-    //   router.push(PRODUCTS_PATH);
-    // }
-
     if (response.status !== 200) {
       throw new Error('Failed to fetch product');
     }
@@ -257,8 +238,9 @@ const fetchProductDetails = async () => {
     useMeta({
       title: metaTitle.value,
     });
-  } catch (error) {
-    console.warn('Error fetching product:', error);
+  } catch (err) {
+    console.warn('Error fetching product:', err);
+    error.value = t('errors.fetchProduct');
     $q.notify({
       color: 'negative',
       position: 'top',
@@ -271,6 +253,7 @@ const fetchProductDetails = async () => {
     }
   } finally {
     $q.loading.hide();
+    loading.value = false;
   }
 };
 
