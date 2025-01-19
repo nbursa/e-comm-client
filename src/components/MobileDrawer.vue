@@ -23,7 +23,7 @@
     </div>
     <q-scroll-area ref="scrollContainer" class="tw-h-full !tw-px-0">
       <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-4 tw-pt-4 tw-pb-20">
-        <q-list class="tw-w-full tw-text-center">
+        <q-list class="lt-lg tw-w-full tw-text-center">
           <q-item
             v-for="item in menuItems"
             :key="item.label"
@@ -41,7 +41,7 @@
           </q-item>
         </q-list>
 
-        <q-separator :color="theme.separatorColor" class="tw-w-10/12 !tw-mt-4 !tw-mb-6" />
+        <q-separator :color="theme.separatorColor" class="lt-lg tw-w-10/12 !tw-mt-4 !tw-mb-6" />
 
         <h2 class="text-h6 tw-mb-2">{{ $t('settings.title') }}</h2>
 

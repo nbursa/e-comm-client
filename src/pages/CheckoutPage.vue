@@ -17,7 +17,7 @@
         <div class="col-12 col-md-4">
           <q-item
             class="tw-flex tw-justify-between tw-flex-col tw-gap-4 sm:!tw-pt-4 sm:!tw-pb-3 tw-rounded-md"
-            :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
+            :class="isDark ? 'tw-bg-transparent tw-text-light' : 'bg-light tw-text-dark'"
           >
             <q-item-section class="tw-w-full">
               <div class="tw-text-xl tw-mb-4">{{ $t('checkout.orderSummary') }}</div>

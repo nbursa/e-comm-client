@@ -1,5 +1,6 @@
 import type { DateTimeFormat, NumberFormat } from '@intlify/core-base';
 import messages from '../i18n';
+import { ComponentPublicInstance } from 'vue';
 
 export type ProductRating = {
   rate: number;
@@ -21,11 +22,10 @@ export interface Product {
   discount?: boolean;
 }
 
-export interface ShippingDetails {
-  firstName: string;
-  lastName: string;
-  address: string;
-  email: string;
+export interface OrderDetails {
+  id: number;
+  items: Product[];
+  total: number;
 }
 
 export interface CardDetails {
@@ -34,20 +34,26 @@ export interface CardDetails {
   cvv: string;
 }
 
+export interface QFormInstance extends ComponentPublicInstance {
+  validate: () => Promise<boolean>;
+  validateField: (field: string) => Promise<boolean>;
+}
+
+export interface ShippingDetails {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+}
+
 export interface PaymentDetails {
   method: 'card' | 'ips';
   cardDetails?: CardDetails;
 }
 
-export interface OrderDetails {
-  id: number;
-  items: Product[];
-  total: number;
-}
-
 export interface IOrderForm {
   shipping: ShippingDetails;
-  payment?: PaymentDetails;
+  payment: PaymentDetails;
 }
 
 export interface EmailConfig {
