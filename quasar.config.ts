@@ -25,6 +25,9 @@ export default defineConfig((ctx) => {
         VITE_EMAIL_ADMIN: process.env.VITE_EMAIL_ADMIN,
         VITE_STORAGE_KEY: process.env.VITE_STORAGE_KEY,
       },
+      publicPath: '/',
+      vueRouterMode: 'history',
+      distDir: 'dist/spa',
       postcss: {
         plugins: ['tailwindcss', 'autoprefixer'],
       },
@@ -39,12 +42,9 @@ export default defineConfig((ctx) => {
         moduleResolution: 'bundler',
         tsconfigPath: './tsconfig.json',
       },
-      publicPath: process.env.NODE_ENV === 'production' ? '/dist/spa/' : '/',
-      vueRouterMode: 'history',
-      distDir: 'dist/spa',
 
       extendViteConf(viteConf: UserConfig) {
-        viteConf.base = process.env.NODE_ENV === 'production' ? '/dist/spa/' : '/';
+        viteConf.base = '/';
         viteConf.resolve ??= {};
         viteConf.resolve.alias = {
           ...viteConf.resolve.alias,
