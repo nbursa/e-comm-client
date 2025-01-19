@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="!tw-pb-16 md:tw-pb-24 !tw-pt-4">
+  <q-page padding class="!tw-pb-16 md:!tw-pb-24 !tw-pt-4">
     <div v-if="loading" class="q-pa-md">
       <q-spinner color="primary" size="50px" />
     </div>
@@ -8,12 +8,27 @@
         <div>{{ error }}</div>
       </q-banner>
     </div>
-    <div v-else class="q-mb-md q-mx-auto overflow-hidden" style="max-width: 1200px">
-      <div class="row items-stretch full-height" :class="{ 'col-reverse-md': $q.screen.md }">
+    <div
+      v-else
+      class="q-mb-md q-mx-auto overflow-hidden !tw-w-full row items-stretch justify-center"
+      style="max-width: 1200px"
+    >
+      <div
+        class="row items-stretch full-height !tw-w-full justify-center"
+        :class="{ 'col-reverse-md': $q.screen.sm }"
+      >
         <div
-          class="col-12 col-md-4 q-py-lg tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
+          class="col-12 col-sm-6 col-md-4 tw-px-2 sm:tw-px-0 tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
         >
-          <div v-if="!product.image">{{ t('errors.noImage') }}</div>
+          <div
+            v-if="!product.image"
+            class="tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center tw-rounded 0 tw-border tw-border-gray-400"
+            :class="
+              isDark ? 'tw-text-gray-200  !tw-bg-gray-700' : 'tw-text-gray-70 !tw-bg-gray-200'
+            "
+          >
+            {{ t('errors.noImage') }}
+          </div>
           <q-img
             v-else
             :src="imageLocalUrl"
@@ -25,7 +40,7 @@
         </div>
 
         <div
-          class="col-12 col-md-8 sm:tw-p-3 !tw-align-top"
+          class="col-12 col-sm-6 col-md-8 sm:tw-p-3 !tw-align-top"
           style="
             display: flex;
             flex-direction: column;
@@ -38,8 +53,8 @@
             class="q-pa-sm !tw-pb-0"
             style="flex: 1; display: flex; flex-direction: column; height: 100%"
           >
-            <h5 class="tw-flex tw-justify-start tw-gap-2">
-              <span>{{ product.name || product.title }}</span>
+            <h5 class="tw-flex tw-justify-between tw-gap-2">
+              <span class="tw-text-base md:tw-text-xl">{{ product.name || product.title }}</span>
               <span class="tw-text-sm tw-mb-2"
                 >({{ product.quantity }}
                 <span class="tw-text-xs">{{ $t('singleProduct.quantity') }}</span
@@ -130,6 +145,7 @@ const product = ref<Product>({
 const loading = ref(true);
 const error = ref<string | null>(null);
 
+const isDark = computed(() => $q.dark.isActive);
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const metaTitle = computed(() => `${product.value.name || product.value.title} - ${PAGE_TITLE}`);
