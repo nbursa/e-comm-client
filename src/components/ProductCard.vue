@@ -83,7 +83,7 @@ const viewProduct = (product: Product) => {
 };
 
 const imageUrl = (imagePath: string) => {
-  return process.env.NODE_ENV === 'development' ? `${apiUrl}${imagePath}` : imagePath;
+  return `${apiUrl}${imagePath}`;
 };
 
 const adjustNoImageSection = () => {

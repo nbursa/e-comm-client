@@ -5,8 +5,10 @@
         <div
           class="col-12 col-md-4 q-py-lg tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
         >
+          <div v-if="!product.image">{{ t('errors.noImage') }}</div>
           <q-img
-            :src="imageLocalUrl(product.image)"
+            v-else
+            :src="imageLocalUrl"
             :alt="product.name"
             fit="contain"
             class="cursor-pointer full-width full-height"
@@ -121,37 +123,65 @@ const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const metaTitle = computed(() => `${product.value.name || product.value.title} - ${PAGE_TITLE}`);
 
-const imageLocalUrl = (imagePath: string | undefined): string => {
-  if (!imagePath) return '/api/static/placeholder.webp';
+// const imageLocalUrl = computed(() => {
+//   if (product.value?.image) {
+//     return getImageUrl(product.value.image);
+//   }
+//   return '';
+// });
 
-  const cached = imageUrlCache.get(imagePath);
+// const getImageUrl = (imagePath: string | undefined): string => {
+//   const fullUrl = `${baseUrl}${imagePath}`;
+//   console.log('imagePath:', imagePath, 'fullUrl:', fullUrl);
+
+//   const cached = imageUrlCache.get(fullUrl);
+//   if (cached) return cached;
+
+//   if (imagePath && imagePath.startsWith('/static')) {
+//     const fullUrl = `${baseUrl}${imagePath}`;
+//     imageUrlCache.set(imagePath, fullUrl);
+//     return fullUrl;
+//   }
+
+//   if (imagePath && imagePath.startsWith('http')) {
+//     imageUrlCache.set(imagePath, imagePath);
+//     return imagePath;
+//   }
+
+//   return fullUrl;
+// };
+
+const getImageUrl = (imagePath: string | undefined): string => {
+  if (!imagePath) return '';
+
+  const fullUrl = `${baseUrl}${imagePath}`;
+  console.log('imagePath:', imagePath, 'fullUrl:', fullUrl);
+
+  const cached = imageUrlCache.get(fullUrl);
   if (cached) return cached;
 
-  if (imagePath.startsWith('/static')) {
-    const fullUrl = `${baseUrl}${imagePath}`;
-    imageUrlCache.set(imagePath, fullUrl);
-    return fullUrl;
-  }
-
-  if (imagePath.startsWith('http')) {
-    imageUrlCache.set(imagePath, imagePath);
-    return imagePath;
-  }
-
-  return imagePath;
+  imageUrlCache.set(fullUrl, fullUrl);
+  return fullUrl;
 };
+
+const imageLocalUrl = computed(() => {
+  if (product.value?.image) {
+    return getImageUrl(product.value.image);
+  }
+  return '';
+});
 
 const openImageOverlay = (mainImage: string) => {
   const previewImages: PreviewImage[] = [
     {
-      src: imageLocalUrl(mainImage),
+      src: getImageUrl(mainImage),
       name: product.value.name || product.value.title || '',
     },
   ];
 
   if (product.value.additionalImages?.length) {
     const additionalPreviewImages = product.value.additionalImages.map((image) => ({
-      src: imageLocalUrl(image),
+      src: getImageUrl(image),
       name: product.value.name || product.value.title || '',
     }));
     previewImages.push(...additionalPreviewImages);
@@ -197,9 +227,9 @@ const fetchProductDetails = async () => {
     }
 
     const response = await api.get(`${baseUrl}${PRODUCTS_PATH}/${slug}`);
-    if (!product.value.id) {
-      router.push(PRODUCTS_PATH);
-    }
+    // if (!product.value.id) {
+    //   router.push(PRODUCTS_PATH);
+    // }
 
     if (response.status !== 200) {
       throw new Error('Failed to fetch product');
@@ -244,8 +274,8 @@ const fetchProductDetails = async () => {
   }
 };
 
-onMounted(async () => {
-  await fetchProductDetails();
+onMounted(() => {
+  fetchProductDetails();
 });
 
 onUnmounted(() => {

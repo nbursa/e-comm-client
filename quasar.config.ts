@@ -5,7 +5,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 export default defineConfig((ctx) => {
+  console.log('ctx:', ctx);
   return {
     preFetch: true,
     boot: ['i18n', 'init', 'ga', 'axios', 'theme', 'lightbox'],

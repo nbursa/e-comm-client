@@ -16,4 +16,5 @@ export const errors = {
     invalidExpiryDate: 'Neispravan datum isteka',
     invalidCVV: 'Neispravan CVV',
   },
+  noImage: 'Slika nije dostupna',
 };

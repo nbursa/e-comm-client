@@ -15,4 +15,5 @@ export const errors = {
     invalidExpiryDate: "Date d'expiration invalide",
     invalidCVV: 'CVV invalide',
   },
+  noImage: 'Image non disponible',
 };
