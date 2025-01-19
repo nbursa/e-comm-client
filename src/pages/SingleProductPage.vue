@@ -100,7 +100,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, inject, onUnmounted } from 'vue';
+import { ref, computed, onMounted, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCartStore } from '@/stores/cart';
 import { useQuasar, useMeta } from 'quasar';
@@ -117,8 +117,6 @@ const scrollToTop = inject('scrollToTop') as () => void;
 
 const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
 
-const imageUrlCache = new Map<string, string>();
-
 const route = useRoute();
 const router = useRouter();
 const $q = useQuasar() as QVueGlobals;
@@ -126,6 +124,8 @@ const cartStore = useCartStore();
 const { t } = useI18n();
 const productCache = useProductStore();
 const imageStore = useImageStore();
+
+const { slug } = route.params as { slug: string };
 
 const product = ref<Product>({
   id: 0,
@@ -144,21 +144,39 @@ const product = ref<Product>({
 
 const loading = ref(true);
 const error = ref<string | null>(null);
+const imageUrlCache = ref(new Map<string, HTMLImageElement>());
 
 const isDark = computed(() => $q.dark.isActive);
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const metaTitle = computed(() => `${product.value.name || product.value.title} - ${PAGE_TITLE}`);
 
+useMeta({ title: metaTitle.value });
+
+const cacheImageUrl = (url: string) => {
+  if (!imageUrlCache.value.has(url)) {
+    const img = new Image();
+    img.src = url;
+    img.onload = () => {
+      imageUrlCache.value.set(url, img);
+    };
+  }
+};
+
+const getCachedImageUrl = (url: string) => {
+  const cachedImage = imageUrlCache.value.get(url);
+  return cachedImage ? cachedImage.src : url;
+};
+
 const getImageUrl = (imagePath: string | undefined): string => {
   if (!imagePath) return '';
 
   const fullUrl = `${baseUrl}${imagePath}`;
 
-  const cached = imageUrlCache.get(fullUrl);
+  const cached = getCachedImageUrl(fullUrl);
   if (cached) return cached;
 
-  imageUrlCache.set(fullUrl, fullUrl);
+  cacheImageUrl(fullUrl);
   return fullUrl;
 };
 
@@ -204,24 +222,20 @@ const goBack = () => {
   router.push(PRODUCTS_PATH);
 };
 
-const fetchProductDetails = async () => {
-  const { slug } = route.params;
+const fetchProduct = async () => {
   loading.value = true;
   $q.loading.show();
 
   try {
+    productCache.initViewedCache();
     const viewedCache = productCache.getViewedCache();
 
     if (viewedCache) {
       const found = viewedCache.products.find((p: { id: number }) => p.id === Number(slug));
       if (found) {
         product.value = found;
-
-        useMeta({
-          title: metaTitle.value,
-        });
-
         loading.value = false;
+        useMeta({ title: metaTitle.value });
         return;
       }
     }
@@ -249,10 +263,6 @@ const fetchProductDetails = async () => {
     };
 
     productCache.setViewedCache(product.value);
-
-    useMeta({
-      title: metaTitle.value,
-    });
   } catch (err) {
     console.warn('Error fetching product:', err);
     error.value = t('errors.fetchProduct');
@@ -273,10 +283,6 @@ const fetchProductDetails = async () => {
 };
 
 onMounted(() => {
-  fetchProductDetails();
-});
-
-onUnmounted(() => {
-  imageUrlCache.clear();
+  fetchProduct();
 });
 </script>

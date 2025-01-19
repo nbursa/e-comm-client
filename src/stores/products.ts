@@ -24,6 +24,20 @@ export const useProductStore = defineStore('products', () => {
     return store;
   };
 
+  const initViewedCache = () => {
+    const store = getStore();
+    if (!store.viewed) {
+      store.viewed = {
+        products: [],
+        timestamp: Date.now(),
+      };
+      storage.set(PRODUCTS_KEY, store, {
+        expiration: PRODUCTS_EXPIRATION,
+        version: '1.0',
+      });
+    }
+  };
+
   const setCache = (data: ProductResponse, cacheKey: string): void => {
     const store = getStore();
     store.cache[cacheKey] = {
@@ -121,5 +135,6 @@ export const useProductStore = defineStore('products', () => {
     getCategoryCache,
     setViewedCache,
     getViewedCache,
+    initViewedCache,
   };
 });
