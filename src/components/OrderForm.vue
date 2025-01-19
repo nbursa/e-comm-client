@@ -18,45 +18,12 @@
     >
       <q-card flat bordered class="!tw-p-0">
         <q-card-section>
-          <q-form ref="shippingFormRef" greedy class="row q-col-gutter-md shipping-form">
-            <div class="col-12 col-sm-6">
-              <q-input
-                v-model="localOrderForm.shipping.firstName"
-                :label="$t('checkout.firstName')"
-                lazy-rules
-                :rules="[required]"
-                @keydown="validateShippingForm"
-              />
-            </div>
-            <div class="col-12 col-sm-6">
-              <q-input
-                v-model="localOrderForm.shipping.lastName"
-                :label="$t('checkout.lastName')"
-                lazy-rules
-                :rules="[required]"
-                @keydown="validateShippingForm"
-              />
-            </div>
-            <div class="col-12">
-              <q-input
-                v-model="localOrderForm.shipping.email"
-                :label="$t('checkout.email')"
-                type="email"
-                lazy-rules
-                :rules="[required, emailRules]"
-                @keydown="validateShippingForm"
-              />
-            </div>
-            <div class="col-12">
-              <q-input
-                v-model="localOrderForm.shipping.address"
-                :label="$t('checkout.address')"
-                lazy-rules
-                :rules="[required]"
-                @keydown="validateShippingForm"
-              />
-            </div>
-          </q-form>
+          <ShippingForm
+            :shipping-form="localOrderForm.shipping"
+            :shipping-form-ref="shippingFormRef"
+            @shipping-valid="handleShippingValidation"
+            @update:shipping="(value) => (localOrderForm.shipping = value)"
+          />
         </q-card-section>
       </q-card>
     </q-step>
@@ -91,40 +58,13 @@
       </q-item>
 
       <q-card v-if="orderForm.payment?.method === 'card'" flat bordered>
-        <q-card-section v-if="orderForm.payment.cardDetails">
-          {{ isPaymentValid }}
-          <q-form ref="paymentFormRef" greedy class="row q-col-gutter-md payment-form">
-            <div class="col-12">
-              <q-input
-                v-model="localOrderForm.payment.cardDetails.cardNumber"
-                :label="$t('checkout.cardNumber')"
-                mask="#### #### #### ####"
-                lazy-rules
-                :rules="[required, cardNumberRules]"
-                @keydown="validatePaymentForm"
-              />
-            </div>
-            <div class="col-6">
-              <q-input
-                v-model="localOrderForm.payment.cardDetails.expiry"
-                label="MM/YY"
-                mask="##/##"
-                lazy-rules
-                :rules="[required, expiryRules]"
-                @keydown="validatePaymentForm"
-              />
-            </div>
-            <div class="col-6">
-              <q-input
-                v-model="localOrderForm.payment.cardDetails.cvv"
-                label="CVV"
-                mask="###"
-                lazy-rules
-                :rules="[required, cvvRules]"
-                @keydown="validatePaymentForm"
-              />
-            </div>
-          </q-form>
+        <q-card-section>
+          <PaymentForm
+            :payment-form="localOrderForm.payment"
+            :payment-form-ref="paymentFormRef"
+            @payment-valid="handlePaymentValidation"
+            @update:payment="(value) => (localOrderForm.payment = value)"
+          />
         </q-card-section>
       </q-card>
       <div v-if="isIpsEnabled && localOrderForm.payment?.method === 'ips'">
@@ -142,14 +82,10 @@
 </template>
 
 <script lang="ts" setup>
-import { IOrderForm } from '@/types';
-import { computed, ref } from 'vue';
-import { ComponentPublicInstance } from 'vue';
-import { useI18n } from 'vue-i18n';
-
-interface QFormInstance extends ComponentPublicInstance {
-  validate: () => Promise<boolean>;
-}
+import { IOrderForm, QFormInstance } from '@/types';
+import { computed, ref, onMounted } from 'vue';
+import ShippingForm from '@/components/ShippingForm.vue';
+import PaymentForm from '@/components/PaymentForm.vue';
 
 const props = defineProps({
   step: {
@@ -161,7 +97,7 @@ const props = defineProps({
     required: true,
   },
   orderForm: {
-    type: Object,
+    type: Object as () => IOrderForm,
     required: true,
   },
   isIpsEnabled: {
@@ -181,10 +117,10 @@ const emit = defineEmits<{
   (event: 'payment-valid', value: boolean): void;
 }>();
 
-const { t } = useI18n();
-
 const isShippingValid = ref(false);
 const isPaymentValid = ref(false);
+const shippingFormRef = ref<QFormInstance | null>(null);
+const paymentFormRef = ref<QFormInstance | null>(null);
 
 const localStep = computed({
   get: () => props.step,
@@ -200,9 +136,6 @@ const localOrderForm = computed({
   },
 });
 
-const shippingFormRef = ref<QFormInstance | null>(null);
-const paymentFormRef = ref<QFormInstance | null>(null);
-
 const handleShippingValidation = (valid: boolean) => {
   isShippingValid.value = valid;
   emit('shipping-valid', valid);
@@ -213,54 +146,12 @@ const handlePaymentValidation = (valid: boolean) => {
   emit('payment-valid', valid);
 };
 
-const validateShippingForm = () => {
-  if (shippingFormRef.value) {
-    shippingFormRef.value
-      .validate()
-      .then((success: boolean) => {
-        handleShippingValidation(success);
-      })
-      .catch(() => {
-        handleShippingValidation(false);
-      });
-  } else {
-    handleShippingValidation(false);
+onMounted(() => {
+  if (!shippingFormRef.value) {
+    shippingFormRef.value = {} as QFormInstance;
   }
-};
-
-const validatePaymentForm = () => {
-  if (paymentFormRef.value) {
-    paymentFormRef.value
-      .validate()
-      .then((success: boolean) => {
-        handlePaymentValidation(success);
-      })
-      .catch(() => {
-        handlePaymentValidation(false);
-      });
-  } else {
-    handlePaymentValidation(false);
+  if (!paymentFormRef.value) {
+    paymentFormRef.value = {} as QFormInstance;
   }
-};
-
-const required = (val: string) => !!val || t('errors.validation.required');
-const emailRules = (val: string) =>
-  /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val) || t('errors.validation.invalidEmail');
-const cardNumberRules = (val: string) =>
-  /^\d{16}$/.test(val.replace(/\s+/g, '')) || t('errors.validation.invalidCardNumber');
-const expiryRules = (val: string) => {
-  const [month, year] = val.split('/').map(Number);
-  if (!month || !year) return t('errors.validation.invalidExpiryDate');
-  const now = new Date();
-  const currentMonth = now.getMonth() + 1;
-  const currentYear = now.getFullYear() % 100;
-  return (
-    (month >= 1 &&
-      month <= 12 &&
-      year >= currentYear &&
-      (year > currentYear || month >= currentMonth)) ||
-    t('errors.validation.invalidExpiryDate')
-  );
-};
-const cvvRules = (val: string) => /^\d{3}$/.test(val) || t('errors.validation.invalidCVV');
+});
 </script>
