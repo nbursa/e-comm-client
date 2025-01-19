@@ -17,8 +17,6 @@ declare module 'vue' {
 // for each client)
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL });
 
-console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
-
 export default defineBoot(({ app }: { app: App }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 

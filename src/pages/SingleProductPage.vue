@@ -138,7 +138,6 @@ const getImageUrl = (imagePath: string | undefined): string => {
   if (!imagePath) return '';
 
   const fullUrl = `${baseUrl}${imagePath}`;
-  console.log('imagePath:', imagePath, 'fullUrl:', fullUrl);
 
   const cached = imageUrlCache.get(fullUrl);
   if (cached) return cached;
