@@ -75,25 +75,6 @@ const localPayment = computed({
   },
 });
 
-// const localOrderForm = computed({
-//   get: () => {
-//     return {
-//       ...props.paymentForm,
-//       payment: {
-//         ...props.paymentForm,
-//         cardDetails: {
-//           cardNumber: props.paymentForm.cardDetails?.cardNumber || '',
-//           expiry: props.paymentForm.cardDetails?.expiry || '',
-//           cvv: props.paymentForm.cardDetails?.cvv || '',
-//         },
-//       },
-//     };
-//   },
-//   set: (value: PaymentDetails) => {
-//     emit('update:orderForm', value);
-//   },
-// });
-
 const validatePaymentForm = () => {
   if (props.paymentFormRef) {
     props.paymentFormRef
