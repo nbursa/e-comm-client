@@ -1,23 +1,35 @@
 <template>
   <div :class="['sticky', { 'is-sticky': isSticky }, isSticky && `tw-bg-${theme.stickyBgColor}`]">
-    <q-tabs
-      v-model="localCategory"
-      indicator-color="transparent"
-      class="gt-sm !tw-max-w-screen-xl tw-mx-auto"
-      :active-color="theme.activeTextColor"
-      :active-bg-color="theme.activeBgColor"
-      :text-color="theme.backgroundColor"
-      :inactive-color="theme.textColor"
-      align="justify"
+    <div
+      class="tw-w-full tw-flex tw-items-center tw-flex-grow tw-gap-3 tw-py-2 tw-px-1 gt-sm !tw-max-w-screen-2xl tw-mx-auto !tw-text-[13px]"
     >
-      <q-tab name="all" :label="$t('products.categories.allProducts')" />
-      <q-tab
-        v-for="category in categories"
-        :key="category"
-        :name="category"
-        :label="formatCategoryLabel(category)"
+      <q-tabs
+        v-model="localCategory"
+        indicator-color="transparent"
+        class="tw-w-full"
+        :active-color="theme.activeTextColor"
+        :active-bg-color="theme.activeBgColor"
+        :text-color="theme.backgroundColor"
+        :inactive-color="theme.textColor"
+        align="justify"
+      >
+        <q-tab name="all" :label="$t('products.categories.allProducts')" />
+        <q-tab
+          v-for="category in categories"
+          :key="category"
+          :name="category"
+          :label="formatCategoryLabel(category)"
+          class="!tw-text-[13px]"
+        />
+      </q-tabs>
+
+      <q-btn
+        :text-color="theme.activeTextColor"
+        :color="theme.activeBgColor"
+        icon="tune"
+        @click="toggleFilters"
       />
-    </q-tabs>
+    </div>
 
     <CategorySelect
       v-model:selected-category="localCategory"
@@ -25,6 +37,15 @@
       :color="theme.backgroundColor"
       :text="theme.textColor"
       class="q-my-md lt-md"
+    />
+
+    <ProductFilters
+      v-if="showFilters"
+      class="tw-mt-3"
+      :initial-filters="filters"
+      :sort-options="sortOptions"
+      :sort-order-options="sortOrderOptions"
+      @update:filters="updateFilters"
     />
   </div>
 </template>
@@ -34,6 +55,9 @@ import { useQuasar } from 'quasar';
 import { QVueGlobals } from 'quasar';
 import { ref, computed, watch, PropType, inject } from 'vue';
 import CategorySelect from './CategorySelect.vue';
+import ProductFilters from './ProductFilters.vue';
+
+const scrollToTop = inject('scrollToTop') as () => void;
 
 const props = defineProps({
   selectedCategory: {
@@ -48,14 +72,27 @@ const props = defineProps({
     type: Array as PropType<string[]>,
     required: true,
   },
+  filters: {
+    type: Object as PropType<Record<string, unknown>>,
+    required: true,
+  },
+  sortOptions: {
+    type: Array as PropType<{ label: string; value: string }[]>,
+    required: true,
+  },
+  sortOrderOptions: {
+    type: Array as PropType<{ label: string; value: string }[]>,
+    required: true,
+  },
 });
 
-const scrollToTop = inject('scrollToTop') as () => void;
-const emit = defineEmits(['update:selectedCategory']);
+const emit = defineEmits(['update:selectedCategory', 'update:filters']);
+
 const $q = useQuasar() as QVueGlobals;
 
 const isSticky = ref(false);
 const localCategory = ref(props.selectedCategory);
+const showFilters = ref(false);
 
 const theme = computed(() => ({
   stickyBgColor: $q.dark.isActive ? 'q-dark' : 'q-light-lighter',
@@ -64,6 +101,10 @@ const theme = computed(() => ({
   backgroundColor: $q.dark.isActive ? 'white' : 'black',
   textColor: $q.dark.isActive ? 'black' : 'white',
 }));
+
+const toggleFilters = () => {
+  showFilters.value = !showFilters.value;
+};
 
 watch(
   () => props.scrollOffset,
@@ -89,6 +130,10 @@ watch(
     scrollToTop();
   },
 );
+
+const updateFilters = (newFilters: Record<string, unknown>) => {
+  emit('update:filters', newFilters);
+};
 
 const formatCategoryLabel = (category: string) => {
   return category
@@ -118,6 +163,10 @@ const formatCategoryLabel = (category: string) => {
     transform: translateY(0);
     animation: slideDown 0.3s ease-out;
   }
+}
+
+.q-tab__label {
+  font-size: 13px;
 }
 
 @keyframes slideDown {
