@@ -74,6 +74,7 @@
             :color="theme.activeTextColor"
             @update:filters="updateFilters"
             @apply-filters="applyFilters"
+            @reset-filters="resetFilters"
           />
         </q-card-section>
       </q-card>
@@ -141,6 +142,11 @@ const toggleFilters = () => {
 };
 
 const applyFilters = (newFilters: ProductFilters) => {
+  emit('update:filters', newFilters);
+  showFilters.value = false;
+};
+
+const resetFilters = (newFilters: ProductFilters) => {
   emit('update:filters', newFilters);
   showFilters.value = false;
 };
