@@ -27,7 +27,7 @@
         :text-color="theme.activeTextColor"
         :color="theme.activeBgColor"
         icon="tune"
-        @click="toggleFilters"
+        @click.prevent="toggleFilters"
       />
     </div>
 
@@ -40,22 +40,44 @@
         class="tw-w-full tw-mr-3"
       />
       <q-btn
-        :text-color="theme.activeTextColor"
-        :color="theme.activeBgColor"
+        :text-color="theme.activeBgColor"
+        :color="theme.activeTextColor"
         icon="tune"
         class="!tw-py-3"
-        @click="toggleFilters"
+        @click.prevent="toggleFilters"
       />
     </div>
 
-    <ProductFilters
-      v-if="showFilters"
-      class="tw-mt-3"
-      :initial-filters="filters"
-      :sort-options="sortOptions"
-      :sort-order-options="sortOrderOptions"
-      @update:filters="updateFilters"
-    />
+    <div v-if="!isMobile && showFilters" class="tw-px-4">
+      <FiltersForm
+        :filters="filters"
+        :sort-options="sortOptions"
+        :sort-order-options="sortOrderOptions"
+        @update:filters="updateFilters"
+      />
+    </div>
+
+    <q-popup-proxy
+      v-if="isMobile && showFilters"
+      transition-show="scale"
+      transition-hide="scale"
+      class="!tw-w-full tw-mr-3"
+      :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'"
+    >
+      <q-card class="!tw-w-full !tw-mx-auto">
+        <q-card-section>
+          <FiltersForm
+            :filters="filters"
+            :sort-options="sortOptions"
+            :sort-order-options="sortOrderOptions"
+            :text="theme.activeBgColor"
+            :color="theme.activeTextColor"
+            @update:filters="updateFilters"
+            @apply-filters="applyFilters"
+          />
+        </q-card-section>
+      </q-card>
+    </q-popup-proxy>
   </div>
 </template>
 
@@ -64,7 +86,7 @@ import { useQuasar } from 'quasar';
 import { QVueGlobals } from 'quasar';
 import { ref, computed, watch, PropType, inject } from 'vue';
 import CategorySelect from './CategorySelect.vue';
-import ProductFilters from './ProductFilters.vue';
+import FiltersForm from './FiltersForm.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -110,9 +132,16 @@ const theme = computed(() => ({
   backgroundColor: $q.dark.isActive ? 'white' : 'black',
   textColor: $q.dark.isActive ? 'black' : 'white',
 }));
+const isMobile = computed(() => $q.screen.lt.md);
+const isDark = computed(() => $q.dark.isActive);
 
 const toggleFilters = () => {
   showFilters.value = !showFilters.value;
+};
+
+const applyFilters = () => {
+  console.log('Applying filters');
+  showFilters.value = false;
 };
 
 watch(

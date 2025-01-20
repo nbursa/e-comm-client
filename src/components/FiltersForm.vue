@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-flex tw-flex-col tw-gap-3 tw-mx-auto md:!tw-flex-row tw-rounded md:tw-px-1 md:tw-max-w-screen-2xl"
+    class="tw-flex tw-flex-col tw-gap-3 tw-w-full tw-mx-auto md:!tw-flex-row tw-rounded md:tw-px-1 md:tw-max-w-screen-2xl"
   >
     <q-input
       v-model="filters.search"
@@ -51,10 +51,19 @@
         @input="emitFilters"
       />
     </div>
+    <q-btn
+      type="button"
+      label="Apply"
+      :color="color"
+      :text-color="text"
+      class="lt-md tw-mt-3 md:tw-hidden"
+      @click="applyFilters"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { useQuasar } from 'quasar';
 import { ref, watch } from 'vue';
 
 const props = defineProps({
@@ -70,14 +79,31 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  color: {
+    type: String,
+    default: '',
+  },
+  text: {
+    type: String,
+    default: '',
+  },
 });
 
-const emit = defineEmits(['update:filters']);
+const emit = defineEmits(['update:filters', 'apply-filters']);
+
+const $q = useQuasar();
 
 const filters = ref({ ...props.filters });
 
+const isMobile = $q.screen.lt.md;
+
 const emitFilters = () => {
+  if (isMobile) return;
   emit('update:filters', filters.value);
+};
+
+const applyFilters = () => {
+  emit('apply-filters');
 };
 
 watch(filters, emitFilters, { deep: true });
