@@ -31,7 +31,7 @@
       />
     </div>
 
-    <div class="q-my-md lt-md tw-flex tw-items-center tw-justify-between tw-px-0">
+    <div class="lt-md tw-flex tw-items-center tw-justify-between tw-px-0">
       <CategorySelect
         v-model:selected-category="localCategory"
         :categories="categories"
