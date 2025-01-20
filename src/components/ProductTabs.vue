@@ -1,7 +1,7 @@
 <template>
   <div :class="['sticky', { 'is-sticky': isSticky }, isSticky && `tw-bg-${theme.stickyBgColor}`]">
     <div
-      class="tw-w-full tw-flex tw-items-center tw-flex-grow tw-gap-3 tw-py-2 tw-px-1 gt-sm !tw-max-w-screen-2xl tw-mx-auto !tw-text-[13px]"
+      class="gt-sm tw-w-full tw-flex tw-items-center tw-flex-grow tw-gap-3 tw-py-2 tw-px-1 !tw-max-w-screen-2xl tw-mx-auto !tw-text-[13px]"
     >
       <q-tabs
         v-model="localCategory"
@@ -31,13 +31,22 @@
       />
     </div>
 
-    <CategorySelect
-      v-model:selected-category="localCategory"
-      :categories="categories"
-      :color="theme.backgroundColor"
-      :text="theme.textColor"
-      class="q-my-md lt-md"
-    />
+    <div class="q-my-md lt-md tw-flex tw-items-center tw-justify-between tw-px-0">
+      <CategorySelect
+        v-model:selected-category="localCategory"
+        :categories="categories"
+        :color="theme.backgroundColor"
+        :text="theme.textColor"
+        class="tw-w-full tw-mr-3"
+      />
+      <q-btn
+        :text-color="theme.activeTextColor"
+        :color="theme.activeBgColor"
+        icon="tune"
+        class="!tw-py-3"
+        @click="toggleFilters"
+      />
+    </div>
 
     <ProductFilters
       v-if="showFilters"

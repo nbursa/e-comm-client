@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-flex tw-flex-col tw-gap-3 md:!tw-flex-row tw-rounded tw-mx-auto md:tw-px-1 md:tw-max-w-screen-2xl"
+    class="tw-flex tw-flex-col tw-gap-3 tw-mx-auto md:!tw-flex-row tw-rounded md:tw-px-1 md:tw-max-w-screen-2xl"
   >
     <q-input
       v-model="filters.search"
