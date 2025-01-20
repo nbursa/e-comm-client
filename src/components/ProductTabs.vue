@@ -48,7 +48,7 @@
       />
     </div>
 
-    <div v-if="!isMobile && showFilters" class="tw-px-4">
+    <div v-if="!isMobile && showFilters" class="tw-px-1">
       <FiltersForm
         :filters="filters"
         :sort-options="sortOptions"
@@ -61,7 +61,7 @@
       v-if="isMobile && showFilters"
       transition-show="scale"
       transition-hide="scale"
-      class="!tw-w-full tw-mr-3"
+      class="!tw-w-full !tw-mr-0"
       :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'"
     >
       <q-card class="!tw-w-full !tw-mx-auto">
