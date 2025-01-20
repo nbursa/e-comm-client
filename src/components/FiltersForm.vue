@@ -57,18 +57,19 @@
       :color="color"
       :text-color="text"
       class="lt-md tw-mt-3 md:tw-hidden"
-      @click="applyFilters"
+      @click.prevent="applyFilters"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ProductFilters } from '@/types';
 import { useQuasar } from 'quasar';
-import { ref, watch } from 'vue';
+import { PropType, ref, watch } from 'vue';
 
 const props = defineProps({
   filters: {
-    type: Object,
+    type: Object as PropType<ProductFilters>,
     required: true,
   },
   sortOptions: {
@@ -103,7 +104,7 @@ const emitFilters = () => {
 };
 
 const applyFilters = () => {
-  emit('apply-filters');
+  emit('apply-filters', filters.value);
 };
 
 watch(filters, emitFilters, { deep: true });

@@ -87,6 +87,7 @@ import { QVueGlobals } from 'quasar';
 import { ref, computed, watch, PropType, inject } from 'vue';
 import CategorySelect from './CategorySelect.vue';
 import FiltersForm from './FiltersForm.vue';
+import { ProductFilters } from '@/types';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -104,7 +105,7 @@ const props = defineProps({
     required: true,
   },
   filters: {
-    type: Object as PropType<Record<string, unknown>>,
+    type: Object as PropType<ProductFilters>,
     required: true,
   },
   sortOptions: {
@@ -139,8 +140,8 @@ const toggleFilters = () => {
   showFilters.value = !showFilters.value;
 };
 
-const applyFilters = () => {
-  console.log('Applying filters');
+const applyFilters = (newFilters: ProductFilters) => {
+  emit('update:filters', newFilters);
   showFilters.value = false;
 };
 
@@ -169,7 +170,7 @@ watch(
   },
 );
 
-const updateFilters = (newFilters: Record<string, unknown>) => {
+const updateFilters = (newFilters: ProductFilters) => {
   emit('update:filters', newFilters);
 };
 

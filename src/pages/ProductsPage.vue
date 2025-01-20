@@ -213,7 +213,6 @@ const fetchProducts = async (category = 'all') => {
     const cached = productCache.getCache(cacheKey);
 
     if (cached?.meta && cached?.data) {
-      console.log('Using cached products');
       products.value = cached.data;
       meta.value = cached.meta;
       $q.loading.hide();
@@ -240,9 +239,6 @@ const fetchProducts = async (category = 'all') => {
       category !== 'all' ? `${CATEGORY_PATH}/${category}` : ''
     }?${queryParams}`;
 
-    console.log('Fetching products from URL:', url);
-    console.log('Fetching products with params:', params, queryParams);
-
     const response: AxiosResponse<ProductResponse> = await api.get(url);
 
     if (response.status !== 200) {
@@ -251,21 +247,30 @@ const fetchProducts = async (category = 'all') => {
 
     if (response && response.data) {
       const result = response.data as ProductResponse;
-      console.log('Fetched products:', result);
       products.value = result.data;
       meta.value = result.meta;
 
       productCache.setCache(result, cacheKey);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching products:', error);
-    $q.notify({
-      color: 'negative',
-      message: t('errors.fetchProducts'),
-      timeout: 1000,
-      icon: 'error',
-      position: 'top',
-    });
+    if (error instanceof Error) {
+      $q.notify({
+        color: 'negative',
+        message: `${t('errors.fetchProducts')}, error: ${error.message}`,
+        timeout: 5000,
+        icon: 'error',
+        position: 'top',
+      });
+    } else {
+      $q.notify({
+        color: 'negative',
+        message: t('errors.fetchProducts'),
+        timeout: 5000,
+        icon: 'error',
+        position: 'top',
+      });
+    }
   } finally {
     $q.loading.hide();
   }
