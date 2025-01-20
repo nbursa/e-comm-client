@@ -1,31 +1,16 @@
 <template>
-  <div class="tw-container !tw-shadow-none tw-mx-0 md:tw-mx-auto !tw-mt-1">
+  <div class="tw-container !tw-shadow-none tw-mx-0 sm:tw-mx-auto tw-pb-4 md:tw-pb-0 !tw-mt-1">
     <FiltersForm
-      v-if="!isMobile"
       :filters="filters"
       :sort-options="sortOptions"
       :sort-order-options="sortOrderOptions"
       @update:filters="updateFilters"
     />
-
-    <div v-else class="tw-flex tw-flex-col tw-gap-3 md:!tw-flex-row tw-rounded tw-mb-0">
-      <q-select v-model="isOpen" label="Filters" dense class="tw-w-full">
-        <div v-if="isOpen">
-          <FiltersForm
-            :filters="filters"
-            :sort-options="sortOptions"
-            :sort-order-options="sortOrderOptions"
-            @update:filters="updateFilters"
-          />
-        </div>
-      </q-select>
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useQuasar } from 'quasar';
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import FiltersForm from './FiltersForm.vue';
 
 const props = defineProps({
@@ -45,12 +30,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:filters']);
 
-const $q = useQuasar();
-
 const filters = ref({ ...props.initialFilters });
-const isOpen = ref(false);
-
-const isMobile = computed(() => $q.screen.lt.md);
 
 const emitFilters = () => {
   emit('update:filters', {
