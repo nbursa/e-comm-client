@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="!tw-pb-16 !tw-pt-4">
+  <q-page padding class="!tw-pb-16 !tw-pt-4 !tw-px-3">
     <h5 class="tw-font-serif tw-my-4">{{ $t('products.title') }}</h5>
     <ProductTabs
       :selected-category="selectedCategory"
@@ -9,6 +9,13 @@
     />
 
     <q-separator class="q-my-md" />
+
+    <ProductFilters
+      :initial-filters="filters"
+      :sort-options="sortOptions"
+      :sort-order-options="sortOrderOptions"
+      @update:filters="updateFilters"
+    />
 
     <div class="tw-container tw-mx-auto tw-mb-8 grid justify-center">
       <div
@@ -55,6 +62,7 @@ import ProductTabs from '@/components/ProductTabs.vue';
 import { CATEGORIES_PATH, CATEGORY_PATH, PRODUCTS_PATH } from '@/router';
 import { api } from '@/boot/axios';
 import { AxiosResponse } from 'axios';
+import ProductFilters from '@/components/ProductFilters.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -92,6 +100,17 @@ const meta = ref({
   limit: 10,
   lastPage: 1,
 });
+
+const sortOptions = [
+  { label: 'ID', value: 'id' },
+  { label: 'Name', value: 'name' },
+  { label: 'Price', value: 'price' },
+];
+
+const sortOrderOptions = [
+  { label: 'Ascending', value: 'asc' },
+  { label: 'Descending', value: 'desc' },
+];
 
 const totalPages = computed(() => Math.ceil(meta.value.total / meta.value.limit));
 const displayedProducts = computed(() => products.value);
@@ -139,6 +158,10 @@ const onCategoryChange = async (newCategory: string) => {
   selectedCategory.value = newCategory;
   currentPage.value = 1;
   await fetchProducts(newCategory);
+};
+
+const updateFilters = (newFilters: typeof filters.value) => {
+  filters.value = newFilters;
 };
 
 const fetchCategories = async () => {
