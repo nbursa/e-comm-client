@@ -34,22 +34,44 @@
         class="tw-w-full md:tw-w-1/4 md:tw-min-w-20 lg:tw-flex-1"
         @input="emitFilters"
       />
+
       <q-select
         v-model="filters.sortBy"
         :options="sortOptions"
-        label="Sort By"
-        dense
-        class="tw-w-full md:tw-w-1/4 md:tw-min-w-20 lg:tw-flex-1"
-        @input="emitFilters"
-      />
-      <q-select
-        v-model="filters.sortOrder"
-        :options="sortOrderOptions"
+        option-value="value"
+        option-label="label"
         label="Sort Order"
         dense
         class="tw-w-full md:tw-w-1/4 md:tw-min-w-20 lg:tw-flex-1"
-        @input="emitFilters"
-      />
+        @update:model-value="emitFilters"
+      >
+        <template #option="scope">
+          <q-item v-bind="scope.itemProps">
+            <q-item-section>
+              <q-item-label>{{ scope.opt.label }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+
+      <q-select
+        v-model="filters.sortOrder"
+        :options="sortOrderOptions"
+        option-value="value"
+        option-label="label"
+        label="Sort Order"
+        dense
+        class="tw-w-full md:tw-w-1/4 md:tw-min-w-20 lg:tw-flex-1"
+        @update:model-value="emitFilters"
+      >
+        <template #option="scope">
+          <q-item v-bind="scope.itemProps">
+            <q-item-section>
+              <q-item-label>{{ scope.opt.label }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
     </div>
     <q-btn
       type="button"
@@ -63,7 +85,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ProductFilters } from '@/types';
+import { IOrderOptions, ISortOptions, ProductFilters } from '@/types';
 import { useQuasar } from 'quasar';
 import { PropType, ref, watch } from 'vue';
 
@@ -73,11 +95,11 @@ const props = defineProps({
     required: true,
   },
   sortOptions: {
-    type: Array,
+    type: Array as PropType<ISortOptions[]>,
     required: true,
   },
   sortOrderOptions: {
-    type: Array,
+    type: Array as PropType<IOrderOptions[]>,
     required: true,
   },
   color: {

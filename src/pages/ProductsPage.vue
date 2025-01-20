@@ -55,7 +55,14 @@ import { useProductStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/stores/cart';
-import { Product, ProductResponse, ProductFilters, FetchParams } from '@/types';
+import {
+  Product,
+  ProductResponse,
+  ProductFilters,
+  FetchParams,
+  ISortOptions,
+  IOrderOptions,
+} from '@/types';
 import { QVueGlobals } from 'quasar';
 import ProductTabs from '@/components/ProductTabs.vue';
 import { CATEGORIES_PATH, CATEGORY_PATH, PRODUCTS_PATH } from '@/router';
@@ -85,13 +92,7 @@ const itemsPerPage = 10;
 const selectedCategory = ref('all');
 const categories = ref<string[]>([]);
 const isLoadingCategories = ref(true);
-const filters = ref<ProductFilters>({
-  search: '',
-  minPrice: null,
-  maxPrice: null,
-  sortBy: 'id',
-  sortOrder: 'asc',
-});
+
 const meta = ref({
   total: 0,
   page: 1,
@@ -99,15 +100,24 @@ const meta = ref({
   lastPage: 1,
 });
 
-const sortOptions = [
+const sortOptions: ISortOptions[] = [
   { label: 'ID', value: 'id' },
   { label: 'Name', value: 'name' },
   { label: 'Price', value: 'price' },
 ];
-const sortOrderOptions = [
+
+const sortOrderOptions: IOrderOptions[] = [
   { label: 'Ascending', value: 'asc' },
   { label: 'Descending', value: 'desc' },
 ];
+
+const filters = ref<ProductFilters>({
+  search: '',
+  minPrice: null,
+  maxPrice: null,
+  sortBy: sortOptions[0]!,
+  sortOrder: sortOrderOptions[0]!,
+});
 
 const totalPages = computed(() => Math.ceil(meta.value.total / meta.value.limit));
 const displayedProducts = computed(() => products.value);
@@ -197,15 +207,15 @@ const buildCacheKey = (params: FetchParams): string => {
 const fetchProducts = async (category = 'all') => {
   $q.loading.show();
   try {
-    const params = {
+    const params: FetchParams = {
       category,
       page: currentPage.value,
       limit: itemsPerPage,
       search: filters.value.search,
       minPrice: filters.value.minPrice,
       maxPrice: filters.value.maxPrice,
-      sortBy: filters.value.sortBy,
-      sortOrder: filters.value.sortOrder,
+      sortBy: filters.value.sortBy.value as unknown as ISortOptions,
+      sortOrder: filters.value.sortOrder.value as unknown as IOrderOptions,
     };
 
     const cacheKey = buildCacheKey(params);
@@ -223,8 +233,8 @@ const fetchProducts = async (category = 'all') => {
       page: currentPage.value.toString(),
       limit: itemsPerPage.toString(),
       search: filters.value.search,
-      sortBy: filters.value.sortBy,
-      sortOrder: filters.value.sortOrder,
+      sortBy: filters.value.sortBy.value,
+      sortOrder: filters.value.sortOrder.value,
     });
 
     if (filters.value.minPrice !== null) {

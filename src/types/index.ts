@@ -180,12 +180,22 @@ export interface ProductFilters {
   search: string;
   minPrice: number | null;
   maxPrice: number | null;
-  sortBy: 'id' | 'price' | 'name';
-  sortOrder: 'asc' | 'desc';
+  sortBy: ISortOptions;
+  sortOrder: IOrderOptions;
 }
 
 export interface FetchParams extends ProductFilters {
   category: string;
   page: number;
   limit: number;
+}
+
+export interface ISortOptions {
+  label: string;
+  value: 'id' | 'name' | 'price';
+}
+
+export interface IOrderOptions {
+  label: string;
+  value: 'asc' | 'desc';
 }
