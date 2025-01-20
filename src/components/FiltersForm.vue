@@ -120,12 +120,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:filters', 'apply-filters']);
+const emit = defineEmits(['update:filters', 'apply-filters', 'reset-filters']);
 
 const $q = useQuasar();
 
 const filters = ref({ ...props.filters });
-const defaultFilters = ref({ ...props.filters });
+// const defaultFilters = ref({ ...props.filters });
 
 const isMobile = $q.screen.lt.md;
 
@@ -139,9 +139,16 @@ const applyFilters = () => {
 };
 
 const resetFilters = () => {
-  filters.value = { ...defaultFilters.value };
-  // emitFilters();
+  filters.value = {
+    search: '',
+    minPrice: null,
+    maxPrice: null,
+    sortBy: { value: 'id', label: 'ID' },
+    sortOrder: { value: 'asc', label: 'Ascending' },
+  };
+  console.log(filters.value);
   emit('update:filters', filters.value);
+  if (isMobile) emit('apply-filters', filters.value);
 };
 
 watch(filters, emitFilters, { deep: true });
