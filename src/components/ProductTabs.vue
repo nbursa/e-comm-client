@@ -87,7 +87,7 @@ import { QVueGlobals } from 'quasar';
 import { ref, computed, watch, PropType, inject } from 'vue';
 import CategorySelect from './CategorySelect.vue';
 import FiltersForm from './FiltersForm.vue';
-import { ProductFilters } from '@/types';
+import { IOrderOptions, ISortOptions, ProductFilters } from '@/types';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -109,11 +109,11 @@ const props = defineProps({
     required: true,
   },
   sortOptions: {
-    type: Array as PropType<{ label: string; value: string }[]>,
+    type: Array as PropType<ISortOptions[]>,
     required: true,
   },
   sortOrderOptions: {
-    type: Array as PropType<{ label: string; value: string }[]>,
+    type: Array as PropType<IOrderOptions[]>,
     required: true,
   },
 });
