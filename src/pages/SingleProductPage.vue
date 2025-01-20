@@ -97,16 +97,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="row justify-center q-mt-xl">
-      <q-btn
-        :color="text"
-        :text-color="color"
-        :outline="isDark"
-        :label="$t('singleProduct.backToProducts')"
-        @click="goToProducts"
-      />
-    </div> -->
   </q-page>
 </template>
 
