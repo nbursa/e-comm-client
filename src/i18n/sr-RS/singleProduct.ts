@@ -3,4 +3,5 @@ export const singleProduct = {
   backToProducts: 'Nazad na proizvode',
   itemAdded: 'Proizvod dodat u korpu!',
   quantity: 'Na stanju',
+  goBack: 'Nazad',
 };

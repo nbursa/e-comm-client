@@ -76,26 +76,37 @@
                 {{ formatPrice(product.price) }}
               </template>
             </div>
-            <q-btn
-              :color="color"
-              :text-color="text"
-              :label="$t('singleProduct.addToCart')"
-              class="!tw-p-4 full-width"
-              @click.stop="addToCart(product)"
-            />
+            <div class="tw-w-full tw-flex tw-justify-between tw-gap-4">
+              <q-btn
+                :color="text"
+                :text-color="color"
+                :outline="isDark"
+                :label="$t('singleProduct.goBack')"
+                class="!tw-p-4 tw-flex-1 tw-basis-1/3"
+                @click.stop="goBack()"
+              />
+              <q-btn
+                :color="color"
+                :text-color="text"
+                :label="$t('singleProduct.addToCart')"
+                class="!tw-p-4 tw-flex-1 tw-basis-2/3"
+                @click.stop="addToCart(product)"
+              />
+            </div>
           </q-card-actions>
         </div>
       </div>
     </div>
 
-    <div class="row justify-center q-mt-xl">
+    <!-- <div class="row justify-center q-mt-xl">
       <q-btn
-        :color="color"
-        :text-color="text"
+        :color="text"
+        :text-color="color"
+        :outline="isDark"
         :label="$t('singleProduct.backToProducts')"
-        @click="goBack"
+        @click="goToProducts"
       />
-    </div>
+    </div> -->
   </q-page>
 </template>
 
@@ -217,7 +228,7 @@ const addToCart = (product: Product) => {
 };
 
 const goBack = () => {
-  router.push(PRODUCTS_PATH);
+  router.back();
 };
 
 const fetchProduct = async () => {
