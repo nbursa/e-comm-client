@@ -175,3 +175,17 @@ export interface ProductStore {
   timestamp: number;
   version: string;
 }
+
+export interface ProductFilters {
+  search: string;
+  minPrice: number | null;
+  maxPrice: number | null;
+  sortBy: 'id' | 'price' | 'name';
+  sortOrder: 'asc' | 'desc';
+}
+
+export interface FetchParams extends ProductFilters {
+  category: string;
+  page: number;
+  limit: number;
+}

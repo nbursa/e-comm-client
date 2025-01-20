@@ -1,53 +1,32 @@
 <template>
-  <div class="tw-container !tw-shadow-none tw-mx-0 md:tw-mx-auto tw-mb-4">
-    <div class="tw-flex tw-flex-col tw-gap-3 md:!tw-flex-row tw-rounded tw-mb-4">
-      <q-input
-        v-model="filters.search"
-        placeholder="Search products"
-        label="Search"
-        class="tw-w-full md:tw-max-w-md tw-mb-3 sm:tw-mr-3"
-        @input="emitFilters"
-      />
-      <div
-        class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-4 tw-gap-3 md:tw-flex md:tw-flex-grow md:tw-flex-row lg:tw-gap-4"
-      >
-        <q-input
-          v-model.number="filters.minPrice"
-          type="number"
-          label="Min Price"
-          placeholder="Min Price"
-          class="tw-w-full md:tw-w-1/4 md:tw-min-w-20 lg:tw-flex-1"
-          @input="emitFilters"
-        />
-        <q-input
-          v-model.number="filters.maxPrice"
-          type="number"
-          label="Max Price"
-          placeholder="Max Price"
-          class="tw-w-full md:tw-w-1/4 md:tw-min-w-20 lg:tw-flex-1"
-          @input="emitFilters"
-        />
-        <q-select
-          v-model="filters.sortBy"
-          :options="sortOptions"
-          label="Sort By"
-          class="tw-w-full md:tw-w-1/4 md:tw-min-w-20 lg:tw-flex-1"
-          @input="emitFilters"
-        />
-        <q-select
-          v-model="filters.sortOrder"
-          :options="sortOrderOptions"
-          label="Sort Order"
-          class="tw-w-full md:tw-w-1/4 md:tw-min-w-20 lg:tw-flex-1"
-          @input="emitFilters"
-        />
-      </div>
+  <div class="tw-container !tw-shadow-none tw-mx-0 md:tw-mx-auto !tw-mt-1">
+    <FiltersForm
+      v-if="!isMobile"
+      :filters="filters"
+      :sort-options="sortOptions"
+      :sort-order-options="sortOrderOptions"
+      @update:filters="updateFilters"
+    />
+
+    <div v-else class="tw-flex tw-flex-col tw-gap-3 md:!tw-flex-row tw-rounded tw-mb-0">
+      <q-select v-model="isOpen" label="Filters" dense class="tw-w-full">
+        <div v-if="isOpen">
+          <FiltersForm
+            :filters="filters"
+            :sort-options="sortOptions"
+            :sort-order-options="sortOrderOptions"
+            @update:filters="updateFilters"
+          />
+        </div>
+      </q-select>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { useQuasar } from 'quasar';
+import { computed, ref, watch } from 'vue';
+import FiltersForm from './FiltersForm.vue';
 
 const props = defineProps({
   initialFilters: {
@@ -66,14 +45,23 @@ const props = defineProps({
 
 const emit = defineEmits(['update:filters']);
 
+const $q = useQuasar();
+
 const filters = ref({ ...props.initialFilters });
+const isOpen = ref(false);
+
+const isMobile = computed(() => $q.screen.lt.md);
 
 const emitFilters = () => {
   emit('update:filters', {
     ...filters.value,
-    sortBy: filters.value.sortBy.value,
-    sortOrder: filters.value.sortOrder.value,
+    sortBy: filters.value.sortBy.value || filters.value.sortBy,
+    sortOrder: filters.value.sortOrder.value || filters.value.sortOrder,
   });
+};
+
+const updateFilters = (newFilters: Record<string, unknown>) => {
+  filters.value = newFilters;
 };
 
 watch(filters, emitFilters, { deep: true });

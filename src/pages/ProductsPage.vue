@@ -1,23 +1,22 @@
 <template>
   <q-page padding class="!tw-pb-16 !tw-pt-4 !tw-px-3">
-    <h5 class="tw-font-serif tw-my-4">{{ $t('products.title') }}</h5>
+    <h4 class="tw-text-3xl tw-font-serif tw-mx-auto tw-my-4 2xl:tw-text-center 2xl:tw-mt-0">
+      {{ $t('products.title') }}
+    </h4>
     <ProductTabs
       :selected-category="selectedCategory"
       :categories="categories"
       :scroll-offset="scrollOffset"
-      @update:selected-category="onCategoryChange"
-    />
-
-    <q-separator class="q-my-md" />
-
-    <ProductFilters
-      :initial-filters="filters"
+      :filters="filters"
       :sort-options="sortOptions"
       :sort-order-options="sortOrderOptions"
+      @update:selected-category="onCategoryChange"
       @update:filters="updateFilters"
     />
 
-    <div class="tw-container tw-mx-auto tw-mb-8 grid justify-center">
+    <q-separator />
+
+    <div class="tw-container tw-mx-auto tw-mb-8 tw-mt-4 grid justify-center">
       <div
         class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 tw-gap-4"
       >
@@ -56,13 +55,12 @@ import { useProductStore } from '@/stores/products';
 import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/ProductCard.vue';
 import { useCartStore } from '@/stores/cart';
-import { Product, ProductResponse } from '@/types';
+import { Product, ProductResponse, ProductFilters, FetchParams } from '@/types';
 import { QVueGlobals } from 'quasar';
 import ProductTabs from '@/components/ProductTabs.vue';
 import { CATEGORIES_PATH, CATEGORY_PATH, PRODUCTS_PATH } from '@/router';
 import { api } from '@/boot/axios';
 import { AxiosResponse } from 'axios';
-import ProductFilters from '@/components/ProductFilters.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -87,10 +85,10 @@ const itemsPerPage = 10;
 const selectedCategory = ref('all');
 const categories = ref<string[]>([]);
 const isLoadingCategories = ref(true);
-const filters = ref({
+const filters = ref<ProductFilters>({
   search: '',
-  minPrice: 0,
-  maxPrice: 999999,
+  minPrice: null,
+  maxPrice: null,
   sortBy: 'id',
   sortOrder: 'asc',
 });
@@ -106,7 +104,6 @@ const sortOptions = [
   { label: 'Name', value: 'name' },
   { label: 'Price', value: 'price' },
 ];
-
 const sortOrderOptions = [
   { label: 'Ascending', value: 'asc' },
   { label: 'Descending', value: 'desc' },
@@ -160,7 +157,7 @@ const onCategoryChange = async (newCategory: string) => {
   await fetchProducts(newCategory);
 };
 
-const updateFilters = (newFilters: typeof filters.value) => {
+const updateFilters = (newFilters: ProductFilters) => {
   filters.value = newFilters;
 };
 
@@ -193,16 +190,7 @@ const fetchCategories = async () => {
   }
 };
 
-const buildCacheKey = (params: {
-  category: string;
-  page: number;
-  limit: number;
-  search: string;
-  minPrice: number;
-  maxPrice: number;
-  sortBy: string;
-  sortOrder: string;
-}): string => {
+const buildCacheKey = (params: FetchParams): string => {
   return `products_${params.category}_${params.page}_${params.limit}_${params.search}_${params.minPrice}_${params.maxPrice}_${params.sortBy}_${params.sortOrder}`;
 };
 
@@ -225,6 +213,7 @@ const fetchProducts = async (category = 'all') => {
     const cached = productCache.getCache(cacheKey);
 
     if (cached?.meta && cached?.data) {
+      console.log('Using cached products');
       products.value = cached.data;
       meta.value = cached.meta;
       $q.loading.hide();
@@ -235,17 +224,26 @@ const fetchProducts = async (category = 'all') => {
       page: currentPage.value.toString(),
       limit: itemsPerPage.toString(),
       search: filters.value.search,
-      minPrice: filters.value.minPrice.toString(),
-      maxPrice: filters.value.maxPrice.toString(),
       sortBy: filters.value.sortBy,
       sortOrder: filters.value.sortOrder,
     });
+
+    if (filters.value.minPrice !== null) {
+      queryParams.append('minPrice', filters.value.minPrice.toString());
+    }
+
+    if (filters.value.maxPrice !== null) {
+      queryParams.append('maxPrice', filters.value.maxPrice.toString());
+    }
 
     const url = `${import.meta.env.VITE_API_URL}${PRODUCTS_PATH}${
       category !== 'all' ? `${CATEGORY_PATH}/${category}` : ''
     }?${queryParams}`;
 
-    const response: AxiosResponse<ProductResponse> = await api.get(url, { params });
+    console.log('Fetching products from URL:', url);
+    console.log('Fetching products with params:', params, queryParams);
+
+    const response: AxiosResponse<ProductResponse> = await api.get(url);
 
     if (response.status !== 200) {
       throw new Error('Failed to fetch products');
@@ -253,6 +251,7 @@ const fetchProducts = async (category = 'all') => {
 
     if (response && response.data) {
       const result = response.data as ProductResponse;
+      console.log('Fetched products:', result);
       products.value = result.data;
       meta.value = result.meta;
 

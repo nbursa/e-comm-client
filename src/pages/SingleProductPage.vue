@@ -10,7 +10,7 @@
     </div>
     <div
       v-else
-      class="q-mb-md q-mx-auto overflow-hidden !tw-w-full row items-stretch justify-center"
+      class="q-mb-md q-mx-auto !tw-w-full row items-stretch justify-center"
       style="max-width: 1200px"
     >
       <div
@@ -18,29 +18,30 @@
         :class="{ 'col-reverse-md': $q.screen.sm }"
       >
         <div
-          class="col-12 col-sm-6 col-md-4 tw-px-2 sm:tw-px-0 tw-transition tw-duration-200 tw-ease-in-out hover:tw-scale-105"
+          class="col-12 col-sm-6 col-md-4 tw-px-2 sm:tw-px-0 tw-transition tw-duration-500 tw-ease-in-out hover:tw-scale-105"
         >
           <div
             v-if="!product.image"
-            class="tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center tw-rounded 0 tw-border tw-border-gray-400"
+            class="tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center tw-rounded 0 tw-border tw-border-gray-400 tw-pb-2"
             :class="
               isDark ? 'tw-text-gray-200  !tw-bg-gray-700' : 'tw-text-gray-70 !tw-bg-gray-200'
             "
           >
             {{ t('errors.noImage') }}
           </div>
-          <q-img
-            v-else
-            :src="imageLocalUrl"
-            :alt="product.name"
-            fit="contain"
-            class="cursor-pointer full-width full-height"
-            @click="openImageOverlay(product.image)"
-          />
+          <div v-else class="tw-h-full tw-w-full">
+            <q-img
+              :src="imageLocalUrl"
+              :alt="product.name"
+              fit="contain"
+              class="cursor-pointer full-width full-height !tw-rounded-md"
+              @click="openImageOverlay(product.image)"
+            />
+          </div>
         </div>
 
         <div
-          class="col-12 col-sm-6 col-md-8 sm:tw-p-3 !tw-align-top"
+          class="col-12 col-sm-6 col-md-8 sm:tw-px-3 sm:!tw-py-0 !tw-align-top"
           style="
             display: flex;
             flex-direction: column;
@@ -50,7 +51,7 @@
           "
         >
           <q-card-section
-            class="q-pa-sm !tw-pb-0"
+            class="!tw-p-0 !tw-px-3"
             style="flex: 1; display: flex; flex-direction: column; height: 100%"
           >
             <h5 class="tw-flex tw-justify-between tw-gap-2">
@@ -64,8 +65,8 @@
             <div class="text-caption q-mt-sm">{{ product.description }}</div>
           </q-card-section>
 
-          <q-card-actions align="right" class="row justify-between items-end !tw-pt-0">
-            <div class="q-mt-sm text-bold price-text">
+          <q-card-actions align="right" class="row justify-between items-end !tw-px-3">
+            <div class="text-bold price-text tw-pb-3">
               <template v-if="product.discount">
                 <s class="text-grey">{{ formatPrice(product.price) }}</s>
                 <span class="text-positive q-ml-sm">
