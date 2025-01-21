@@ -10,7 +10,7 @@ export default defineConfig((ctx) => {
     preFetch: true,
     boot: ['i18n', 'store', 'ga', 'axios', 'theme', 'components', 'lightbox'],
     css: ['app.scss'],
-    extras: ['roboto-font', 'material-icons'],
+    extras: ['material-icons'],
     set: false,
     pwd: 999,
     build: {

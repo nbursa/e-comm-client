@@ -14,6 +14,7 @@
     :fab="fab"
     :size="computedSize"
     :class="['qbutton', 'hover:!tw-opacity-100 focus:!tw-ring-0', className]"
+    :style="{ fontSize: computedFontSize }"
     @click="handleClick"
   >
     <template v-if="icon">
@@ -122,6 +123,12 @@ const computedSize = computed(() => {
   return $q.screen.lt.md ? 'lg' : props.size;
 });
 
+const computedFontSize = computed(() => {
+  return {
+    fontSize: props.size === 'sm' ? '12px' : '20px',
+  };
+});
+
 const handleClick = (event: Event) => {
   event.preventDefault();
   event.stopPropagation();
@@ -130,7 +137,13 @@ const handleClick = (event: Event) => {
 </script>
 
 <style scoped>
-.q-btn {
+.qbutton {
   transition: all 0.3s ease;
+  font-size: 14px;
+  padding: 0.5rem !important;
+  @media (min-width: 768px) {
+    font-size: 16px;
+    padding: 1rem !important;
+  }
 }
 </style>

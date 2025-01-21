@@ -13,8 +13,10 @@
       class="tw-flex tw-w-full tw-mx-auto tw-flex-col tw-justify-center tw-items-center tw-gap-3"
       style="max-width: 1200px"
     >
-      <div class="tw-w-full tw-flex tw-items-center tw-justify-between tw-px-2 md:tw-mb-8">
-        <span class="tw-text-xl tw-font-semibold tw-font-serif md:tw-text-2xl tw-mr-auto">
+      <div
+        class="tw-w-full tw-flex tw-items-baseline !tw-justify-between sm:!tw-justify-start md:tw-mb-8"
+      >
+        <span class="tw-text-xl tw-font-semibold tw-font-serif md:tw-text-2xl tw-mr-4">
           {{ product.name }}
         </span>
         <span class="tw-text-sm">{{ product.category }}</span>
@@ -56,7 +58,7 @@
             min-height: 100%;
           "
         >
-          <h5 class="!tw-w-full tw-flex tw-justify-end tw-gap-2">
+          <h5 class="!tw-w-full tw-flex tw-font-serif tw-justify-end tw-gap-2">
             <span class="tw-text-sm tw-mb-2"
               >({{ product.quantity }}
               <span class="tw-text-xs">{{ $t('singleProduct.quantity') }}</span
@@ -64,12 +66,12 @@
             >
           </h5>
 
-          <q-card-section class="tw-flex tw-flex-col tw-flex-1 tw-h-full">
-            <div class="text-caption q-mt-sm">{{ product.description }}</div>
+          <q-card-section class="tw-flex tw-flex-col tw-flex-1 tw-h-full !tw-px-0">
+            <div class="text-caption">{{ product.description }}</div>
           </q-card-section>
 
           <q-card-actions align="right" class="!tw-flex !tw-justify-between !tw-items-end !tw-p-0">
-            <div class="text-bold price-text tw-pb-3">
+            <div class="text-bold price-text tw-pb-5">
               <template v-if="product.discount">
                 <s class="text-grey">{{ formatPrice(product.price) }}</s>
                 <span class="text-positive tw-font-serif q-ml-sm">
@@ -86,14 +88,14 @@
                 :text-color="color"
                 :outline="isDark"
                 :label="$t('singleProduct.goBack')"
-                class-name="!tw-p-4 tw-flex-1 tw-basis-1/3"
+                class-name="tw-flex-1 tw-basis-1/3"
                 @click="goBack"
               />
               <QButton
                 :color="color"
                 :text-color="text"
                 :label="$t('singleProduct.addToCart')"
-                class-name="!tw-p-4 tw-flex-1 tw-basis-2/3"
+                class-name="tw-flex-1 tw-basis-2/3"
                 @click="addToCart(product)"
               />
             </div>

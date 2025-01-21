@@ -6,6 +6,10 @@ export default {
   prefix: 'tw-',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Montserrat', 'sans-serif'],
+        serif: ['Forum', 'serif'],
+      },
       fontSize: {
         xs: '0.75rem',
         sm: '0.875rem',
