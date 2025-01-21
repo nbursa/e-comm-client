@@ -67,14 +67,16 @@
           </h5>
 
           <q-card-section class="tw-flex tw-flex-col tw-flex-1 tw-h-full !tw-px-0">
-            <div class="text-caption">{{ product.description }}</div>
+            <div class="tw-text-base">{{ product.description }}</div>
           </q-card-section>
 
           <q-card-actions align="right" class="!tw-flex !tw-justify-between !tw-items-end !tw-p-0">
-            <div class="text-bold price-text tw-pb-5">
+            <div class="text-bold tw-text-xl tw-pb-5">
               <template v-if="product.discount">
-                <s class="text-grey">{{ formatPrice(product.price) }}</s>
-                <span class="text-positive tw-font-serif q-ml-sm">
+                <span class="tw-text-gray-500 tw-mr-1 tw-text-base tw-line-through">{{
+                  formatPrice(product.price)
+                }}</span>
+                <span class="tw-text-green-600">
                   {{ formatPrice(product.discountedPrice || product.price) }}
                 </span>
               </template>

@@ -10,7 +10,7 @@
       :src="imageUrl(product.image)"
       :alt="product.name"
       fit="cover"
-      class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"
+      class="tw-w-full tw-h-64"
     />
     <div
       v-if="!product.image"
@@ -25,10 +25,12 @@
     </q-card-section>
 
     <q-card-actions class="row justify-between items-center !tw-pt-0">
-      <div class="q-mt-sm text-bold price-text">
+      <div class="text-bold tw-text-xl tw-pb-0">
         <template v-if="product.discount">
-          <span class="text-grey">{{ formatPrice(product.price) }}</span>
-          <span class="text-positive q-ml-sm">
+          <span class="tw-text-gray-500 tw-mr-2 tw-text-base tw-line-through">{{
+            formatPrice(product.price)
+          }}</span>
+          <span class="tw-text-green-600">
             {{ formatPrice(product.discountedPrice || product.price) }}
           </span>
         </template>
