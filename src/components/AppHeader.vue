@@ -70,8 +70,7 @@ const isAnimating = ref(false);
 const totalItems = computed(() => cartStore.totalItems);
 
 const buttonSize = computed(() => {
-  if ($q.screen.lt.sm) return 'lg';
-  if ($q.screen.lt.md) return 'md';
+  if ($q.screen.lt.md) return 'lg';
   return 'md';
 });
 

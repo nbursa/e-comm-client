@@ -12,15 +12,17 @@
     :push="push"
     :square="square"
     :fab="fab"
-    :class="[
-      'qbutton  tw-font-medium tw-text-center tw-transition !tw-py-3 !tw-px-4',
-      'hover:!tw-opacity-100 focus:!tw-ring-0',
-      className,
-    ]"
+    :size="computedSize"
+    :class="['qbutton', 'hover:!tw-opacity-100 focus:!tw-ring-0', className]"
     @click="handleClick"
   >
     <template v-if="icon">
-      <q-icon :name="icon" :color="textColor" size="1rem" class="q-mr-sm" />
+      <q-icon
+        :name="icon"
+        :color="computedTextColor"
+        :size="computedSize"
+        class="tw-flex tw-items-center tw-justify-center"
+      />
     </template>
     {{ label }}
   </q-btn>
@@ -96,6 +98,10 @@ const props = defineProps({
     type: Boolean as PropType<boolean>,
     default: false,
   },
+  size: {
+    type: String as PropType<string>,
+    default: '',
+  },
 });
 
 const emit = defineEmits(['click']);
@@ -112,8 +118,11 @@ const computedTextColor = computed(() => {
   return props.textColor || (isDark.value ? 'black' : 'white');
 });
 
+const computedSize = computed(() => {
+  return $q.screen.lt.md ? 'lg' : props.size;
+});
+
 const handleClick = (event: Event) => {
-  console.log('Button clicked');
   event.preventDefault();
   event.stopPropagation();
   return typeof props.action === 'function' ? props.action() : emit('click');

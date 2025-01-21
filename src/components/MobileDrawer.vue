@@ -9,15 +9,15 @@
     :style="{ background: theme.drawerBackground }"
     @update:model-value="$emit('update:drawerOpen', $event)"
   >
-    <div class="tw-h-[54px] tw-flex tw-items-center tw-justify-between">
-      <div class="tw-flex-1"></div>
-      <q-btn
+    <div class="tw-h-[54px] tw-flex tw-items-center tw-justify-end tw-pr-2 sm:tw-pr-5">
+      <QButton
         flat
         round
         dense
         :size="buttonSize"
-        :color="$q.dark.isActive ? 'white' : 'black'"
+        :text-color="$q.dark.isActive ? 'white' : 'black'"
         icon="close"
+        class-name=""
         @click="$emit('update:drawerOpen', false)"
       />
     </div>
@@ -122,6 +122,7 @@ import { QVueGlobals } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { storage } from '@/utils/storage';
 import { ScrollAreaRef } from '@/types';
+import QButton from './base/QButton.vue';
 
 const scrollContainer = ref<ScrollAreaRef | null>(null);
 
@@ -156,9 +157,11 @@ watch(
 );
 
 const buttonSize = computed(() => {
-  if ($q.screen.lt.sm) return 'lg';
   if ($q.screen.lt.md) return 'md';
-  return 'md';
+  if ($q.screen.lt.lg) return 'lg';
+  if ($q.screen.gt.lg) return 'sm';
+
+  return 'sm';
 });
 
 const theme = computed(() => ({
