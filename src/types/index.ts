@@ -9,17 +9,17 @@ export type ProductRating = {
 
 export interface Product {
   id: number;
-  title?: string;
-  name?: string;
-  price: number;
-  discountedPrice?: number;
-  quantity: number;
+  name: string;
   description: string;
-  category: string;
   image: string;
+  category: string;
+  price: number;
+  quantity: number;
+  title?: string;
+  discount?: boolean;
+  discountedPrice?: number;
   additionalImages?: string[];
   rating?: ProductRating;
-  discount?: boolean;
 }
 
 export interface OrderDetails {

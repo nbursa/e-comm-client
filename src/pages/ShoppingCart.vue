@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="!tw-pb-16 !tw-pt-4">
+  <q-page padding class="!tw-pb-16 !tw-pt-4 !tw-px-4">
     <div
       v-if="cartStore.items.length === 0"
       class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-screen -tw-mt-32"
@@ -9,7 +9,7 @@
       <q-btn to="/products" :color="color" :text-color="text" :label="$t('cart.continue')" />
     </div>
 
-    <div v-else class="tw-container tw-max-w-screen-xl tw-mx-auto">
+    <div v-else class="tw-max-w-screen-xl tw-mx-auto">
       <div class="row q-col-gutter-lg">
         <div class="col-12 col-md-8 tw-space-y-4">
           <q-card
@@ -86,11 +86,13 @@
         <!-- Order Summary -->
         <div class="col-12 col-md-4">
           <q-item
-            class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 tw-rounded-md"
+            class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 !tw-px-0 tw-rounded-md"
             :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
           >
             <q-item-section class="tw-w-full">
-              <div class="tw-text-xl tw-mb-4">{{ $t('cart.orderSummary') }}</div>
+              <div class="tw-text-xl tw-font-semibold tw-font-serif md:tw-text-2xl tw-mb-4">
+                {{ $t('cart.orderSummary') }}
+              </div>
               <q-list dense class="tw-w-full tw-flex tw-flex-col tw-justify-between">
                 <q-item class="tw-justify-between">
                   <q-item-section

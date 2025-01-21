@@ -1,24 +1,30 @@
 <template>
-  <q-page padding class="!tw-pb-16 md:!tw-pb-24 !tw-pt-4">
-    <div v-if="loading" class="q-pa-md">
+  <q-page padding class="!tw-pb-16 md:!tw-pb-24 !tw-pt-4 !tw-px-3">
+    <div v-if="loading" class="tw-p-4">
       <q-spinner color="primary" size="50px" />
     </div>
-    <div v-else-if="error" class="q-pa-md">
+    <div v-else-if="error" class="tw-p-4">
       <q-banner type="negative" class="q-mb-md">
         <div>{{ error }}</div>
       </q-banner>
     </div>
     <div
       v-else
-      class="q-mb-md q-mx-auto !tw-w-full row items-stretch justify-center"
+      class="tw-flex tw-w-full tw-mx-auto tw-flex-col tw-justify-center tw-items-center tw-gap-3"
       style="max-width: 1200px"
     >
-      <div
-        class="row items-stretch full-height !tw-w-full justify-center"
-        :class="{ 'col-reverse-md': $q.screen.sm }"
-      >
+      <div class="tw-w-full tw-flex tw-items-center tw-justify-between tw-px-2 md:tw-mb-8">
+        <span class="tw-text-xl tw-font-semibold tw-font-serif md:tw-text-2xl tw-mr-auto">
+          {{ product.name }}
+        </span>
+        <span class="tw-text-sm">{{ product.category }}</span>
+      </div>
+
+      <q-separator />
+
+      <div class="tw-flex !tw-flex-col !tw-w-full tw-gap-4 sm:!tw-flex-row">
         <div
-          class="col-12 col-sm-6 col-md-4 tw-px-2 sm:tw-px-0 tw-transition tw-duration-500 tw-ease-in-out hover:tw-scale-105"
+          class="tw-col-span-12 sm:!tw-col-span-6 tw-w-full tw-px-0 tw-transition tw-duration-500 tw-ease-in-out hover:tw-scale-105"
         >
           <div
             v-if="!product.image"
@@ -41,7 +47,7 @@
         </div>
 
         <div
-          class="col-12 col-sm-6 col-md-8 sm:tw-px-3 sm:!tw-py-0 !tw-align-top"
+          class="tw-col-span-12 sm:!tw-col-span-6 tw-w-full sm:!tw-py-0 !tw-align-top"
           style="
             display: flex;
             flex-direction: column;
@@ -50,26 +56,23 @@
             min-height: 100%;
           "
         >
-          <q-card-section
-            class="!tw-p-0 !tw-px-3"
-            style="flex: 1; display: flex; flex-direction: column; height: 100%"
-          >
-            <h5 class="tw-flex tw-justify-between tw-gap-2">
-              <span class="tw-text-base md:tw-text-xl">{{ product.name || product.title }}</span>
-              <span class="tw-text-sm tw-mb-2"
-                >({{ product.quantity }}
-                <span class="tw-text-xs">{{ $t('singleProduct.quantity') }}</span
-                >)</span
-              >
-            </h5>
+          <h5 class="!tw-w-full tw-flex tw-justify-end tw-gap-2">
+            <span class="tw-text-sm tw-mb-2"
+              >({{ product.quantity }}
+              <span class="tw-text-xs">{{ $t('singleProduct.quantity') }}</span
+              >)</span
+            >
+          </h5>
+
+          <q-card-section class="tw-flex tw-flex-col tw-flex-1 tw-h-full">
             <div class="text-caption q-mt-sm">{{ product.description }}</div>
           </q-card-section>
 
-          <q-card-actions align="right" class="row justify-between items-end !tw-px-3">
+          <q-card-actions align="right" class="!tw-flex !tw-justify-between !tw-items-end !tw-p-0">
             <div class="text-bold price-text tw-pb-3">
               <template v-if="product.discount">
                 <s class="text-grey">{{ formatPrice(product.price) }}</s>
-                <span class="text-positive q-ml-sm">
+                <span class="text-positive tw-font-serif q-ml-sm">
                   {{ formatPrice(product.discountedPrice || product.price) }}
                 </span>
               </template>
@@ -78,20 +81,20 @@
               </template>
             </div>
             <div class="tw-w-full tw-flex tw-justify-between tw-gap-4">
-              <q-btn
+              <QButton
                 :color="text"
                 :text-color="color"
                 :outline="isDark"
                 :label="$t('singleProduct.goBack')"
-                class="!tw-p-4 tw-flex-1 tw-basis-1/3"
-                @click.stop="goBack()"
+                class-name="!tw-p-4 tw-flex-1 tw-basis-1/3"
+                @click="goBack"
               />
-              <q-btn
+              <QButton
                 :color="color"
                 :text-color="text"
                 :label="$t('singleProduct.addToCart')"
-                class="!tw-p-4 tw-flex-1 tw-basis-2/3"
-                @click.stop="addToCart(product)"
+                class-name="!tw-p-4 tw-flex-1 tw-basis-2/3"
+                @click="addToCart(product)"
               />
             </div>
           </q-card-actions>
@@ -114,6 +117,7 @@ import { useProductStore } from '@/stores/products';
 import { useImageStore } from '@/stores/images';
 import { PAGE_TITLE, PRODUCTS_PATH } from '@/router';
 import { api } from '@/boot/axios';
+import QButton from '@/components/base/QButton.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 

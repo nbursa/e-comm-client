@@ -43,3 +43,10 @@ button.q-btn {
   ) !important;
   background-size: 10px 10px;
 }
+
+body.desktop .q-focusable:focus > .q-focus-helper,
+body.desktop .q-manual-focusable--focused > .q-focus-helper,
+body.desktop .q-hoverable:hover > .q-focus-helper {
+  background: yellow !important;
+  opacity: 0.1 !important;
+}

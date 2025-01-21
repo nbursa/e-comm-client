@@ -5,13 +5,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log('NODE_ENV:', process.env.NODE_ENV);
-
 export default defineConfig((ctx) => {
-  console.log('ctx:', ctx);
   return {
     preFetch: true,
-    boot: ['i18n', 'init', 'ga', 'axios', 'theme', 'lightbox'],
+    boot: ['i18n', 'store', 'ga', 'axios', 'theme', 'components', 'lightbox'],
     css: ['app.scss'],
     extras: ['roboto-font', 'material-icons'],
     set: false,
@@ -127,7 +124,7 @@ export default defineConfig((ctx) => {
       pwa: false,
     },
     pwa: {
-      workboxMode: 'InjectManifest',
+      workboxMode: 'InjectManifest' as 'GenerateSW' | 'InjectManifest' | undefined,
       options: null,
     },
     capacitor: {
@@ -137,7 +134,7 @@ export default defineConfig((ctx) => {
       bundler: 'builder',
       inspectPort: 5858,
       builder: {
-        appId: 'e-commerce-platform',
+        appId: 'e-comm-shop',
       },
     },
   };
