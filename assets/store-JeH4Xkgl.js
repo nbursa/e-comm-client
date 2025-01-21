@@ -1,0 +1,1 @@
+import{b as e,u as s}from"./index-BidtkMwE.js";import{u as r}from"./rates-BRGrLMDU.js";import"./axios-B0KLCXYP.js";const n=e(()=>{const t=r(),o=s();t.loadExchangeRates(),o.loadSettings()});export{n as default};
