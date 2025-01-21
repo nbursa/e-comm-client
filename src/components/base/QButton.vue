@@ -136,14 +136,17 @@ const handleClick = (event: Event) => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .qbutton {
   transition: all 0.3s ease;
-  font-size: 14px;
-  padding: 0.5rem !important;
-  @media (min-width: 768px) {
+  font-size: 16px;
+  padding: 1rem !important;
+  &:hover {
     font-size: 16px;
-    padding: 1rem !important;
+    transform: scale(1.05);
+  }
+  @media (min-width: 768px) {
+    padding: 0.75rem 1rem !important;
   }
 }
 </style>

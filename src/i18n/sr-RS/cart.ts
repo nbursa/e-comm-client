@@ -14,4 +14,5 @@ export const cart = {
   deleteMessage: 'Ova akcija je nepovratna.',
   cancel: 'Otkaži',
   delete: 'Obriši',
+  shoppingCart: 'Korpa',
 };

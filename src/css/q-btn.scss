@@ -1,7 +1,3 @@
-// .q-btn {
-//   font-size: 16px;
-// }
-
 a.q-btn {
   padding: 0.5rem 2rem;
   &:focus {
@@ -46,6 +42,8 @@ button.q-btn {
     transparent
   ) !important;
   background-size: 10px 10px;
+  mix-blend-mode: difference;
+  color: white;
 }
 
 body.desktop .q-focusable:focus > .q-focus-helper,

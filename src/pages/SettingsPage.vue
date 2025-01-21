@@ -1,6 +1,8 @@
 <template>
-  <q-page padding>
-    <h5 class="q-m-sm tw-font-serif">{{ $t('settings.title') }}</h5>
+  <q-page padding class="tw-max-w-screen-md tw-mx-auto tw-pb-16 tw-pt-4 tw-px-3">
+    <h5 class="tw-text-3xl tw-mt-4 tw-font-semibold tw-font-serif tw-my-4 tw-text-center tw-mb-8">
+      {{ $t('settings.title') }}
+    </h5>
     <q-separator class="q-my-md" />
 
     <!-- Language & Currency Section -->

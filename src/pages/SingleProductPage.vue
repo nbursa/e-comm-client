@@ -14,12 +14,12 @@
       style="max-width: 1200px"
     >
       <div
-        class="tw-w-full tw-flex tw-items-baseline !tw-justify-between sm:!tw-justify-start md:tw-mb-8"
+        class="tw-flex tw-w-full !tw-flex-col tw-items-baseline !tw-justify-between sm:!tw-justify-start md:tw-mb-8"
       >
-        <span class="tw-text-xl tw-font-semibold tw-font-serif md:tw-text-2xl tw-mr-4">
-          {{ product.name }}
+        <span class="tw-text-3xl tw-mt-4 tw-font-semibold tw-font-serif tw-mr-4">
+          {{ product?.name }}
         </span>
-        <span class="tw-text-sm">{{ product.category }}</span>
+        <span class="tw-text-base">{{ product?.category }}</span>
       </div>
 
       <q-separator />
@@ -29,7 +29,7 @@
           class="tw-col-span-12 sm:!tw-col-span-6 tw-w-full tw-px-0 tw-transition tw-duration-500 tw-ease-in-out hover:tw-scale-105"
         >
           <div
-            v-if="!product.image"
+            v-if="!product?.image"
             class="tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center tw-rounded 0 tw-border tw-border-gray-400 tw-pb-2"
             :class="
               isDark ? 'tw-text-gray-200  !tw-bg-gray-700' : 'tw-text-gray-70 !tw-bg-gray-200'
@@ -49,39 +49,32 @@
         </div>
 
         <div
-          class="tw-col-span-12 sm:!tw-col-span-6 tw-w-full sm:!tw-py-0 !tw-align-top"
-          style="
-            display: flex;
-            flex-direction: column;
-            flex-grow: 0;
-            height: auto;
-            min-height: 100%;
-          "
+          class="tw-col-span-12 sm:!tw-col-span-6 tw-w-full tw-flex tw-flex-col tw-flex-grow-0 tw-h-auto tw-min-h-full sm:!tw-py-0 !tw-align-top"
         >
           <h5 class="!tw-w-full tw-flex tw-font-serif tw-justify-end tw-gap-2">
             <span class="tw-text-sm tw-mb-2"
-              >({{ product.quantity }}
+              >({{ product?.quantity }}
               <span class="tw-text-xs">{{ $t('singleProduct.quantity') }}</span
               >)</span
             >
           </h5>
 
           <q-card-section class="tw-flex tw-flex-col tw-flex-1 tw-h-full !tw-px-0">
-            <div class="tw-text-base">{{ product.description }}</div>
+            <div class="tw-text-base">{{ product?.description }}</div>
           </q-card-section>
 
-          <q-card-actions align="right" class="!tw-flex !tw-justify-between !tw-items-end !tw-p-0">
+          <q-card-actions class="!tw-flex !tw-justify-between !tw-items-end tw-gap-2 !tw-p-0">
             <div class="text-bold tw-text-xl tw-pb-5">
-              <template v-if="product.discount">
+              <template v-if="product?.discount">
                 <span class="tw-text-gray-500 tw-mr-1 tw-text-base tw-line-through">{{
-                  formatPrice(product.price)
+                  formatPrice(product?.price)
                 }}</span>
                 <span class="tw-text-green-600">
-                  {{ formatPrice(product.discountedPrice || product.price) }}
+                  {{ formatPrice(product?.discountedPrice || product?.price) }}
                 </span>
               </template>
               <template v-else>
-                {{ formatPrice(product.price) }}
+                {{ product?.price !== undefined ? formatPrice(product.price) : '' }}
               </template>
             </div>
             <div class="tw-w-full tw-flex tw-justify-between tw-gap-4">
@@ -98,7 +91,7 @@
                 :text-color="text"
                 :label="$t('singleProduct.addToCart')"
                 class-name="tw-flex-1 tw-basis-2/3"
-                @click="addToCart(product)"
+                @click="product && addToCart(product)"
               />
             </div>
           </q-card-actions>
@@ -137,20 +130,7 @@ const imageStore = useImageStore();
 
 const { slug } = route.params as { slug: string };
 
-const product = ref<Product>({
-  id: 0,
-  title: '',
-  name: '',
-  price: 0,
-  quantity: 0,
-  description: '',
-  category: '',
-  image: '',
-  rating: {
-    rate: 0,
-    count: 0,
-  },
-});
+const product = ref<Product | null>(null);
 
 const loading = ref(true);
 const error = ref<string | null>(null);
@@ -159,7 +139,9 @@ const imageUrlCache = ref(new Map<string, HTMLImageElement>());
 const isDark = computed(() => $q.dark.isActive);
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
 const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
-const metaTitle = computed(() => `${product.value.name || product.value.title} - ${PAGE_TITLE}`);
+const metaTitle = computed(
+  () => `${product.value?.name || product.value?.title || ''} - ${PAGE_TITLE}`,
+);
 
 const cacheImageUrl = (url: string) => {
   if (!imageUrlCache.value.has(url)) {
@@ -199,14 +181,14 @@ const openImageOverlay = (mainImage: string) => {
   const previewImages: PreviewImage[] = [
     {
       src: getImageUrl(mainImage),
-      name: product.value.name || product.value.title || '',
+      name: product.value?.name || product.value?.title || '',
     },
   ];
 
-  if (product.value.additionalImages?.length) {
+  if (product.value && product.value.additionalImages?.length) {
     const additionalPreviewImages = product.value.additionalImages.map((image) => ({
       src: getImageUrl(image),
-      name: product.value.name || product.value.title || '',
+      name: product.value ? product.value.name || product.value.title || '' : '',
     }));
     previewImages.push(...additionalPreviewImages);
   }
@@ -280,7 +262,7 @@ const fetchProduct = async () => {
       message: t('errors.fetchProduct'),
       icon: 'error',
     });
-    if (!product.value.id) {
+    if (!product.value || !product.value.id) {
       router.push(PRODUCTS_PATH);
     }
   } finally {

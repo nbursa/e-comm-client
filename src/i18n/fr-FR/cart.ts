@@ -14,4 +14,5 @@ export const cart = {
   deleteMessage: 'Cette action est irréversible.',
   cancel: 'Annuler',
   delete: 'Supprimer',
+  shoppingCart: 'Panier',
 };

@@ -2,10 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-// @import 'q-layout.scss';
+@import 'fonts.scss';
 @import 'q-header.scss';
 @import 'q-pagination.scss';
-// @import 'q-notify.scss';
 @import 'q-dialog.scss';
 @import 'q-item.scss';
 @import 'q-card.scss';
@@ -25,9 +24,7 @@ $light-lighter: #d1c9ad;
   --q-bg-white: #ffffff;
   --q-bg-black: #000000;
   --q-bg-pale: #f9f9f9;
-  // --q-light-lighter: #d1c9ad;
   --q-light-lighter: #{$light-lighter};
-  // --q-bg-light-lighter: var(--q-light-lighter);
   --q-bg-light-lighter: #d1c9ad;
 }
 
@@ -50,7 +47,6 @@ body {
 
 html {
   background-color: black;
-  font-size: 20px;
 }
 
 .q-footer {

@@ -155,3 +155,11 @@ onMounted(() => {
   }
 });
 </script>
+
+<style lang="scss">
+.q-stepper__label .q-stepper__title {
+  font-size: 1.2rem !important;
+  font-family: serif;
+  font-weight: 600;
+}
+</style>

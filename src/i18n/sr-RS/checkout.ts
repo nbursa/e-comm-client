@@ -38,4 +38,5 @@ export const checkout = {
   toShipping: 'Dostava',
   backToCheckout: 'Nazad na porudžbinu',
   processingPayment: 'Obrada plaćanja',
+  checkoutTitle: 'Porudžbina',
 };

@@ -1,5 +1,10 @@
 <template>
-  <q-page padding class="!tw-pb-16 !tw-pt-4 !tw-px-4">
+  <q-page padding class="!tw-pb-16 !tw-pt-4 !tw-px-4 tw-max-w-screen-xl tw-mx-auto">
+    <h5
+      class="tw-text-3xl tw-mt-4 tw-font-semibold tw-font-serif tw-my-4 tw-text-left md:tw-text-center tw-mb-8"
+    >
+      {{ $t('cart.shoppingCart') }}
+    </h5>
     <div
       v-if="cartStore.items.length === 0"
       class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-screen -tw-mt-32"
@@ -122,10 +127,11 @@
               </q-list>
             </q-item-section>
             <q-card-actions align="center">
-              <q-btn
+              <QButton
+                :color="color"
+                :text-color="text"
                 :label="$t('cart.checkout')"
-                class="full-width !tw-p-4"
-                :class="isDark ? 'bg-white text-dark' : 'bg-dark text-white'"
+                class-name="tw-flex-1 tw-basis-2/3 !tw-m-0"
                 @click="checkout"
               />
             </q-card-actions>
@@ -144,6 +150,7 @@ import { computed, inject, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { formatPrice } from '@/utils/currency';
+import QButton from '@/components/base/QButton.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 

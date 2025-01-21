@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Montserrat', 'sans-serif'],
-        serif: ['Forum', 'serif'],
+        sans: ['Open Sans', 'sans-serif'],
+        serif: ['Lora', 'serif'],
       },
       fontSize: {
         xs: '0.75rem',

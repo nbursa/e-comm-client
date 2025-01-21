@@ -1,6 +1,11 @@
 <template>
   <q-page padding class="!tw-pb-16">
     <div class="tw-container tw-max-w-screen-xl tw-mx-auto">
+      <h5
+        class="tw-text-3xl tw-mt-4 tw-font-semibold tw-font-serif tw-my-4 tw-text-left md:tw-text-center tw-mb-8"
+      >
+        {{ $t('checkout.checkoutTitle') }}
+      </h5>
       <div class="row q-col-gutter-md">
         <div class="col-12 col-md-8">
           <OrderForm
@@ -20,7 +25,9 @@
             :class="isDark ? 'tw-bg-transparent tw-text-light' : 'bg-light tw-text-dark'"
           >
             <q-item-section class="tw-w-full">
-              <div class="tw-text-xl tw-mb-4">{{ $t('checkout.orderSummary') }}</div>
+              <div class="tw-text-xl tw-font-semibold tw-font-serif md:tw-text-2xl tw-mb-4">
+                {{ $t('checkout.orderSummary') }}
+              </div>
               <q-list dense class="tw-w-full tw-flex tw-flex-col tw-justify-between">
                 <q-item v-for="item in cartStore.items" :key="item.id" class="tw-justify-between">
                   <q-item-section>
@@ -51,31 +58,30 @@
             </q-item-section>
 
             <q-card-actions align="center">
-              <q-btn
+              <QButton
                 :color="color"
                 :text-color="text"
-                :label="step === 2 ? $t('checkout.orderOverview') : $t('checkout.continue')"
                 :disable="(step === 1 && !isShippingValid) || (step === 2 && !isPaymentValid)"
-                type="submit"
-                class="full-width tw-mb-2 !tw-py-4"
+                :label="step === 2 ? $t('checkout.orderOverview') : $t('checkout.continue')"
+                class-name="tw-w-full tw-flex-1 !tw-ml-0 tw-mb-2 !tw-py-4"
                 @click="nextStep()"
               />
 
               <div class="tw-w-full tw-flex tw-flex-row tw-gap-2">
-                <q-btn
+                <QButton
                   :color="text"
                   :text-color="color"
                   :label="step === 2 ? $t('checkout.toShipping') : $t('checkout.toCart')"
-                  class="full-width !tw-py-4"
+                  class="tw-flex-grow !tw-py-4"
                   @click="step === 2 ? prevStep() : viewCart()"
                 />
 
-                <q-btn
+                <QButton
                   v-if="step === 2"
                   :color="text"
                   :text-color="color"
                   :label="$t('checkout.toCart')"
-                  class="full-width !tw-py-4"
+                  class="tw-flex-grow tw-p-0 tw-w-1/2"
                   @click="viewCart()"
                 />
               </div>
@@ -108,6 +114,7 @@ import { formatPrice } from '@/utils/currency';
 import OrderConfirmationDialog from '@/components/OrderConfirmationDialog.vue';
 import { CART_PATH, ORDER_PATH } from '@/router';
 import OrderForm from '@/components/OrderForm.vue';
+import QButton from '@/components/base/QButton.vue';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 

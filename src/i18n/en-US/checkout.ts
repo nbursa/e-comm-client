@@ -37,4 +37,5 @@ export const checkout = {
   toShipping: 'Shipping',
   backToCheckout: 'Back to Checkout',
   processingPayment: 'Processing Payment',
+  checkoutTitle: 'Checkout',
 };

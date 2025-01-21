@@ -14,4 +14,5 @@ export const cart = {
   deleteMessage: 'This action cannot be undone.',
   cancel: 'Cancel',
   delete: 'Delete',
+  shoppingCart: 'Shopping Cart',
 };
