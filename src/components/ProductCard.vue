@@ -9,7 +9,7 @@
       ref="imageSection"
       :src="imageUrl(product.image)"
       :alt="product.name"
-      fit="contain"
+      fit="cover"
       class="sm:tw-h-2/3 tw-w-full tw-max-h-1.5"
     />
     <div
