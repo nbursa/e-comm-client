@@ -40,7 +40,7 @@
                 {{ t('errors.noImage') }}
               </div>
               <q-img
-                :src="`${imageUrl(item.image)}`"
+                :src="`${getImageUrl(item.image)}`"
                 :ratio="1"
                 class="tw-w-full sm:tw-h-44"
                 fit="contain"
@@ -166,10 +166,14 @@ import { useRouter } from 'vue-router';
 import { formatPrice } from '@/utils/currency';
 import QButton from '@/components/base/QButton.vue';
 import { PRODUCTS_PATH } from '@/router';
+import { useImageStore } from '@/stores/images';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
+const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
+
 const cartStore = useCartStore();
+const imageStore = useImageStore();
 const $q = useQuasar() as QVueGlobals;
 const router = useRouter();
 const { t } = useI18n();
@@ -178,10 +182,16 @@ const isDark = computed(() => $q.dark.isActive);
 const color = computed(() => (isDark.value ? 'white' : 'dark'));
 const text = computed(() => (isDark.value ? 'dark' : 'white'));
 
-const imageUrl = (imagePath: string) => {
-  return process.env.NODE_ENV === 'development'
-    ? `${import.meta.env.VITE_API_URL}${imagePath}`
-    : imagePath;
+const getImageUrl = (imagePath: string) => {
+  if (!imagePath) return '';
+
+  const fullUrl = `${baseUrl}${imagePath}`;
+
+  const cached = imageStore.getCachedImageUrl(fullUrl);
+  if (cached) return cached;
+
+  imageStore.cacheImageUrl(fullUrl);
+  return fullUrl;
 };
 
 const updateQuantity = (id: number, quantity: number) => {

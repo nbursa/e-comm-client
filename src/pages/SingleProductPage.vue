@@ -141,7 +141,6 @@ const product = ref<Product | null>(null);
 
 const loading = ref(true);
 const error = ref<string | null>(null);
-const imageUrlCache = ref(new Map<string, HTMLImageElement>());
 
 const isDark = computed(() => $q.dark.isActive);
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));
@@ -153,30 +152,15 @@ const isInCart = computed(() => {
   return cartStore.items.some((item) => item.id === product.value?.id);
 });
 
-const cacheImageUrl = (url: string) => {
-  if (!imageUrlCache.value.has(url)) {
-    const img = new Image();
-    img.src = url;
-    img.onload = () => {
-      imageUrlCache.value.set(url, img);
-    };
-  }
-};
-
-const getCachedImageUrl = (url: string) => {
-  const cachedImage = imageUrlCache.value.get(url);
-  return cachedImage ? cachedImage.src : url;
-};
-
 const getImageUrl = (imagePath: string | undefined): string => {
   if (!imagePath) return '';
 
   const fullUrl = `${baseUrl}${imagePath}`;
 
-  const cached = getCachedImageUrl(fullUrl);
+  const cached = imageStore.getCachedImageUrl(fullUrl);
   if (cached) return cached;
 
-  cacheImageUrl(fullUrl);
+  imageStore.cacheImageUrl(fullUrl);
   return fullUrl;
 };
 
