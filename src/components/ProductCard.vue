@@ -23,7 +23,7 @@
       <div class="!tw-font-extrabold tw-text-xl">
         {{ product.name || product.title }}
       </div>
-      <div class="tw-p-2">{{ getFirstSentence(product.description) }}</div>
+      <div class="tw-pl-2 tw-pr-0 tw-py-3">{{ getFirstSentence(product.description) }}</div>
     </q-card-section>
 
     <q-card-actions class="tw-flex tw-justify-between tw-items-center !tw-pt-0">
