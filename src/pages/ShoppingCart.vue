@@ -14,19 +14,31 @@
       <q-btn to="/products" :color="color" :text-color="text" :label="$t('cart.continue')" />
     </div>
 
-    <div v-else class="tw-max-w-screen-xl tw-mx-auto">
-      <div class="row q-col-gutter-lg">
-        <div class="col-12 col-md-8 tw-space-y-4">
+    <div v-else class="tw-max-w-screen-xl tw-mx-auto tw-flex tw-justify-between !tw-py-4">
+      <div
+        class="tw-w-full tw-flex tw-flex-col tw-items-start tw-justify-center !tw-mx-auto sm:tw-flex-row sm:tw-gap-4"
+      >
+        <div
+          class="tw-flex !tw-flex-col tw-w-full sm:tw-flex-row sm:tw-w-1/2 md:tw-w-2/3 tw-space-y-4 tw-mx-auto sm:tw-mx-0 sm:tw-max-w-md"
+        >
           <q-card
             v-for="item in cartStore.items"
             :key="item.id"
             flat
             bordered
-            class="tw-flex tw-flex-col md:tw-flex-row md:!tw-justify-between !tw-gap-3 tw-p-3 tw-rounded-md"
+            class="tw-flex tw-flex-col md:tw-flex-row md:!tw-justify-between !tw-gap-3 tw-p-3 tw-rounded-md tw-cursor-pointer"
             :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
+            @click="viewProduct(item.id)"
           >
             <!-- Image section -->
             <q-item-section class="tw-w-full md:!tw-max-w-44 !tw-flex-shrink-1 md:tw-min-w-[50px]">
+              <div
+                v-if="!item.image"
+                class="tw-h-full tw-w-full tw-max-h-44 tw-flex tw-items-center tw-justify-center tw-rounded 0 tw-border tw-bg-transparent tw-border-gray-400"
+                :class="isDark ? 'tw-text-gray-200' : '!tw-bg-gray-200'"
+              >
+                {{ t('errors.noImage') }}
+              </div>
               <q-img
                 :src="`${imageUrl(item.image)}`"
                 :ratio="1"
@@ -49,7 +61,7 @@
               <div
                 class="tw-flex tw-flex-col tw-flex-grow tw-items-center tw-gap-2 md:tw-text-left"
               >
-                <div class="tw-flex tw-items-center tw-h-full">
+                <div class="tw-flex tw-items-center tw-py-6 tw-h-full">
                   <q-btn-group flat class="">
                     <q-btn
                       flat
@@ -89,9 +101,11 @@
         </div>
 
         <!-- Order Summary -->
-        <div class="col-12 col-md-4">
+        <div
+          class="tw-flex-col tw-w-full tw-mx-auto sm:tw-w-1/2 md:!tw-w-1/3 sm:tw-ml-4 sm:tw-mx-0 sm:tw-max-w-sm sm:tw-sticky sm:tw-top-8"
+        >
           <q-item
-            class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 !tw-px-0 tw-rounded-md"
+            class="tw-flex tw-justify-between tw-flex-col tw-gap-4 !tw-pt-4 !tw-pb-3 !tw-px-0 tw-rounded-md sm:!tw-pt-0 tw-w-full"
             :class="isDark ? 'tw-bg-transparent text-light' : 'bg-light text-dark'"
           >
             <q-item-section class="tw-w-full">
@@ -151,6 +165,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { formatPrice } from '@/utils/currency';
 import QButton from '@/components/base/QButton.vue';
+import { PRODUCTS_PATH } from '@/router';
 
 const scrollToTop = inject('scrollToTop') as () => void;
 
@@ -178,6 +193,10 @@ const checkout = () => {
   if (cartStore.items.length) {
     router.push('/checkout');
   }
+};
+
+const viewProduct = (slug: number) => {
+  router.push(`${PRODUCTS_PATH}/${slug}`);
 };
 
 const removeItem = (id: number) => {

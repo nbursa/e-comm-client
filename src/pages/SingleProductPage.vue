@@ -93,6 +93,7 @@
                 @click="goBack"
               />
               <QButton
+                v-if="!isInCart"
                 :color="color"
                 :text-color="text"
                 :label="$t('singleProduct.addToCart')"
@@ -148,6 +149,9 @@ const text = computed(() => ($q.dark.isActive ? 'black' : 'white'));
 const metaTitle = computed(
   () => `${product.value?.name || product.value?.title || ''} - ${PAGE_TITLE}`,
 );
+const isInCart = computed(() => {
+  return cartStore.items.some((item) => item.id === product.value?.id);
+});
 
 const cacheImageUrl = (url: string) => {
   if (!imageUrlCache.value.has(url)) {
