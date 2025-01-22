@@ -44,7 +44,7 @@
                 round
                 icon="close"
                 color="white"
-                class="hover:tw-bg-black/25 !tw-w-12 tw-h-12"
+                class="hover:tw-bg-black/25"
                 @click="close"
               />
             </div>
