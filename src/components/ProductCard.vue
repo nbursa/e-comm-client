@@ -41,6 +41,7 @@
         </template>
       </div>
       <QButton
+        ripple
         :color="color"
         :text-color="text"
         :label="$t('products.addToCart')"
