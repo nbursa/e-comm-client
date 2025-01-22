@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="!tw-pb-16 md:!tw-pb-24 !tw-pt-4 !tw-px-3">
     <div v-if="loading" class="tw-p-4">
-      <q-spinner color="primary" size="50px" />
+      <q-spinner :color="text" size="50px" />
     </div>
     <div v-else-if="error" class="tw-p-4">
       <q-banner type="negative" class="q-mb-md">
@@ -37,7 +37,13 @@
           >
             {{ t('errors.noImage') }}
           </div>
-          <div v-else class="tw-h-full tw-w-full">
+          <div v-else class="tw-h-full tw-w-full tw-relative">
+            <q-icon
+              name="zoom_out_map"
+              :color="color"
+              size="lg"
+              class="tw-flex tw-items-center tw-justify-center !tw-absolute tw-bottom-0 tw-right-0 tw-m-2 tw-cursor-pointer tw-z-10"
+            />
             <q-img
               :src="imageLocalUrl"
               :alt="product.name"

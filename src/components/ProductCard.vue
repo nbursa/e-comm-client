@@ -19,13 +19,15 @@
     >
       {{ $t('products.noImage') }}
     </div>
-    <q-card-section class="q-px-sm !tw-pb-0">
-      <div class="text-bold">{{ product.name || product.title }}</div>
-      <div class="text-caption">{{ getFirstSentence(product.description) }}</div>
+    <q-card-section class="!tw-p-2 !tw-pb-0">
+      <div class="!tw-font-extrabold tw-text-xl">
+        {{ product.name || product.title }}
+      </div>
+      <div class="tw-p-2">{{ getFirstSentence(product.description) }}</div>
     </q-card-section>
 
-    <q-card-actions class="row justify-between items-center !tw-pt-0">
-      <div class="text-bold tw-text-xl tw-pb-0">
+    <q-card-actions class="tw-flex tw-justify-between tw-items-center !tw-pt-0">
+      <div class="text-bold tw-text-lg tw-pb-0">
         <template v-if="product.discount">
           <span class="tw-text-gray-500 tw-mr-2 tw-text-base tw-line-through">{{
             formatPrice(product.price)
@@ -38,11 +40,11 @@
           {{ formatPrice(product.price) }}
         </template>
       </div>
-      <q-btn
+      <QButton
         :color="color"
         :text-color="text"
         :label="$t('products.addToCart')"
-        class="full-width q-mt-md !tw-py-4"
+        class="!tw-w-full tw-mt-2 !tw-py-4"
         @click.stop="addToCart(product)"
       />
     </q-card-actions>
@@ -53,6 +55,7 @@
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import { watch, ref } from 'vue';
+import QButton from './base/QButton.vue';
 
 const apiUrl = import.meta.env.VITE_API_URL || '';
 
