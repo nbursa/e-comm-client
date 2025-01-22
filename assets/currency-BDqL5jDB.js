@@ -1,0 +1,1 @@
+import{u}from"./rates-ChCCUG2K.js";import{u as a}from"./index-C5YdPelo.js";const y=(t,s)=>{const n=u(),e=a(),r=s||e.settings.currency||"EUR",o=n.getRate(r),c=t*o;return new Intl.NumberFormat(e.settings.language||"en-US",{style:"currency",currency:r,currencyDisplay:"symbol",useGrouping:!0}).format(c)};export{y as f};
