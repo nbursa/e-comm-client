@@ -25,7 +25,7 @@
               @click="prev"
             />
             <div class="tw-text-white tw-font-bold tw-shrink-0">{{ title }}</div>
-            <div class="tw-flex tw-gap-8">
+            <div class="tw-flex tw-gap-8 tw-py-1">
               <QButton
                 v-if="showNavButtons"
                 flat
