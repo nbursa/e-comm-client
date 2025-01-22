@@ -63,17 +63,23 @@
               >
                 <div class="tw-flex tw-items-center tw-py-6 tw-h-full">
                   <q-btn-group flat class="">
-                    <q-btn
+                    <QButton
                       flat
                       dense
                       icon="remove"
+                      :text-color="color"
                       @click="updateQuantity(item.id, item.quantity - 1)"
                     />
-                    <q-btn flat dense class="text-weight-bold">{{ item.quantity }}</q-btn>
-                    <q-btn
+                    <div
+                      class="text-weight-bold tw-flex tw-items-center tw-justify-center tw-text-lg tw-mx-2"
+                    >
+                      {{ item.quantity }}
+                    </div>
+                    <QButton
                       flat
                       dense
                       icon="add"
+                      :text-color="color"
                       @click="updateQuantity(item.id, item.quantity + 1)"
                     />
                   </q-btn-group>
@@ -88,11 +94,11 @@
             <q-item-section
               class="!tw-flex-shrink-0 tw-flex tw-items-center tw-justify-center md:!tw-max-w-[60px] md:tw-ml-4"
             >
-              <q-btn
+              <QButton
                 flat
                 round
                 rectangle
-                color="negative"
+                text-color="negative"
                 icon="delete"
                 @click="removeItem(item.id)"
               />
