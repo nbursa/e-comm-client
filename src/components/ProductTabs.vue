@@ -27,6 +27,8 @@
         :text-color="theme.activeTextColor"
         :color="theme.activeBgColor"
         icon="tune"
+        size="md"
+        class="!tw-px-5 !tw-py-2"
         @click.prevent="toggleFilters"
       />
     </div>
@@ -43,7 +45,8 @@
         :text-color="theme.activeBgColor"
         :color="theme.activeTextColor"
         icon="tune"
-        class="!tw-py-3"
+        size="md"
+        class="!tw-p-2"
         @click.prevent="toggleFilters"
       />
     </div>

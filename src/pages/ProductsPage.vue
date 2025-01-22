@@ -3,9 +3,7 @@
     <h4 class="tw-text-3xl tw-text-center tw-my-4 tw-font-semibold tw-font-serif tw-mr-4">
       {{ $t('products.title') }}
     </h4>
-    <!-- <h4 class="tw-text-3xl tw-font-serif tw-mx-auto tw-my-4 2xl:tw-text-center 2xl:tw-mt-0">
-      {{ $t('products.title') }}
-    </h4> -->
+
     <ProductTabs
       :selected-category="selectedCategory"
       :categories="categories"

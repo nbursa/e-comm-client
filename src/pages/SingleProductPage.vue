@@ -89,7 +89,7 @@
                 :text-color="color"
                 :outline="isDark"
                 :label="$t('singleProduct.goBack')"
-                class-name="tw-flex-1 tw-basis-1/3"
+                class-name="tw-flex-1 tw-basis-1/3 !tw-py-2.5"
                 @click="goBack"
               />
               <QButton
@@ -97,7 +97,7 @@
                 :color="color"
                 :text-color="text"
                 :label="$t('singleProduct.addToCart')"
-                class-name="tw-flex-1 tw-basis-2/3"
+                class-name="tw-flex-1 tw-basis-2/3 !tw-py-2.5"
                 @click="product && addToCart(product)"
               />
             </div>

@@ -13,8 +13,8 @@
     :square="square"
     :fab="fab"
     :size="computedSize"
-    :class="['qbutton', 'hover:!tw-opacity-100 focus:!tw-ring-0', className]"
-    :style="{ fontSize: computedFontSize }"
+    :class="['qbutton', className]"
+    :style="{ fontSize: computedFontSize, padding: computedPadding }"
     @click="handleClick"
   >
     <template v-if="icon">
@@ -25,7 +25,9 @@
         class="tw-flex tw-items-center tw-justify-center"
       />
     </template>
-    {{ label }}
+    <template v-else>
+      {{ label }}
+    </template>
   </q-btn>
 </template>
 
@@ -103,6 +105,10 @@ const props = defineProps({
     type: String as PropType<string>,
     default: '',
   },
+  padding: {
+    type: String as PropType<string>,
+    default: '',
+  },
 });
 
 const emit = defineEmits(['click']);
@@ -124,9 +130,11 @@ const computedSize = computed(() => {
 });
 
 const computedFontSize = computed(() => {
-  return {
-    fontSize: props.size === 'sm' ? '12px' : '20px',
-  };
+  return props.size || '16px';
+});
+
+const computedPadding = computed(() => {
+  return props.padding || '0';
 });
 
 const handleClick = (event: Event) => {
@@ -140,13 +148,18 @@ const handleClick = (event: Event) => {
 .qbutton {
   transition: all 0.3s ease;
   font-size: 16px;
-  padding: 1rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &.round {
+    width: 2rem;
+    height: 2rem;
+  }
   &:hover {
     font-size: 16px;
     transform: scale(1.05);
   }
   @media (min-width: 768px) {
-    padding: 0.75rem 1rem !important;
   }
 }
 </style>

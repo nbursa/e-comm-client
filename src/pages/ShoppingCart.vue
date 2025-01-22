@@ -151,7 +151,7 @@
                 :color="color"
                 :text-color="text"
                 :label="$t('cart.checkout')"
-                class-name="tw-flex-1 tw-basis-2/3 !tw-m-0"
+                class-name="tw-flex-1 tw-basis-2/3 !tw-m-0 !tw-py-2.5"
                 @click="checkout"
               />
             </q-card-actions>

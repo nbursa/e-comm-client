@@ -45,7 +45,7 @@
         :color="color"
         :text-color="text"
         :label="$t('products.addToCart')"
-        class="!tw-w-full tw-mt-2 !tw-py-4"
+        class="!tw-w-full tw-mt-2 !tw-py-3"
         @click="addToCart(product)"
       />
     </q-card-actions>

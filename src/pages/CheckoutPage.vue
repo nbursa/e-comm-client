@@ -63,7 +63,7 @@
                 :text-color="text"
                 :disable="(step === 1 && !isShippingValid) || (step === 2 && !isPaymentValid)"
                 :label="step === 2 ? $t('checkout.orderOverview') : $t('checkout.continue')"
-                class-name="tw-w-full tw-flex-1 !tw-ml-0 tw-mb-2 !tw-py-4"
+                class-name="tw-w-full tw-flex-1 !tw-ml-0 tw-mb-2 !tw-py-2.5"
                 @click="nextStep()"
               />
 
@@ -72,7 +72,7 @@
                   :color="text"
                   :text-color="color"
                   :label="step === 2 ? $t('checkout.toShipping') : $t('checkout.toCart')"
-                  class="tw-flex-grow !tw-py-4"
+                  class="tw-flex-grow !tw-py-2.5"
                   @click="step === 2 ? prevStep() : viewCart()"
                 />
 
@@ -195,11 +195,9 @@ const viewCart = () => {
 };
 
 const shippingValid = (valid: boolean) => {
-  console.log('Shipping valid:', valid);
   isShippingValid.value = valid;
 };
 const paymentValid = (valid: boolean) => {
-  console.log('payment valid:', valid);
   isPaymentValid.value = valid;
 };
 

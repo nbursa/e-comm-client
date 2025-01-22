@@ -11,40 +11,40 @@
         <div
           class="!tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-z-50 tw-bg-black/50 tw-backdrop-blur-sm"
         >
-          <div class="tw-flex tw-justify-between tw-items-center tw-pl-3">
-            <q-btn
+          <div class="tw-flex tw-justify-between tw-items-center tw-gap-6 sm:tw-px-3">
+            <QButton
               v-if="showNavButtons"
               flat
-              round
               dense
+              round
               icon="chevron_left"
               color="white"
               size="lg"
-              class="hover:tw-bg-black/50"
+              class="hover:tw-bg-black/25"
               :disable="isFirstImage"
               @click="prev"
             />
-            <div class="tw-text-white tw-font-bold">{{ title }}</div>
-            <div class="tw-flex tw-gap-2">
-              <q-btn
+            <div class="tw-text-white tw-font-bold tw-shrink-0">{{ title }}</div>
+            <div class="tw-flex tw-gap-8">
+              <QButton
                 v-if="showNavButtons"
                 flat
-                round
                 dense
+                round
                 icon="chevron_right"
                 color="white"
                 size="lg"
-                class="hover:tw-bg-black/50"
+                class="hover:tw-bg-black/25"
                 :disable="isLastImage"
                 @click="next"
               />
-              <q-btn
+              <QButton
                 flat
-                round
                 dense
+                round
                 icon="close"
                 color="white"
-                class="hover:tw-bg-black/50"
+                class="hover:tw-bg-black/25 !tw-w-12 tw-h-12"
                 @click="close"
               />
             </div>
@@ -59,6 +59,7 @@
 import { PropType, ref, computed, onMounted } from 'vue';
 import { PreviewImage } from '@/types';
 import VueEasyLightbox from 'vue-easy-lightbox';
+import QButton from './base/QButton.vue';
 
 defineOptions({
   inheritAttrs: false,
