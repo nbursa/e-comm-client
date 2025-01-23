@@ -4,5 +4,5 @@ export const main = {
   settings: 'Settings',
   ecomm: 'E-comm',
   cart: 'Cart',
-  userProfile: 'User Profile',
+  userProfile: 'Login',
 };

@@ -7,30 +7,21 @@
     :outline="outline"
     :unelevated="unelevated"
     :color="computedColor"
-    :text-color="computedTextColor"
+    :text-color="outline ? computedColor : computedTextColor"
     :disable="disable"
     :ripple="ripple"
     :push="push"
+    :label="label"
     :square="square"
     :fab="fab"
+    :icon="icon"
+    :icon-right="iconRight"
     :type="type"
     :size="computedSize"
     :class="['qbutton', className]"
     :style="{ fontSize: computedFontSize, padding: computedPadding }"
     @click="handleClick"
-  >
-    <template v-if="icon">
-      <q-icon
-        :name="icon"
-        :color="computedTextColor"
-        :size="computedSize"
-        class="tw-flex tw-items-center tw-justify-center"
-      />
-    </template>
-    <template v-else>
-      {{ label }}
-    </template>
-  </q-btn>
+  />
 </template>
 
 <script lang="ts" setup>
@@ -122,6 +113,10 @@ const props = defineProps({
   type: {
     type: String as PropType<string>,
     default: 'button',
+  },
+  iconRight: {
+    type: String as PropType<string>,
+    default: '',
   },
 });
 

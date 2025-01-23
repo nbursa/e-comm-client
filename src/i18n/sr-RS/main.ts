@@ -4,5 +4,5 @@ export const main = {
   settings: 'Podešavanja',
   ecomm: 'E-Kom',
   cart: 'Korpa',
-  userProfile: 'Korisnički profil',
+  userProfile: 'Login',
 };

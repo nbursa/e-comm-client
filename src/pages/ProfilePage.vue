@@ -6,17 +6,31 @@
       </q-card-actions>
 
       <q-card-section>
-        <q-item class="tw-flex tw-flex-col tw-justify-between tw-gap-4 !tw-p-0">
+        <q-item class="tw-w-full tw-flex tw-flex-col tw-justify-between tw-gap-4 !tw-p-0">
           <q-item-section>
             <q-list>
               <q-item-label class="tw-text-base">{{ user?.name }}</q-item-label>
               <q-item-label class="tw-text-xs">{{ user?.email }}</q-item-label>
             </q-list>
           </q-item-section>
-          <q-item-section class="!tw-flex !tw-flex-row tw-gap-4 !tw-p-0 tw-items-center !tw-m-0">
-            <QButton label="Update Profile" class="!tw-px-4" @click="updateProfile" />
-            <QButton label="Change Password" class="!tw-px-4" @click="changePassword" />
-            <QButton label="Logout" class="!tw-px-4" @click="logout" />
+          <q-item-section
+            class="!tw-w-full !tw-flex sm:!tw-flex-row tw-gap-2 !tw-p-0 tw-items-center !tw-m-0"
+          >
+            <QButton
+              outline
+              dense
+              label="Update Profile"
+              class="!tw-w-full sm:!tw-w-fit"
+              @click="updateProfile"
+            />
+            <QButton
+              outline
+              dense
+              label="Change Password"
+              class="!tw-w-full sm:!tw-w-fit"
+              @click="changePassword"
+            />
+            <QButton outline dense label="Logout" class="!tw-w-full sm:!tw-w-fit" @click="logout" />
           </q-item-section>
         </q-item>
       </q-card-section>
@@ -30,6 +44,9 @@
             clickable
             @click="viewProduct(item.id)"
           >
+            <q-item-section avatar>
+              <q-img :src="getImageUrl(item.image)" :alt="item.name || item.title" />
+            </q-item-section>
             <q-item-section>
               <q-item-label>{{ item.name || item.title }}</q-item-label>
               <q-item-label caption>{{ formatPrice(item.price) }}</q-item-label>
@@ -80,11 +97,15 @@ import {
 } from '@/constants/routes';
 import { useOrderStore } from '@/stores/order';
 import { formatDate } from '@/utils/date';
+import { useImageStore } from '@/stores/images';
+
+const baseUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
 
 const authStore = useAuthStore();
 const productCache = useProductStore();
 const router = useRouter();
 const orderStore = useOrderStore();
+const imageStore = useImageStore();
 
 const user = computed(() => authStore.user);
 const viewedItems = computed(() => productCache.getViewedCache()?.products || []);
@@ -97,6 +118,18 @@ const logout = () => {
   } catch (error) {
     console.error('Logout failed:', error);
   }
+};
+
+const getImageUrl = (imagePath: string) => {
+  if (!imagePath) return '';
+
+  const fullUrl = `${baseUrl}${imagePath}`;
+
+  const cached = imageStore.getCachedImageUrl(fullUrl);
+  if (cached) return cached;
+
+  imageStore.cacheImageUrl(fullUrl);
+  return fullUrl;
 };
 
 const changePassword = () => {

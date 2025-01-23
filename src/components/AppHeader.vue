@@ -29,21 +29,12 @@
       <QButton
         v-if="isLoggedIn"
         flat
-        icon="account_circle"
         size="sm"
+        :label="userLabel"
         :text-color="color"
+        icon-right="account_circle"
         class="lt-lg tw-mx-2"
         @click="goToProfile"
-      />
-
-      <QButton
-        v-if="!isLoggedIn"
-        flat
-        label="Login"
-        size="sm"
-        :text-color="color"
-        class="lt-lg tw-mx-2"
-        @click="goToLogin"
       />
 
       <MenuButton :button-size="buttonSize" @update:drawer-open="$emit('update:drawerOpen')" />
@@ -80,6 +71,10 @@ const props = defineProps({
     type: Number as PropType<number>,
     default: 0,
   },
+  userName: {
+    type: String as PropType<string>,
+    default: '',
+  },
 });
 
 defineEmits<{
@@ -96,7 +91,7 @@ const isAnimating = ref(false);
 const totalItems = computed(() => cartStore.totalItems);
 const isLoggedIn = computed(() => !!authStore.token);
 const color = computed(() => (darkMode.value ? 'white' : 'black'));
-
+const isMobile = computed(() => $q.screen.lt.sm);
 const buttonSize = computed(() => {
   if ($q.screen.lt.md) return 'lg';
   return 'md';
@@ -104,6 +99,10 @@ const buttonSize = computed(() => {
 
 const darkMode = computed(() => userStore.settings.theme === 'dark');
 const scrolled = computed(() => props.scrollOffset > 40);
+const userLabel = computed(() => {
+  const label = isLoggedIn.value ? authStore.user?.name : props.userName || 'Guest';
+  return !isMobile.value ? label?.split(' ')[0] || '' : '';
+});
 
 const themeStyles = computed(() => {
   if (darkMode.value) {
@@ -134,11 +133,11 @@ const themeStyles = computed(() => {
 });
 
 const goToProfile = () => {
-  router.push(PROFILE_PATH);
-};
-
-const goToLogin = () => {
-  router.push(LOGIN_PATH);
+  if (isLoggedIn.value) {
+    router.push(PROFILE_PATH);
+  } else {
+    router.push(LOGIN_PATH);
+  }
 };
 
 watch(
