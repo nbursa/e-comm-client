@@ -14,7 +14,7 @@
         flat
         round
         dense
-        :size="buttonSize"
+        size="sm"
         :text-color="$q.dark.isActive ? 'white' : 'black'"
         icon="close"
         class-name=""
@@ -155,14 +155,6 @@ watch(
   },
   { immediate: true },
 );
-
-const buttonSize = computed(() => {
-  if ($q.screen.lt.md) return 'md';
-  if ($q.screen.lt.lg) return 'lg';
-  if ($q.screen.gt.lg) return 'sm';
-
-  return 'sm';
-});
 
 const theme = computed(() => ({
   drawerBackground: $q.dark.isActive

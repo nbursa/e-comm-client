@@ -112,7 +112,7 @@ import { useRouter } from 'vue-router';
 import { IOrderForm, OrderDetails } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import OrderConfirmationDialog from '@/components/OrderConfirmationDialog.vue';
-import { CART_PATH, ORDER_PATH } from '@/router';
+import { CART_PATH, ORDER_PATH } from '@/constants/routes';
 import OrderForm from '@/components/OrderForm.vue';
 import QButton from '@/components/base/QButton.vue';
 
@@ -128,11 +128,6 @@ const showDialog = ref(false);
 const isShippingValid = ref(false);
 const isPaymentValid = ref(false);
 
-const orderDetails = reactive<OrderDetails>({
-  id: Math.floor(Math.random() * 1000),
-  items: cartStore.items,
-  total: cartStore.totalPrice,
-});
 const orderForm = reactive<IOrderForm>({
   shipping: {
     firstName: '',
@@ -148,6 +143,17 @@ const orderForm = reactive<IOrderForm>({
       cvv: '',
     },
   },
+});
+
+const orderDetails = reactive<OrderDetails>({
+  id: Math.floor(Math.random() * 1000),
+  items: cartStore.items,
+  total: cartStore.totalPrice,
+  date: new Date().toISOString(),
+  status: 'Pending',
+  shippingAddress: `${orderForm.shipping.address}`,
+  paymentMethod: orderForm.payment.method,
+  trackingNumber: '',
 });
 
 const color = computed(() => ($q.dark.isActive ? 'white' : 'black'));

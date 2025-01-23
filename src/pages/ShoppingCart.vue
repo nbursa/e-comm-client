@@ -171,7 +171,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { formatPrice } from '@/utils/currency';
 import QButton from '@/components/base/QButton.vue';
-import { PRODUCTS_PATH } from '@/router';
+import { PRODUCTS_PATH } from '@/constants/routes';
 import { useImageStore } from '@/stores/images';
 
 const scrollToTop = inject('scrollToTop') as () => void;

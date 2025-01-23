@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { IOrderForm } from '@/types';
+import { IOrderForm, OrderDetails } from '@/types';
 import { storage } from '@/utils/storage';
 
 export const useOrderStore = defineStore('order', () => {
@@ -20,6 +20,8 @@ export const useOrderStore = defineStore('order', () => {
       },
     },
   });
+
+  const orderHistory = ref<OrderDetails[]>([]);
 
   const setShippingForm = (shippingData: IOrderForm['shipping']) => {
     orderForm.value.shipping = shippingData;
@@ -71,12 +73,29 @@ export const useOrderStore = defineStore('order', () => {
     storage.remove('orderForm');
   };
 
+  const addOrderToHistory = (order: OrderDetails) => {
+    orderHistory.value.push(order);
+    storage.set('orderHistory', orderHistory.value, {
+      version: '1.0',
+    });
+  };
+
+  const loadOrderHistory = () => {
+    const storedOrderHistory = storage.get('orderHistory');
+    if (storedOrderHistory) {
+      orderHistory.value = storedOrderHistory;
+    }
+  };
+
   return {
     orderForm,
+    orderHistory,
     setShippingForm,
     setPaymentForm,
     loadOrder,
     clearOrderForm,
     storeOrder,
+    addOrderToHistory,
+    loadOrderHistory,
   };
 });

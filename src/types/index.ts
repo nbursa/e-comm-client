@@ -26,6 +26,11 @@ export interface OrderDetails {
   id: number;
   items: Product[];
   total: number;
+  date: string;
+  status: string;
+  shippingAddress: string;
+  paymentMethod: string;
+  trackingNumber?: string;
 }
 
 export interface CardDetails {
@@ -85,6 +90,18 @@ export type Theme = 'light' | 'dark';
 export interface ThemeOption {
   value: Theme;
   label: string;
+}
+
+export interface Token {
+  timestamp: number;
+  version: string;
+  expiration: number | null;
+  data: string;
+}
+
+export interface User {
+  name: string;
+  email: string;
 }
 
 export interface UserSettings {

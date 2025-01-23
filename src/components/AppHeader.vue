@@ -26,6 +26,16 @@
         :total-items="totalItems"
       />
 
+      <QButton
+        v-if="isLoggedIn"
+        flat
+        icon="account_circle"
+        size="sm"
+        :text-color="color"
+        class="lt-lg tw-mx-2"
+        @click="goToProfile"
+      />
+
       <MenuButton :button-size="buttonSize" @update:drawer-open="$emit('update:drawerOpen')" />
     </q-toolbar>
   </q-header>
@@ -42,6 +52,10 @@ import MenuButton from './base/MenuButton.vue';
 import CartButton from './base/CartButton.vue';
 import AnimatedLights from './base/AnimatedLights.vue';
 import { useUserStore } from '@/stores/user';
+import QButton from './base/QButton.vue';
+import { useAuthStore } from '@/stores/auth';
+import { PROFILE_PATH } from '@/constants/routes';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   menuItems: {
@@ -65,9 +79,13 @@ defineEmits<{
 const $q = useQuasar() as QVueGlobals;
 const cartStore = useCartStore();
 const userStore = useUserStore();
+const authStore = useAuthStore();
+const router = useRouter();
 
 const isAnimating = ref(false);
 const totalItems = computed(() => cartStore.totalItems);
+const isLoggedIn = computed(() => !!authStore.token);
+const color = computed(() => (darkMode.value ? 'white' : 'black'));
 
 const buttonSize = computed(() => {
   if ($q.screen.lt.md) return 'lg';
@@ -104,6 +122,10 @@ const themeStyles = computed(() => {
     }
   }
 });
+
+const goToProfile = () => {
+  router.push(PROFILE_PATH);
+};
 
 watch(
   () => totalItems.value,
