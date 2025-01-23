@@ -1,19 +1,21 @@
 <template>
-  <q-btn
-    v-if="!!totalItems"
+  <QButton
     flat
-    to="/cart"
+    :to="'/cart'"
+    :text-color="textColor"
     icon="shopping_cart"
-    :size="buttonSize"
+    size="md"
     class="cart-btn !tw-p-3"
   >
     <q-badge class="cart-badge" :class="{ 'blink-animation': isAnimating }">
       {{ totalItems }}
     </q-badge>
-  </q-btn>
+  </QButton>
 </template>
 
 <script lang="ts" setup>
+import QButton from './QButton.vue';
+
 defineProps({
   buttonSize: {
     type: String,
@@ -26,6 +28,10 @@ defineProps({
   isAnimating: {
     type: Boolean,
     default: false,
+  },
+  textColor: {
+    type: String,
+    required: true,
   },
 });
 </script>

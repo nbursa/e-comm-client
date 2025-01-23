@@ -22,6 +22,7 @@
       <CartButton
         v-if="!!totalItems"
         :button-size="buttonSize"
+        :text-color="color"
         :is-animating="isAnimating"
         :total-items="totalItems"
       />
@@ -54,7 +55,7 @@
               <q-item-section class="tw-font-bold">{{ userLabel }}</q-item-section>
             </q-item>
             <q-separator v-if="isLoggedIn" tw-mx-2 />
-            <q-item v-if="isLoggedIn" clickable @click="logout">
+            <q-item v-if="isLoggedIn" clickable class="!tw-color-red-400" @click="logout">
               <q-item-section>{{ $t('main.logout') }}</q-item-section>
             </q-item>
             <q-item v-if="!isLoggedIn" clickable @click="goToLogin">
