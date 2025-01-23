@@ -3,6 +3,7 @@
     <AppHeader
       :menu-items="menuItems"
       :drawer-open="drawerOpen"
+      :user-name="userName"
       :scroll-offset="scrollPosition"
       @update:drawer-open="toggleDrawer"
     />
@@ -51,10 +52,12 @@ import { provide } from 'vue';
 import { ScrollAreaRef } from '@/types';
 import ImagePreview from '@/components/ImagePreview.vue';
 import { useImageStore } from '@/stores/images';
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
 const { t } = useI18n();
 const imageStore = useImageStore();
+const authStore = useAuthStore();
 
 const drawerOpen = ref(false);
 const scrollPosition = ref(0);
@@ -62,16 +65,27 @@ const scrollContainer = ref<ScrollAreaRef | null>(null);
 const scrolling = ref(false);
 const position = ref(0);
 
+const userName = computed(() => authStore.user?.name || '');
+const isLoggedIn = computed(() => !!authStore.token);
 const menuItems = computed(() => [
   { label: t('main.home'), path: '/' },
   { label: t('main.products'), path: '/products' },
-  { label: t('main.userProfile'), path: '/profile' },
-]);
-const mobileMenuItems = computed(() => [
-  { label: t('main.home'), path: '/' },
-  { label: t('main.products'), path: '/products' },
   { label: t('main.cart'), path: '/cart' },
+  { label: userName.value.split(' ')[0] || t('main.userProfile'), path: '/profile' },
 ]);
+const mobileMenuItems = computed(() => {
+  const items = [
+    { label: t('main.home'), path: '/' },
+    { label: t('main.products'), path: '/products' },
+    { label: t('main.cart'), path: '/cart' },
+  ];
+  if (isLoggedIn.value) {
+    items.push({ label: userName.value.split(' ')[0] || t('main.userProfile'), path: '/profile' });
+  } else {
+    items.push({ label: t('main.userProfile'), path: '/profile' });
+  }
+  return items;
+});
 
 const navigate = (item: { label: string; path: string }) => {
   drawerOpen.value = false;
