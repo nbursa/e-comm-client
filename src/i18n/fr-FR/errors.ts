@@ -14,6 +14,10 @@ export const errors = {
     invalidCardNumber: 'Numéro de carte invalide',
     invalidExpiryDate: "Date d'expiration invalide",
     invalidCVV: 'CVV invalide',
+    passwordMinLength: 'Le mot de passe doit contenir au moins 6 caractères',
+    passwordMismatch: 'Les mots de passe ne correspondent pas',
   },
   noImage: 'Image non disponible',
+  loginRequired: 'Email et mot de passe requis',
+  loginFailed: 'Échec de la connexion. Veuillez réessayer.',
 };

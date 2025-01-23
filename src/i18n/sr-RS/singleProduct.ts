@@ -4,4 +4,5 @@ export const singleProduct = {
   itemAdded: 'Proizvod dodat u korpu!',
   quantity: 'Na stanju',
   goBack: 'Nazad',
+  viewCart: 'Pogledaj korpu',
 };

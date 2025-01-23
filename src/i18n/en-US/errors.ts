@@ -14,6 +14,10 @@ export const errors = {
     invalidCardNumber: 'Invalid card number',
     invalidExpiryDate: 'Invalid expiry date',
     invalidCVV: 'Invalid CVV',
+    passwordMinLength: 'Password must be at least 6 characters long',
+    passwordMismatch: 'Passwords do not match',
   },
   noImage: 'No Image Available',
+  loginRequired: 'Email and password required',
+  loginFailed: 'Failed to login. Please try again.',
 };

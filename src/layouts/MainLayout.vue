@@ -53,11 +53,13 @@ import { ScrollAreaRef } from '@/types';
 import ImagePreview from '@/components/ImagePreview.vue';
 import { useImageStore } from '@/stores/images';
 import { useAuthStore } from '@/stores/auth';
+import { useCartStore } from '@/stores/cart';
 
 const router = useRouter();
 const { t } = useI18n();
 const imageStore = useImageStore();
 const authStore = useAuthStore();
+const cartStore = useCartStore();
 
 const drawerOpen = ref(false);
 const scrollPosition = ref(0);
@@ -67,18 +69,33 @@ const position = ref(0);
 
 const userName = computed(() => authStore.user?.name || '');
 const isLoggedIn = computed(() => !!authStore.token);
-const menuItems = computed(() => [
-  { label: t('main.home'), path: '/' },
-  { label: t('main.products'), path: '/products' },
-  { label: t('main.cart'), path: '/cart' },
-  { label: userName.value.split(' ')[0] || t('main.userProfile'), path: '/profile' },
-]);
+const totalItems = computed(() => cartStore.totalItems);
+
+const menuItems = computed(() => {
+  const items = [
+    { label: t('main.home'), path: '/' },
+    { label: t('main.products'), path: '/products' },
+  ];
+  if (totalItems.value > 0) {
+    items.push({ label: t('main.cart'), path: '/cart' });
+  }
+  // items.push({ label: userName.value.split(' ')[0] || t('main.userProfile'), path: '/profile' });
+  return items;
+});
+// const menuItems = computed(() => [
+//   { label: t('main.home'), path: '/' },
+//   { label: t('main.products'), path: '/products' },
+//   { label: t('main.cart'), path: '/cart' },
+//   { label: userName.value.split(' ')[0] || t('main.userProfile'), path: '/profile' },
+// ]);
 const mobileMenuItems = computed(() => {
   const items = [
     { label: t('main.home'), path: '/' },
     { label: t('main.products'), path: '/products' },
-    { label: t('main.cart'), path: '/cart' },
   ];
+  if (totalItems.value > 0) {
+    items.push({ label: t('main.cart'), path: '/cart' });
+  }
   if (isLoggedIn.value) {
     items.push({ label: userName.value.split(' ')[0] || t('main.userProfile'), path: '/profile' });
   } else {
@@ -86,6 +103,19 @@ const mobileMenuItems = computed(() => {
   }
   return items;
 });
+// const mobileMenuItems = computed(() => {
+//   const items = [
+//     { label: t('main.home'), path: '/' },
+//     { label: t('main.products'), path: '/products' },
+//     { label: t('main.cart'), path: '/cart' },
+//   ];
+//   if (isLoggedIn.value) {
+//     items.push({ label: userName.value.split(' ')[0] || t('main.userProfile'), path: '/profile' });
+//   } else {
+//     items.push({ label: t('main.userProfile'), path: '/profile' });
+//   }
+//   return items;
+// });
 
 const navigate = (item: { label: string; path: string }) => {
   drawerOpen.value = false;

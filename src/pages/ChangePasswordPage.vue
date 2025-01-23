@@ -3,13 +3,15 @@
     <div class="tw-w-full sm:tw-max-w-72 tw-mx-auto">
       <q-card flat bordered class="!tw-w-full !tw-max-w-54 tw-p-4 !tw-bg-transparent">
         <h4 class="tw-text-3xl tw-text-center tw-mb-8 tw-font-semibold tw-font-serif">
-          {{ isResetPassword ? 'Reset Password' : 'Change Password' }}
+          {{ isResetPassword ? t('changePassword.titleReset') : t('changePassword.titleChange') }}
         </h4>
         <q-form class="!tw-w-full" @submit.prevent="handleSubmit">
           <q-card-section v-if="success">
             <div class="tw-w-full tw-flex tw-justify-center tw-items-center">
               {{
-                isResetPassword ? 'Successfully reset password!' : 'Successfully changed password!'
+                isResetPassword
+                  ? t('changePassword.successReset')
+                  : t('changePassword.successChange')
               }}
             </div>
           </q-card-section>
@@ -22,7 +24,7 @@
               v-if="!isResetPassword"
               v-model="oldPassword"
               :type="showOldPassword ? 'text' : 'password'"
-              label="Current Password"
+              :label="t('changePassword.currentPassword')"
               dense
               lazy-rules
               :rules="[required, passwordRules]"
@@ -38,7 +40,7 @@
             <q-input
               v-model="newPassword"
               :type="showNewPassword ? 'text' : 'password'"
-              label="New Password"
+              :label="t('changePassword.newPassword')"
               dense
               lazy-rules
               :rules="[required, passwordRules]"
@@ -54,7 +56,7 @@
             <q-input
               v-model="confirmPassword"
               :type="showConfirmPassword ? 'text' : 'password'"
-              label="Confirm New Password"
+              :label="t('changePassword.confirmPassword')"
               dense
               lazy-rules
               :rules="[required, confirmPasswordRules]"
@@ -75,20 +77,12 @@
             <QButton
               v-if="!success"
               type="submit"
-              :label="isResetPassword ? 'Reset Password' : 'Change Password'"
+              :label="isResetPassword ? t('changePassword.reset') : t('changePassword.change')"
               class="!tw-w-full !tw-py-2.5"
             />
             <QButton
-              v-if="!success"
               secondary
-              label="Cancel"
-              class="!tw-w-full !tw-py-2.5"
-              @click="goBack"
-            />
-            <QButton
-              v-if="success"
-              secondary
-              label="Go Back"
+              :label="success ? t('common.continue') : t('changePassword.cancel')"
               class="!tw-w-full !tw-py-2.5"
               @click="goBack"
             />
@@ -146,12 +140,12 @@ const handleSubmit = async () => {
   if (newPassword.value !== confirmPassword.value) {
     $q.notify({
       type: 'negative',
-      message: 'New password and confirm password do not match.',
+      message: t('changePassword.noMatch'),
       position: 'top',
       timeout: 5000,
       icon: 'error',
     });
-    errorMessage.value = 'New password and confirm password do not match.';
+    errorMessage.value = t('changePassword.noMatch');
     return;
   }
 
@@ -177,8 +171,7 @@ const handleSubmit = async () => {
     }
   } catch (error) {
     const axiosError = error as AxiosError<{ error: string }>;
-    errorMessage.value =
-      axiosError.response?.data?.error || 'Failed to change password. Please try again.';
+    errorMessage.value = axiosError.response?.data?.error || t('changePassword.errorMessage') as string;
     $q.notify({
       type: 'negative',
       message: errorMessage.value,
@@ -204,7 +197,7 @@ const confirmPasswordRules = (val: string) => {
 onMounted(() => {
   email.value = route.query.email as string;
   token.value = route.query.token as string;
-  console.log('email:', email.value, 'token: ', token.value);
+
   if (token.value) {
     isResetPassword.value = true;
   }

@@ -100,6 +100,14 @@
                 class-name="tw-flex-1 tw-basis-2/3 !tw-py-2.5"
                 @click="product && addToCart(product)"
               />
+              <QButton
+                v-if="isInCart"
+                :color="color"
+                :text-color="text"
+                :label="$t('singleProduct.viewCart')"
+                class-name="tw-flex-1 tw-basis-2/3 !tw-py-2.5"
+                @click="viewCart"
+              />
             </div>
           </q-card-actions>
         </div>
@@ -119,7 +127,7 @@ import { PreviewImage, Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import { useProductStore } from '@/stores/products';
 import { useImageStore } from '@/stores/images';
-import { PAGE_TITLE, PRODUCTS_PATH } from '@/constants/routes';
+import { PAGE_TITLE, PRODUCTS_PATH, CART_PATH } from '@/constants/routes';
 import { api } from '@/boot/axios';
 import QButton from '@/components/base/QButton.vue';
 
@@ -162,6 +170,10 @@ const getImageUrl = (imagePath: string | undefined): string => {
 
   imageStore.cacheImageUrl(fullUrl);
   return fullUrl;
+};
+
+const viewCart = () => {
+  router.push(CART_PATH);
 };
 
 const imageLocalUrl = computed(() => {

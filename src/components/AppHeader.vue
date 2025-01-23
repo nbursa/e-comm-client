@@ -27,15 +27,42 @@
       />
 
       <QButton
-        v-if="isLoggedIn"
+        v-if="isMobile"
         flat
+        dense
         size="sm"
         :label="userLabel"
         :text-color="color"
         icon-right="account_circle"
-        class="lt-lg tw-mx-2"
+        class="tw-mx-2 !tw-text-xs"
         @click="goToProfile"
       />
+
+      <div v-if="!isMobile" class="tw-relative">
+        <QButton
+          flat
+          dense
+          size="sm"
+          :text-color="color"
+          icon="account_circle"
+          class="tw-mx-2 !tw-text-xs"
+          @click="toggleMenu"
+        />
+        <q-menu v-model="menuOpen" :color="color" class="tw-w-48 tw-rounded-lg tw-shadow-lg">
+          <q-list class="!tw-p-2">
+            <q-item v-if="isLoggedIn" clickable class="!tw-px-2 !tw-py-0" @click="goToProfile">
+              <q-item-section class="tw-font-bold">{{ userLabel }}</q-item-section>
+            </q-item>
+            <q-separator v-if="isLoggedIn" tw-mx-2 />
+            <q-item v-if="isLoggedIn" clickable @click="logout">
+              <q-item-section>{{ $t('main.logout') }}</q-item-section>
+            </q-item>
+            <q-item v-if="!isLoggedIn" clickable @click="goToLogin">
+              <q-item-section>{{ $t('main.login') }}</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </div>
 
       <MenuButton :button-size="buttonSize" @update:drawer-open="$emit('update:drawerOpen')" />
     </q-toolbar>
@@ -92,10 +119,15 @@ const totalItems = computed(() => cartStore.totalItems);
 const isLoggedIn = computed(() => !!authStore.token);
 const color = computed(() => (darkMode.value ? 'white' : 'black'));
 const isMobile = computed(() => $q.screen.lt.sm);
+const menuOpen = ref(false);
 const buttonSize = computed(() => {
   if ($q.screen.lt.md) return 'lg';
   return 'md';
 });
+
+const toggleMenu = () => {
+  menuOpen.value = !menuOpen.value;
+};
 
 const darkMode = computed(() => userStore.settings.theme === 'dark');
 const scrolled = computed(() => props.scrollOffset > 40);
@@ -138,6 +170,15 @@ const goToProfile = () => {
   } else {
     router.push(LOGIN_PATH);
   }
+};
+
+const goToLogin = () => {
+  router.push(LOGIN_PATH);
+};
+
+const logout = () => {
+  authStore.logout();
+  router.push(LOGIN_PATH);
 };
 
 watch(

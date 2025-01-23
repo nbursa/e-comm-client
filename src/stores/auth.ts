@@ -18,7 +18,6 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(storage.get('user'));
 
   const fetchUser = async () => {
-    console.log('Token:', token.value);
     try {
       if (!token.value || !token.value.data) {
         throw new Error('No token available');
@@ -33,13 +32,11 @@ export const useAuthStore = defineStore('auth', () => {
           Authorization: `Bearer ${token.value?.data}`,
         },
       });
-      console.log('User:', response.data);
       user.value = response.data;
       storage.set('user', user.value, {
         expiration: USER_EXPIRATION,
         version: '1.0',
       });
-      console.log('User in storage:', storage.get('user'));
     } catch (error) {
       console.error('Failed to fetch user data:', error);
       throw error;
@@ -55,7 +52,6 @@ export const useAuthStore = defineStore('auth', () => {
         expiration: USER_EXPIRATION,
         data: response.data.token,
       };
-      console.log('Token after login:', token.value);
       if (token.value) {
         storage.set('token', token.value);
         await fetchUser();
@@ -86,7 +82,6 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const updateProfile = async (profileData: { name: string; email: string }) => {
-    console.log('updateProfile:', token.value?.data);
     try {
       const response = await api.put(API_USER_PATH, profileData, {
         headers: {

@@ -2,11 +2,13 @@
   <q-page padding class="!tw-pb-16 !tw-px-3 tw-flex tw-justify-center tw-items-center">
     <div class="tw-w-full sm:tw-max-w-72 tw-mx-auto">
       <q-card flat bordered class="!tw-w-full !tw-max-w-54 tw-p-4 !tw-bg-transparent">
-        <h4 class="tw-text-3xl tw-text-center tw-mb-8 tw-font-semibold tw-font-serif">Login</h4>
+        <h4 class="tw-text-3xl tw-text-center tw-mb-8 tw-font-semibold tw-font-serif">
+          {{ t('login.title') }}
+        </h4>
         <q-form class="!tw-w-full" @submit.prevent="handleLogin">
           <q-card-section v-if="success">
             <div class="tw-w-full tw-flex tw-justify-center tw-items-center">
-              Successfully Logged in!
+              {{ t('login.successMessage') }}
             </div>
           </q-card-section>
 
@@ -16,7 +18,7 @@
           >
             <q-input
               v-model="email"
-              label="Email"
+              :label="t('login.email')"
               type="email"
               dense
               lazy-rules
@@ -26,7 +28,7 @@
             <q-input
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
-              label="Password"
+              :label="t('login.password')"
               dense
               lazy-rules
               :rules="[required, passwordRules]"
@@ -48,21 +50,21 @@
               v-if="!success"
               type="submit"
               :disabled="!isValid"
-              label="Login"
+              :label="t('login.login')"
               class="!tw-w-full !tw-py-2.5"
             />
-            <div class="tw-flex tw-items-center tw-justify-center">or</div>
+            <div class="tw-flex tw-items-center tw-justify-center">{{ t('login.or') }}</div>
             <QButton
               v-if="!success"
               secondary
-              label="Create Account"
+              :label="t('login.createAccount')"
               class="!tw-w-full !tw-py-2.5"
               @click="goToRegister"
             />
             <QButton
               v-if="success"
               secondary
-              label="Home Page"
+              :label="t('login.goHome')"
               class="!tw-w-full !tw-py-2.5"
               @click="goHome"
             />
@@ -121,12 +123,12 @@ const handleLogin = async () => {
   if (!email.value || !password.value) {
     $q.notify({
       type: 'negative',
-      message: 'Email and password are required.',
+      message: t('errors.loginRequired'),
       position: 'top',
       timeout: 5000,
       icon: 'error',
     });
-    errorMessage.value = 'Email and password are required.';
+    errorMessage.value = t('errors.loginRequired');
     return;
   }
 
@@ -147,7 +149,7 @@ const handleLogin = async () => {
       await router.push(PROFILE_PATH);
     }
   } catch (error) {
-    let errorMsg = 'Failed to login. Please try again.';
+    let errorMsg = t('login.loginFailed');
     if (error instanceof AxiosError) {
       errorMsg = error.response?.data?.error || error.message || errorMsg;
     } else if (error instanceof Error) {
