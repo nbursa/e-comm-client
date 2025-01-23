@@ -44,7 +44,7 @@
           </q-card-section>
           <div class="tw-flex tw-flex-col tw-gap-2">
             <QButton type="submit" label="Register" class="!tw-w-full !tw-py-2.5" />
-            <QButton secondary :to="home" label="Cancel" class="!tw-w-full !tw-py-2.5" />
+            <QButton secondary :to="HOME_PATH" label="Cancel" class="!tw-w-full !tw-py-2.5" />
           </div>
         </q-form>
       </q-card>
@@ -57,7 +57,7 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useI18n } from 'vue-i18n';
 import QButton from '@/components/base/QButton.vue';
-import { HOME_PATH } from '@/constants/routes';
+import { PROFILE_PATH, HOME_PATH } from '@/constants/routes';
 import { useRouter } from 'vue-router';
 
 const email = ref('');
@@ -66,7 +66,6 @@ const name = ref('');
 const confirmPassword = ref('');
 const authStore = useAuthStore();
 const { t } = useI18n();
-const home = HOME_PATH;
 const router = useRouter();
 
 const handleRegister = async () => {
@@ -78,7 +77,7 @@ const handleRegister = async () => {
   try {
     await authStore.register(name.value, email.value, password.value);
     console.log('Registration successful');
-    router.push(home);
+    router.push(PROFILE_PATH);
   } catch (error) {
     console.error('Registration failed:', error);
   }

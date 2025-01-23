@@ -36,6 +36,16 @@
         @click="goToProfile"
       />
 
+      <QButton
+        v-if="!isLoggedIn"
+        flat
+        label="Login"
+        size="sm"
+        :text-color="color"
+        class="lt-lg tw-mx-2"
+        @click="goToLogin"
+      />
+
       <MenuButton :button-size="buttonSize" @update:drawer-open="$emit('update:drawerOpen')" />
     </q-toolbar>
   </q-header>
@@ -54,7 +64,7 @@ import AnimatedLights from './base/AnimatedLights.vue';
 import { useUserStore } from '@/stores/user';
 import QButton from './base/QButton.vue';
 import { useAuthStore } from '@/stores/auth';
-import { PROFILE_PATH } from '@/constants/routes';
+import { LOGIN_PATH, PROFILE_PATH } from '@/constants/routes';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
@@ -125,6 +135,10 @@ const themeStyles = computed(() => {
 
 const goToProfile = () => {
   router.push(PROFILE_PATH);
+};
+
+const goToLogin = () => {
+  router.push(LOGIN_PATH);
 };
 
 watch(

@@ -34,3 +34,4 @@ export const API_LOGIN_PATH = '/auth/login';
 export const API_USER_PATH = '/auth/user';
 export const API_CHANGE_PASSWORD_PATH = '/auth/change-password';
 export const API_RESET_PASSWORD_PATH = '/auth/reset-password';
+export const API_PASSWORD_RESET_CONFIRM_PATH = '/auth/complete-reset-password';

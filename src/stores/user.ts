@@ -63,6 +63,17 @@ export const useUserStore = defineStore('user', () => {
     return (lang?.data as MessageLanguages) || 'en-US';
   };
 
+  const clearSettings = () => {
+    settings.value = {
+      language: 'en-US',
+      theme: 'light',
+      useSystemPreference: false,
+      currency: 'EUR',
+    };
+    saveSettings();
+    storage.set('user_settings', settings.value);
+  };
+
   loadSettings();
 
   watch(() => settings.value.language, setLanguage);
@@ -78,5 +89,6 @@ export const useUserStore = defineStore('user', () => {
     currencyOptions,
     loadSettings,
     getStoredLanguage,
+    clearSettings,
   };
 });

@@ -2,51 +2,65 @@ import { api } from '@/boot/axios';
 import {
   API_LOGIN_PATH,
   API_REGISTER_PATH,
-  // LOGIN_PATH,
   API_USER_PATH,
   API_CHANGE_PASSWORD_PATH,
+  API_PASSWORD_RESET_CONFIRM_PATH,
 } from '@/constants/routes';
 import { Token, User } from '@/types';
 import { storage } from '@/utils/storage';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-// import { useRouter } from 'vue-router';
 
 export const useAuthStore = defineStore('auth', () => {
   const USER_EXPIRATION = 3600; // 1 hour in seconds
 
   const token = ref<Token | null>(storage.get('token'));
   const user = ref<User | null>(storage.get('user'));
-  // const router = useRouter();
 
   const fetchUser = async () => {
+    console.log('Token:', token.value);
     try {
       if (!token.value || !token.value.data) {
         throw new Error('No token available');
       }
-      
+
+      if (user.value) {
+        return;
+      }
+
       const response = await api.get(API_USER_PATH, {
         headers: {
           Authorization: `Bearer ${token.value?.data}`,
         },
       });
+      console.log('User:', response.data);
       user.value = response.data;
       storage.set('user', user.value, {
         expiration: USER_EXPIRATION,
         version: '1.0',
       });
+      console.log('User in storage:', storage.get('user'));
     } catch (error) {
       console.error('Failed to fetch user data:', error);
+      throw error;
     }
   };
 
   const login = async (email: string, password: string) => {
     try {
       const response = await api.post(API_LOGIN_PATH, { email, password });
-      token.value = response.data.token;
+      token.value = {
+        timestamp: Date.now(),
+        version: '1.0',
+        expiration: USER_EXPIRATION,
+        data: response.data.token,
+      };
+      console.log('Token after login:', token.value);
       if (token.value) {
         storage.set('token', token.value);
         await fetchUser();
+      } else {
+        throw new Error('Failed to retrieve token');
       }
       return response.data.message;
     } catch (error) {
@@ -69,7 +83,6 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null;
     storage.remove('token');
     storage.remove('user');
-    // router.push(LOGIN_PATH);
   };
 
   const updateProfile = async (profileData: { name: string; email: string }) => {
@@ -123,5 +136,29 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  return { token, user, login, register, logout, fetchUser, updateProfile, changePassword };
+  const resetPassword = async (email: string | null, token: string | null, newPassword: string) => {
+    try {
+      const response = await api.post(API_PASSWORD_RESET_CONFIRM_PATH, {
+        email,
+        token,
+        newPassword,
+      });
+      return response.data.message;
+    } catch (error) {
+      console.error('Failed to reset password:', error);
+      throw error;
+    }
+  };
+
+  return {
+    token,
+    user,
+    login,
+    register,
+    logout,
+    fetchUser,
+    updateProfile,
+    changePassword,
+    resetPassword,
+  };
 });
