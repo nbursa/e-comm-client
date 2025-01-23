@@ -1,1 +1,0 @@
-import{b as s,u as r,a}from"./index-Cw1-6oTs.js";import{u}from"./rates-BvmdyCoH.js";const S=s(()=>{const o=u(),e=r(),t=a();t.token&&t.fetchUser().catch(()=>{t.logout()}),o.loadExchangeRates(),e.loadSettings()});export{S as default};
