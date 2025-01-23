@@ -68,6 +68,18 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    path: '/reset-password',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        component: loadPage('ChangePasswordPage'),
+        meta: { requiresAuth: false, title: 'Reset Password' },
+      },
+    ],
+  },
+
+  {
     path: '/cart',
     component: MainLayout,
     children: [{ path: '', component: loadPage('ShoppingCart'), meta: { title: 'Cart' } }],

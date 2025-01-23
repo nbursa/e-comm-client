@@ -126,6 +126,10 @@ export const useProductStore = defineStore('products', () => {
       : null;
   };
 
+  const clearAllProductsCache = () => {
+    storage.remove(PRODUCTS_KEY);
+  };
+
   return {
     setCache,
     getCache,
@@ -136,5 +140,6 @@ export const useProductStore = defineStore('products', () => {
     setViewedCache,
     getViewedCache,
     initViewedCache,
+    clearAllProductsCache,
   };
 });

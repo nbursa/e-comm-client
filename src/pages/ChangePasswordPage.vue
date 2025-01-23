@@ -3,12 +3,14 @@
     <div class="tw-w-full sm:tw-max-w-72 tw-mx-auto">
       <q-card flat bordered class="!tw-w-full !tw-max-w-54 tw-p-4 !tw-bg-transparent">
         <h4 class="tw-text-3xl tw-text-center tw-mb-8 tw-font-semibold tw-font-serif">
-          Change Password
+          {{ isResetPassword ? 'Reset Password' : 'Change Password' }}
         </h4>
-        <q-form class="!tw-w-full" @submit.prevent="changePassword">
-          <q-card-section>
+        <q-form class="!tw-w-full" @submit.prevent="handleSubmit">
+          <q-card-section v-if="success">
             <div class="tw-w-full tw-flex tw-justify-center tw-items-center">
-              Successfully changed password!
+              {{
+                isResetPassword ? 'Successfully reset password!' : 'Successfully changed password!'
+              }}
             </div>
           </q-card-section>
 
@@ -17,6 +19,7 @@
             class="tw-flex tw-flex-col tw-gap-4 tw-w-full !tw-p-0 tw-mb-4"
           >
             <q-input
+              v-if="!isResetPassword"
               v-model="oldPassword"
               :type="showOldPassword ? 'text' : 'password'"
               label="Current Password"
@@ -72,7 +75,7 @@
             <QButton
               v-if="!success"
               type="submit"
-              label="Change Password"
+              :label="isResetPassword ? 'Reset Password' : 'Change Password'"
               class="!tw-w-full !tw-py-2.5"
             />
             <QButton
@@ -97,17 +100,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { AxiosError } from 'axios';
 
 const authStore = useAuthStore();
 const $q = useQuasar();
 const { t } = useI18n();
 const router = useRouter();
+const route = useRoute();
 
 const oldPassword = ref('');
 const newPassword = ref('');
@@ -117,6 +121,9 @@ const showOldPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmPassword = ref(false);
 const success = ref(false);
+const token = ref<string | null>(null);
+const email = ref<string | null>(null);
+const isResetPassword = ref(false);
 
 const toggleCurrentPassword = () => {
   showOldPassword.value = !showOldPassword.value;
@@ -134,7 +141,7 @@ const goBack = () => {
   router.back();
 };
 
-const changePassword = async () => {
+const handleSubmit = async () => {
   errorMessage.value = null;
   if (newPassword.value !== confirmPassword.value) {
     $q.notify({
@@ -149,7 +156,12 @@ const changePassword = async () => {
   }
 
   try {
-    const message = await authStore.changePassword(oldPassword.value, newPassword.value);
+    let message;
+    if (isResetPassword.value) {
+      message = await authStore.resetPassword(email.value, token.value, newPassword.value);
+    } else {
+      message = await authStore.changePassword(oldPassword.value, newPassword.value);
+    }
     if (message) {
       $q.notify({
         type: 'positive',
@@ -180,27 +192,6 @@ const changePassword = async () => {
 const required = (val: string) => !!val || t('errors.validation.required');
 const passwordRules = (val: string) => {
   const minLength = 6;
-  // const minLength = 8;
-  // const hasUpperCase = /[A-Z]/.test(val);
-  // const hasLowerCase = /[a-z]/.test(val);
-  // const hasDigit = /\d/.test(val);
-  // const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(val);
-
-  // if (val.length < minLength) {
-  //   return t('errors.validation.passwordMinLength', { minLength });
-  // }
-  // if (!hasUpperCase) {
-  //   return t('errors.validation.passwordUpperCase');
-  // }
-  // if (!hasLowerCase) {
-  //   return t('errors.validation.passwordLowerCase');
-  // }
-  // if (!hasDigit) {
-  //   return t('errors.validation.passwordDigit');
-  // }
-  // if (!hasSpecialChar) {
-  //   return t('errors.validation.passwordSpecialChar');
-  // }
   if (val.length < minLength) {
     return t('errors.validation.passwordMinLength', { minLength });
   }
@@ -209,4 +200,13 @@ const passwordRules = (val: string) => {
 const confirmPasswordRules = (val: string) => {
   return val === newPassword.value || t('errors.validation.passwordMismatch');
 };
+
+onMounted(() => {
+  email.value = route.query.email as string;
+  token.value = route.query.token as string;
+  console.log('email:', email.value, 'token: ', token.value);
+  if (token.value) {
+    isResetPassword.value = true;
+  }
+});
 </script>

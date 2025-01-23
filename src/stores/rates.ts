@@ -31,9 +31,16 @@ export const useRatesStore = defineStore('rates', () => {
 
   const getRate = (currency: string) => exchangeRates.value[currency] || 1;
 
+  const clearExchangeRates = () => {
+    exchangeRates.value = {};
+    storage.remove('exchange_rates');
+    storage.set('exchange_rates', exchangeRates.value);
+  };
+
   return {
     exchangeRates,
     loadExchangeRates,
     getRate,
+    clearExchangeRates,
   };
 });

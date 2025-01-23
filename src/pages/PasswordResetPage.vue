@@ -71,7 +71,7 @@ const router = useRouter();
 
 const email = ref('');
 const errorMessage = ref<string | null>(null);
-const success = ref(true);
+const success = ref(false);
 
 const goBack = () => {
   router.back();

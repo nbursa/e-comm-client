@@ -35,7 +35,7 @@
               <template #append>
                 <q-icon
                   :name="showPassword ? 'visibility_off' : 'visibility'"
-                  @click="toggleNewPassword"
+                  @click="togglePassword"
                 />
               </template>
             </q-input>
@@ -50,6 +50,14 @@
               :disabled="!isValid"
               label="Login"
               class="!tw-w-full !tw-py-2.5"
+            />
+            <div class="tw-flex tw-items-center tw-justify-center">or</div>
+            <QButton
+              v-if="!success"
+              secondary
+              label="Create Account"
+              class="!tw-w-full !tw-py-2.5"
+              @click="goToRegister"
             />
             <QButton
               v-if="success"
@@ -70,7 +78,7 @@ import { computed, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useI18n } from 'vue-i18n';
 import QButton from '@/components/base/QButton.vue';
-import { HOME_PATH } from '@/constants/routes';
+import { HOME_PATH, PROFILE_PATH, REGISTER_PATH } from '@/constants/routes';
 import { useQuasar } from 'quasar';
 import { AxiosError } from 'axios';
 import { useRouter } from 'vue-router';
@@ -100,7 +108,11 @@ const goHome = () => {
   router.push(HOME_PATH);
 };
 
-const toggleNewPassword = () => {
+const goToRegister = () => {
+  router.push(REGISTER_PATH);
+};
+
+const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
 
@@ -109,12 +121,12 @@ const handleLogin = async () => {
   if (!email.value || !password.value) {
     $q.notify({
       type: 'negative',
-      message: '',
+      message: 'Email and password are required.',
       position: 'top',
       timeout: 5000,
       icon: 'error',
     });
-    errorMessage.value = '';
+    errorMessage.value = 'Email and password are required.';
     return;
   }
 
@@ -132,14 +144,19 @@ const handleLogin = async () => {
       password.value = '';
       successMessage.value = message;
       success.value = true;
+      await router.push(PROFILE_PATH);
     }
   } catch (error) {
-    const axiosError = error as AxiosError<{ error: string }>;
-    errorMessage.value =
-      axiosError.response?.data?.error || 'Failed to change password. Please try again.';
+    let errorMsg = 'Failed to login. Please try again.';
+    if (error instanceof AxiosError) {
+      errorMsg = error.response?.data?.error || error.message || errorMsg;
+    } else if (error instanceof Error) {
+      errorMsg = error.message || errorMsg;
+    }
+    errorMessage.value = errorMsg;
     $q.notify({
       type: 'negative',
-      message: errorMessage.value,
+      message: errorMsg,
       position: 'top',
       timeout: 5000,
       icon: 'error',
