@@ -11,17 +11,23 @@
     :disable="disable"
     :ripple="ripple"
     :push="push"
-    :label="label"
     :square="square"
     :fab="fab"
-    :icon="icon"
-    :icon-right="iconRight"
     :type="type"
     :size="computedSize"
     :class="['qbutton', className]"
     :style="{ fontSize: computedFontSize, padding: computedPadding }"
     @click="handleClick"
-  />
+  >
+    <template v-if="icon || iconRight">
+      <q-icon v-if="icon" :name="icon" />
+      <span>{{ label }}</span>
+      <q-icon v-if="iconRight" :name="iconRight" />
+    </template>
+    <template v-else>
+      <span>{{ label }}</span>
+    </template>
+  </q-btn>
 </template>
 
 <script lang="ts" setup>
@@ -174,7 +180,7 @@ const handleClick = (event: Event) => {
   }
   &:hover {
     font-size: 16px;
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
   @media (min-width: 768px) {
   }
