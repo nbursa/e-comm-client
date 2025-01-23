@@ -1,5 +1,4 @@
 <template>
-  {{ emailRules(localShipping.email) }}
   <q-form
     ref="shippingFormRef"
     class="row q-col-gutter-md shipping-form"

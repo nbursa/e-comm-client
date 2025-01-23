@@ -1,5 +1,6 @@
 <template>
   <q-btn
+    :to="to"
     :flat="flat"
     :round="round"
     :dense="dense"
@@ -12,6 +13,7 @@
     :push="push"
     :square="square"
     :fab="fab"
+    :type="type"
     :size="computedSize"
     :class="['qbutton', className]"
     :style="{ fontSize: computedFontSize, padding: computedPadding }"
@@ -37,6 +39,10 @@ import { useQuasar } from 'quasar';
 import { QVueGlobals } from 'quasar';
 
 const props = defineProps({
+  to: {
+    type: String as PropType<string>,
+    default: '',
+  },
   label: {
     type: String as PropType<string>,
     default: '',
@@ -109,6 +115,14 @@ const props = defineProps({
     type: String as PropType<string>,
     default: '',
   },
+  secondary: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
+  type: {
+    type: String as PropType<string>,
+    default: 'button',
+  },
 });
 
 const emit = defineEmits(['click']);
@@ -118,10 +132,16 @@ const $q = useQuasar() as QVueGlobals;
 const isDark = computed(() => $q.dark.isActive);
 
 const computedColor = computed(() => {
+  if (props.secondary) {
+    return props.textColor || (isDark.value ? 'black' : 'white');
+  }
   return props.color || (isDark.value ? 'white' : 'black');
 });
 
 const computedTextColor = computed(() => {
+  if (props.secondary) {
+    return props.color || (isDark.value ? 'white' : 'black');
+  }
   return props.textColor || (isDark.value ? 'black' : 'white');
 });
 
@@ -138,7 +158,9 @@ const computedPadding = computed(() => {
 });
 
 const handleClick = (event: Event) => {
-  event.preventDefault();
+  if (props.type !== 'submit') {
+    event.preventDefault();
+  }
   event.stopPropagation();
   return typeof props.action === 'function' ? props.action() : emit('click');
 };

@@ -184,7 +184,7 @@ import { useOrderStore } from '../stores/order';
 import { formatPrice } from '@/utils/currency';
 import { useCartStore } from '../stores/cart';
 import { useRouter } from 'vue-router';
-import { THANK_YOU_PATH } from '@/router';
+import { THANK_YOU_PATH } from '@/constants/routes';
 
 const $q = useQuasar();
 const orderStore = useOrderStore();

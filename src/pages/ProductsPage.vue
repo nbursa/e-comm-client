@@ -66,7 +66,7 @@ import {
 } from '@/types';
 import { QVueGlobals } from 'quasar';
 import ProductTabs from '@/components/ProductTabs.vue';
-import { CATEGORIES_PATH, CATEGORY_PATH, PRODUCTS_PATH } from '@/router';
+import { CATEGORIES_PATH, CATEGORY_PATH, PRODUCTS_PATH } from '@/constants/routes';
 import { api } from '@/boot/axios';
 import { AxiosResponse } from 'axios';
 

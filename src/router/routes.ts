@@ -15,6 +15,59 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    path: '/login',
+    component: MainLayout,
+    children: [{ path: '', component: loadPage('LoginPage'), meta: { title: 'Login' } }],
+  },
+
+  {
+    path: '/register',
+    component: MainLayout,
+    children: [{ path: '', component: loadPage('RegisterPage'), meta: { title: 'Register' } }],
+  },
+
+  {
+    path: '/profile',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        component: loadPage('ProfilePage'),
+        meta: { requiresAuth: true, title: 'Profile' },
+      },
+      {
+        path: 'update',
+        component: loadPage('UpdateProfilePage'),
+        meta: { requiresAuth: true, title: 'Profile Update' },
+      },
+    ],
+  },
+
+  {
+    path: '/password-change',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        component: loadPage('ChangePasswordPage'),
+        meta: { requiresAuth: true, title: 'Change password' },
+      },
+    ],
+  },
+
+  {
+    path: '/password-reset',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        component: loadPage('PasswordResetPage'),
+        meta: { requiresAuth: false, title: 'Reset Password' },
+      },
+    ],
+  },
+
+  {
     path: '/cart',
     component: MainLayout,
     children: [{ path: '', component: loadPage('ShoppingCart'), meta: { title: 'Cart' } }],
@@ -29,7 +82,7 @@ const routes: RouteRecordRaw[] = [
         path: ':slug',
         component: loadPage('SingleProductPage'),
         props: true,
-        meta: { requiresAuth: false, title: 'Product Details' },
+        meta: { title: 'Product Details' },
       },
     ],
   },

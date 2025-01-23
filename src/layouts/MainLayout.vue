@@ -65,7 +65,7 @@ const position = ref(0);
 const menuItems = computed(() => [
   { label: t('main.home'), path: '/' },
   { label: t('main.products'), path: '/products' },
-  { label: t('main.settings'), path: '/settings' },
+  { label: t('main.userProfile'), path: '/profile' },
 ]);
 const mobileMenuItems = computed(() => [
   { label: t('main.home'), path: '/' },

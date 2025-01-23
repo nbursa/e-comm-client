@@ -18,14 +18,6 @@
 
     <q-separator class="q-my-md" />
 
-    <!-- Shipping Summary -->
-    <!-- <div class="q-gutter-md">
-      <div class="text-subtitle1 text-weight-bold">{{ $t('orderOverview.shippingSummary') }}</div>
-      <div>{{ shippingDetails.firstName }} {{ shippingDetails.lastName }}</div>
-      <div>{{ shippingDetails.address }}</div>
-      <div>{{ shippingDetails.email }}</div>
-    </div> -->
-
     <!-- Total Price -->
     <div class="q-gutter-md">
       <div class="text-subtitle1 text-weight-bold">{{ $t('orderOverview.total') }}</div>
@@ -79,7 +71,7 @@ import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { useCartStore } from 'src/stores/cart';
 import { formatPrice } from 'src/utils/currency';
-import { CHECKOUT_PATH, THANK_YOU_PATH } from '@/router';
+import { CHECKOUT_PATH, THANK_YOU_PATH } from '@/constants/routes';
 
 const { t } = useI18n();
 const $q = useQuasar();

@@ -119,7 +119,7 @@ import { PreviewImage, Product } from '@/types';
 import { formatPrice } from '@/utils/currency';
 import { useProductStore } from '@/stores/products';
 import { useImageStore } from '@/stores/images';
-import { PAGE_TITLE, PRODUCTS_PATH } from '@/router';
+import { PAGE_TITLE, PRODUCTS_PATH } from '@/constants/routes';
 import { api } from '@/boot/axios';
 import QButton from '@/components/base/QButton.vue';
 
