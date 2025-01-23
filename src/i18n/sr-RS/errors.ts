@@ -15,6 +15,10 @@ export const errors = {
     invalidCardNumber: 'Neispravan broj kartice',
     invalidExpiryDate: 'Neispravan datum isteka',
     invalidCVV: 'Neispravan CVV',
+    passwordMinLength: 'Lozinka mora imati najmanje 6 karaktera',
+    passwordMismatch: 'Lozinke se ne poklapaju',
   },
   noImage: 'Slika nije dostupna',
+  loginRequired: 'Mejl i lozinka su neophodni',
+  loginFailed: 'Neuspešna prijava. Molimo pokušajte ponovo.',
 };

@@ -9,6 +9,11 @@ import { singleProduct } from './singleProduct';
 import { thankYou } from './thankYou';
 import { errors } from './errors';
 import { orderOverview } from './orderOverview';
+import { profile } from './profile';
+import { login } from './login';
+import { changePassword } from './changePassword';
+import { passwordReset } from './passwordReset';
+import { profilePage } from './profilePage';
 
 export default {
   orderOverview,
@@ -22,4 +27,9 @@ export default {
   singleProduct,
   thankYou,
   errors,
+  profile,
+  login,
+  changePassword,
+  passwordReset,
+  profilePage,
 };

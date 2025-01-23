@@ -5,4 +5,6 @@ export const main = {
   ecomm: 'E-Kom',
   cart: 'Korpa',
   userProfile: 'Login',
+  login: 'Uloguj Se',
+  logout: 'Izloguj Se',
 };

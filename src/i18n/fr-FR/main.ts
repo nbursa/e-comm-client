@@ -5,4 +5,6 @@ export const main = {
   ecomm: 'E-comm',
   cart: 'Panier',
   userProfile: 'Connexion',
+  login: 'Se connecter',
+  logout: 'Se déconnecter'
 };

@@ -4,4 +4,5 @@ export const singleProduct = {
   itemAdded: 'Produit ajouté au panier!',
   quantity: 'Na stanju',
   goBack: 'Retour',
+  viewCart: 'Voir le panier',
 };

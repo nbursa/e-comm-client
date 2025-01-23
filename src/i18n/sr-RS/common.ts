@@ -18,4 +18,6 @@ export const common = {
   yes: 'Da',
   no: 'Ne',
   back: 'Nazad',
+  goBack: 'Idi Nazad',
+  continue: 'Nastavi',
 };

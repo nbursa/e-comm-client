@@ -17,4 +17,6 @@ export const common = {
   welcome: 'Welcome',
   yes: 'Yes',
   no: 'No',
+  goBack: 'Go back',
+  continue: 'Continue',
 };

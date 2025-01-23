@@ -4,4 +4,5 @@ export const singleProduct = {
   itemAdded: 'Product added to cart!',
   quantity: 'In Stock',
   goBack: 'Back',
+  viewCart: 'View Cart',
 };
