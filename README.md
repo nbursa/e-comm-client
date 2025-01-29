@@ -6,6 +6,20 @@ This project is a simple client application for an e-commerce platform, built us
 
 The backend for this application is built using the Gin framework in Go. It provides a simple API for managing products and their categories. Repository can be found at: [E-commerce Platform API](https://github.com/nbursa/e-comm-api)
 
+## Features
+
+- **User Authentication**: Secure login, registration functionality, token-based authentication.
+- **Profile Management**: Update user profile and change password.
+- **Product Management**: Browse, search, and filter products by categories.
+- **Shopping Cart**: Add, update, and remove products from the cart.
+- **Checkout Process**: Seamless checkout experience with order summary and payment options.
+- **Order Management**: View order history and order details.
+- **Localization**: Multi-language support for a global audience.
+- **Responsive Design**: Optimized for both desktop and mobile devices.
+- **Dark Mode**: Toggle between light and dark themes.
+- **Notifications**: Real-time notifications for various actions.
+- **Caching**: Efficient caching of products and categories for improved performance.
+
 ## Installation
 
 ```bash
